@@ -1,0 +1,64 @@
+@import url('https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css');
+@import url('https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.3.0/css/flag-icon.min.css');
+@import url('https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700');
+
+@import 'assets/css/fontawesome-free/css/all.css';
+@import '~icheck-bootstrap/icheck-bootstrap.min.css';
+@import '~bootstrap/dist/css/bootstrap.min.css';
+@import '~datatables.net-dt/css/jquery.dataTables.min.css';
+@import 'assets/alertifyjs/css/alertify.rtl.min.css';
+@import 'assets/alertifyjs/css/themes/default.min.css';
+@import '~datatables.net-searchpanes-bs5/css/searchPanes.bootstrap5.min.css';
+@import '~datatables.net-searchbuilder-bs5/css/searchBuilder.bootstrap5.min.css';
+@import '~datatables.net-datetime/css/dataTables.dateTime.scss';
+@import 'assets/css/adminlte.css';
+
+#app {
+  width: 100vw;
+  height: 100vh;
+  direction: rtl;
+}
+
+.main-header .navbar-nav .nav-item .nav-link {
+  background: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+}
+
+.navbar-nav > .user-menu .user-image {
+  height: 1.6rem;
+  width: 1.6rem;
+  margin-right: 0;
+  margin-left: -8px;
+}
+
+[class*='icheck-'] > label {
+  padding-left: unset !important;
+  padding-right: 29px !important;
+}
+
+[class*='icheck-'] > input:first-child + input[type='hidden'] + label::before,
+[class*='icheck-'] > input:first-child + label::before {
+  margin-right: -29px;
+}
+
+.content-wrapper {
+  padding: 15px;
+}
+
+.panel {
+  background: white;
+  padding: 5px 15px;
+}
+
+.dataTables_wrapper .dataTables_length {
+    float: right !important;
+}
+.dataTables_wrapper .dataTables_filter{
+    float: left !important;
+}
+
+.form-select {
+    background-position: left.75rem center !important;
+}
