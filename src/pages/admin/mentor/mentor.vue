@@ -84,7 +84,8 @@ export default defineComponent({
       },
       {
         label: 'تاریخ تولد',
-        data: 'birthdate'
+        data: `birthdate`,
+        responsivePriority: 3
       },
       {
         label: 'تصویر',
@@ -128,6 +129,7 @@ export default defineComponent({
     });
 
     const editMentor = (mentor: any) => {
+      mentor.birthdate = mentor.birthdate.split('T')[0];
       router.push({
         name: 'mentor-edit',
         params: { mentor: JSON.stringify(mentor) }
@@ -135,7 +137,6 @@ export default defineComponent({
     };
 
     const deleteMentor = (mentor: any) => {
-      console.log('delete', mentor);
       alertify.defaults.glossary.cancel = 'بله';
       alertify.defaults.glossary.ok = 'خیر';
       alertify.confirm('حذف', 'آیا اطمینان دارید؟', function (e: any) {

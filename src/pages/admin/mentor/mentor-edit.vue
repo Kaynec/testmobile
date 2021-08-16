@@ -26,7 +26,6 @@
             class="form-control"
             id="email"
             name="email"
-            :readonly="model.email"
             v-model="model.email"
           />
           <span class="form-text text-danger">
@@ -130,24 +129,26 @@
             <ErrorMessage name="gender" />
           </span>
         </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group col-md-4 col-sm-12">
-          <label for="point">امتیاز:</label>
-          <input
-            type="number"
-            class="form-control"
-            id="point"
-            readonly="readonly"
-            v-model="model.point"
-          />
-        </div>
-        <div class="form-group col-md-4 col-sm-12">
-          <label for="profileImage">تصویر:</label>
-          <img :src="model.profileImage" style="width: 100px" />
+
+        <div class="form-row">
+          <div class="form-group col-md-4 col-sm-12">
+            <label for="point">امتیاز:</label>
+            <input
+              type="number"
+              class="form-control"
+              id="point"
+              readonly="readonly"
+              v-model="model.point"
+            />
+          </div>
+          <div class="form-group col-md-4 col-sm-12">
+            <label for="profileImage">تصویر:</label>
+            <img :src="model.profileImage" style="width: 100px" />
+          </div>
         </div>
       </div>
       <button type="submit" class="btn btn-default">ذخیره</button>
+      <button class="btn btn-default" @click="cancel()">برگشت</button>
     </Form>
   </div>
 </template>
@@ -157,6 +158,7 @@ import '@majidh1/jalalidatepicker/dist/jalaliDatepicker.css';
 import '@majidh1/jalalidatepicker/dist/jalaliDatepicker.js';
 import { MentorServiceApi } from '@/api/services/admin/mentor-service';
 import { Form, Field, ErrorMessage } from 'vee-validate';
+import { UserDocuments } from '@/@types/user';
 import * as yup from 'yup';
 import locale from '../../../../lang/locale.json';
 import router from '@/router';
@@ -177,8 +179,12 @@ export default defineComponent({
 
   setup(props) {
     let model = JSON.parse(props.mentor);
+    (window as any).jalaliDatepicker.startWatch();
 
     const save = () => {
+      let tmp = model.birthdate.split('T')[0];
+      model.birthdate = tmp;
+      console.log(model);
       if (model._id) {
         let temp: any = {
           phone: model.phone,
@@ -186,7 +192,8 @@ export default defineComponent({
           lastname: model.lastname,
           gender: model.gender,
           birthdate: model.birthdate,
-          profileImage: model.profileImage
+          profileImage: model.profileImage,
+          nationalId: model.nationalId
         };
         //
         MentorServiceApi.update(model._id, temp).then((result) => {
@@ -196,9 +203,8 @@ export default defineComponent({
           });
         });
       } else {
-        console.log(model);
         MentorServiceApi.create(model).then((result) => {
-          console.log(result);
+          console.log(model);
           alertify.success(result.data.message);
           router.push({
             name: 'mentor'
@@ -206,20 +212,28 @@ export default defineComponent({
         });
       }
     };
+    // cancel
+    const cancel = () => {
+      router.push({
+        name: 'mentor'
+      });
+      alertify.notify('cancelled action');
+    };
 
     const validateSchema = computed(() => {
+      yup.setLocale(locale);
       return yup.object({
-        username: yup.string().required().min(6).label('نام کاربری'),
         email: yup.string().required().email().label('ایمیل'),
+        username: yup.string().required().min(6).label('نام کاربری'),
+        nationalId: yup.string().required().label('کد ملی'),
         firstname: yup.string().label('نام'),
         lastname: yup.string().label('نام خانوادگی'),
         phone: yup.string().label('تلفن'),
-        gender: yup.string().required().label('جنسیت'),
-        birthdate: yup.string().label('تاریخ تولد'),
-        nationalId: yup.number().min(8).required().label('کد ملی')
+        gender: yup.string().label('جنسیت'),
+        birthdate: yup.string().required().label('تاریخ تولد')
       });
     });
-    return { model, save, validateSchema };
+    return { model, save, validateSchema, cancel };
   }
 });
 </script>

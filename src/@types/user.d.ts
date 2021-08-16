@@ -22,4 +22,5 @@ export type UserDocuments = {
   profileImage: string;
   gender: string;
   birthdate: Date;
+  nationalId: number;
 };

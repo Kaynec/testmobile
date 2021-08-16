@@ -26,7 +26,6 @@
             class="form-control"
             id="email"
             name="email"
-            :readonly="model._id"
             v-model="model.email"
           />
           <span class="form-text text-danger">
@@ -105,6 +104,20 @@
           </span>
         </div>
         <div class="form-group col-md-4 col-sm-12">
+          <label for="nationalId">کد ملی:</label>
+          <Field
+            type="text"
+            class="form-control"
+            id="nationalId"
+            name="nationalId"
+            :readonly="model._id"
+            v-model="model.nationalId"
+          />
+          <span class="form-text text-danger">
+            <ErrorMessage name="biddingCode" />
+          </span>
+        </div>
+        <div class="form-group col-md-4 col-sm-12">
           <label for="orientation">رشته:</label>
           <Field
             type="text"
@@ -155,12 +168,14 @@
             v-model="model.point"
           />
         </div>
+
         <div class="form-group col-md-4 col-sm-12">
           <label for="profileImage">تصویر:</label>
           <img :src="model.profileImage" style="width: 100px" />
         </div>
       </div>
       <button type="submit" class="btn btn-default">ذخیره</button>
+      <button @click="cancel()" class="btn btn-default">برگشت</button>
     </Form>
   </div>
 </template>
@@ -197,8 +212,12 @@ export default defineComponent({
     (window as any).jalaliDatepicker.startWatch();
   },
   methods: {
+    cancel() {
+      router.push({
+        name: 'student'
+      });
+    },
     save() {
-      console.log(this.model);
       if (this.model._id) {
         let temp: any = {
           firstname: this.model.firstname,
@@ -206,7 +225,9 @@ export default defineComponent({
           gender: this.model.gender,
           birthdate: this.model.birthdate,
           phone: this.model.phone,
-          orientation: this.model.orientation
+          orientation: this.model.orientation,
+          profileImage: this.model.profileImage,
+          nationalId: this.model.nationalId
         };
         StudentServiceApi.update(this.model._id, temp).then((result) => {
           alertify.success(result.data.message);
@@ -236,7 +257,8 @@ export default defineComponent({
         orientation: yup.string().required().label('رشته'),
         biddingCode: yup.string().required().label('کد داوطلبی'),
         gender: yup.string().required().label('جنسیت'),
-        birthdate: yup.string().required().label('تاریخ تولد')
+        birthdate: yup.string().required().label('تاریخ تولد'),
+        nationalId: yup.string().required().label('کد ملی')
       });
     }
   }
