@@ -1,7 +1,7 @@
 <template>
   <div class="panel">
     <h2>
-      {{ model._id ? `ویرایش ${model.username}` : 'تعریف کاربر جدید' }}
+      {{ model._id ? `ویرایش ${model.username}` : 'تعریف مشاور جدید' }}
     </h2>
     <Form @submit="save" :validation-schema="validateSchema" class="mt-5">
       <div class="form-row">
@@ -26,7 +26,7 @@
             class="form-control"
             id="email"
             name="email"
-            :readonly="model._id"
+            :readonly="model.email"
             v-model="model.email"
           />
           <span class="form-text text-danger">
@@ -91,30 +91,17 @@
       </div>
       <div class="form-row">
         <div class="form-group col-md-4 col-sm-12">
-          <label for="biddingCode">کد داوطلبی:</label>
+          <label for="nationalId">کد ملی:</label>
           <Field
             type="text"
             class="form-control"
-            id="biddingCode"
-            name="biddingCode"
+            id="nationalId"
+            name="nationalId"
             :readonly="model._id"
-            v-model="model.biddingCode"
+            v-model="model.nationalId"
           />
           <span class="form-text text-danger">
             <ErrorMessage name="biddingCode" />
-          </span>
-        </div>
-        <div class="form-group col-md-4 col-sm-12">
-          <label for="orientation">رشته:</label>
-          <Field
-            type="text"
-            class="form-control"
-            id="orientation"
-            name="orientation"
-            v-model="model.orientation"
-          />
-          <span class="form-text text-danger">
-            <ErrorMessage name="orientation" />
           </span>
         </div>
         <div class="form-group col-md-4 col-sm-12">
@@ -165,10 +152,10 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { computed, defineComponent, onMounted, reactive } from 'vue';
 import '@majidh1/jalalidatepicker/dist/jalaliDatepicker.css';
 import '@majidh1/jalalidatepicker/dist/jalaliDatepicker.js';
-import { StudentServiceApi } from '@/api/services/admin/student-service';
+import { MentorServiceApi } from '@/api/services/admin/mentor-service';
 import { Form, Field, ErrorMessage } from 'vee-validate';
 import * as yup from 'yup';
 import locale from '../../../../lang/locale.json';
@@ -182,63 +169,57 @@ export default defineComponent({
     ErrorMessage
   },
   props: {
-    student: {
+    mentor: {
       type: String,
       default: '{}'
     }
   },
-  data() {
-    return {
-      model: {} as any
-    };
-  },
-  mounted() {
-    this.model = JSON.parse(this.$props.student);
-    (window as any).jalaliDatepicker.startWatch();
-  },
-  methods: {
-    save() {
-      console.log(this.model);
-      if (this.model._id) {
+
+  setup(props) {
+    let model = JSON.parse(props.mentor);
+
+    const save = () => {
+      if (model._id) {
         let temp: any = {
-          firstname: this.model.firstname,
-          lastname: this.model.lastname,
-          gender: this.model.gender,
-          birthdate: this.model.birthdate,
-          phone: this.model.phone,
-          orientation: this.model.orientation
+          phone: model.phone,
+          firstname: model.firstname,
+          lastname: model.lastname,
+          gender: model.gender,
+          birthdate: model.birthdate,
+          profileImage: model.profileImage
         };
-        StudentServiceApi.update(this.model._id, temp).then((result) => {
+        //
+        MentorServiceApi.update(model._id, temp).then((result) => {
           alertify.success(result.data.message);
           router.push({
-            name: 'student'
+            name: 'mentor'
           });
         });
       } else {
-        StudentServiceApi.create(this.model).then((result) => {
+        console.log(model);
+        MentorServiceApi.create(model).then((result) => {
+          console.log(result);
           alertify.success(result.data.message);
           router.push({
-            name: 'student'
+            name: 'mentor'
           });
         });
       }
-    }
-  },
-  computed: {
-    validateSchema() {
-      yup.setLocale(locale);
+    };
+
+    const validateSchema = computed(() => {
       return yup.object({
-        email: yup.string().required().email().label('ایمیل'),
         username: yup.string().required().min(6).label('نام کاربری'),
-        firstname: yup.string().required().label('نام'),
-        lastname: yup.string().required().label('نام خانوادگی'),
-        phone: yup.string().required().label('تلفن'),
-        orientation: yup.string().required().label('رشته'),
-        biddingCode: yup.string().required().label('کد داوطلبی'),
+        email: yup.string().required().email().label('ایمیل'),
+        firstname: yup.string().label('نام'),
+        lastname: yup.string().label('نام خانوادگی'),
+        phone: yup.string().label('تلفن'),
         gender: yup.string().required().label('جنسیت'),
-        birthdate: yup.string().required().label('تاریخ تولد')
+        birthdate: yup.string().label('تاریخ تولد'),
+        nationalId: yup.number().min(8).required().label('کد ملی')
       });
-    }
+    });
+    return { model, save, validateSchema };
   }
 });
 </script>

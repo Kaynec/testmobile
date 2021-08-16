@@ -5,21 +5,21 @@ export type UserRoles = string[];
 export type Token = string;
 
 export type LoginDocuments = {
-    username: string,
-    password: string
-}
+  username: string;
+  password: string;
+};
 
 export type UserDocuments = {
-    _id?: number,
-    username: string,
-    email: string,
-    firstname: string,
-    lastname: string,
-    phone: String,
-    orientation: String,
-    point: Number,
-    biddingCode: String,
-    profileImage: String,
-    gender: string,
-    birthdate: Date
-}
+  _id?: number;
+  username: string;
+  email: string;
+  firstname: string;
+  lastname: string;
+  phone: string;
+  orientation: string;
+  point: number;
+  biddingCode: string;
+  profileImage: string;
+  gender: string;
+  birthdate: Date;
+};

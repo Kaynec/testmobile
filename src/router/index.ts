@@ -9,6 +9,8 @@ import Student from '@/pages/admin/student/student.vue';
 import StudentEdit from '@/pages/admin/student/student-edit.vue';
 import Profile from '@/pages/profile/profile.vue';
 import ForgotPassword from '@/modules/forgot-password/forgot-password.vue';
+import Mentor from '@/pages/admin/mentor/mentor.vue';
+import MentorEdit from '@/pages/admin/mentor/mentor-edit.vue';
 import { useStore } from '@/store';
 const ifNotAuthenticated = (to: any, from: any, next: any) => {
   if (!useStore().getters.getUserToken) {
@@ -60,6 +62,25 @@ const routes: Array<RouteRecordRaw> = [
         props: true,
         component: StudentEdit
       },
+
+      {
+        path: 'mentor',
+        name: 'mentor',
+        component: Mentor
+      },
+      {
+        path: 'mentor-create',
+        name: 'mentor-create',
+        props: true,
+        component: MentorEdit
+      },
+      {
+        path: 'mentor-edit',
+        name: 'mentor-edit',
+        props: true,
+        component: MentorEdit
+      },
+
       {
         path: 'profile',
         name: 'Profile',
