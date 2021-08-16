@@ -34,16 +34,16 @@
           </span>
         </div>
         <div class="form-group col-md-4 col-sm-12">
-          <label for="phone">شماره تلفن:</label>
+          <label for="nationalId">کد ملی:</label>
           <Field
-            type="text"
+            type="number"
             class="form-control"
-            id="phone"
-            name="phone"
-            v-model="model.phone"
+            id="nationalId"
+            name="nationalId"
+            v-model="model.nationalId"
           />
           <span class="form-text text-danger">
-            <ErrorMessage name="phone" />
+            <ErrorMessage name="nationalId" />
           </span>
         </div>
       </div>
@@ -146,6 +146,19 @@
       </div>
       <div class="form-row">
         <div class="form-group col-md-4 col-sm-12">
+          <label for="phone">شماره تلفن:</label>
+          <Field
+            type="text"
+            class="form-control"
+            id="phone"
+            name="phone"
+            v-model="model.phone"
+          />
+          <span class="form-text text-danger">
+            <ErrorMessage name="phone" />
+          </span>
+        </div>
+        <div class="form-group col-md-4 col-sm-12">
           <label for="point">امتیاز:</label>
           <input
             type="number"
@@ -206,7 +219,8 @@ export default defineComponent({
           gender: this.model.gender,
           birthdate: this.model.birthdate,
           phone: this.model.phone,
-          orientation: this.model.orientation
+          orientation: this.model.orientation,
+          nationalId: this.model.nationalId
         };
         StudentServiceApi.update(this.model._id, temp).then((result) => {
           alertify.success(result.data.message);
@@ -230,6 +244,7 @@ export default defineComponent({
       return yup.object({
         email: yup.string().required().email().label('ایمیل'),
         username: yup.string().required().min(6).label('نام کاربری'),
+        nationalId: yup.string().required().min(8).max(10).label('کد ملی'),
         firstname: yup.string().required().label('نام'),
         lastname: yup.string().required().label('نام خانوادگی'),
         phone: yup.string().required().label('تلفن'),

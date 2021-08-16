@@ -42,7 +42,6 @@ import router from '@/router';
 const $ = require('jquery');
 const alertify = require('../../../assets/alertifyjs/alertify');
 import { StudentServiceApi } from '@/api/services/admin/student-service';
-import { string } from 'yup/lib/locale';
 export default defineComponent({
   data() {
     return {
@@ -50,14 +49,7 @@ export default defineComponent({
         {
           label: 'نام کاربری',
           data: 'username',
-          responsivePriority: 1,
-          type: () => {
-            return typeof string;
-          },
-          searchPanes: {
-            orthogonal: 'sp',
-            show: true
-          }
+          responsivePriority: 1
         },
         { label: 'ایمیل', data: 'email' },
         { label: 'نام', data: 'firstname', responsivePriority: 3 },
