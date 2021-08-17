@@ -9,6 +9,7 @@ class AuthService {
       }
     });
   }
+
   async currentUser() {
     return instance.get('auth/admin/me', {
       headers: {
