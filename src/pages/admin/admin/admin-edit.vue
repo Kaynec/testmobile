@@ -195,8 +195,8 @@ export default defineComponent({
       return yup.object({
         email: yup.string().required().email().label('ایمیل'),
         username: yup.string().required().min(6).label('نام کاربری'),
-        firstname: yup.string().label('نام'),
-        lastname: yup.string().label('نام خانوادگی'),
+        firstname: yup.string().required().label('نام'),
+        lastname: yup.string().required().label('نام خانوادگی'),
         gender: yup.string().required().label('جنسیت'),
         birthdate: yup.string().label('تاریخ تولد')
       });
