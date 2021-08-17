@@ -1,7 +1,7 @@
 <template>
   <div class="panel">
     <h2>
-      {{ model._id ? `ویرایش ${model.username}` : 'تعریف کاربر جدید' }}
+      {{ model._id ? `ویرایش ${model.username}` : 'تعریف مشاور جدید' }}
     </h2>
     <Form @submit="save" :validation-schema="validateSchema" class="mt-5">
       <div class="form-row">
@@ -90,20 +90,6 @@
       </div>
       <div class="form-row">
         <div class="form-group col-md-4 col-sm-12">
-          <label for="biddingCode">کد داوطلبی:</label>
-          <Field
-            type="text"
-            class="form-control"
-            id="biddingCode"
-            name="biddingCode"
-            :readonly="model._id"
-            v-model="model.biddingCode"
-          />
-          <span class="form-text text-danger">
-            <ErrorMessage name="biddingCode" />
-          </span>
-        </div>
-        <div class="form-group col-md-4 col-sm-12">
           <label for="nationalId">کد ملی:</label>
           <Field
             type="text"
@@ -115,19 +101,6 @@
           />
           <span class="form-text text-danger">
             <ErrorMessage name="biddingCode" />
-          </span>
-        </div>
-        <div class="form-group col-md-4 col-sm-12">
-          <label for="orientation">رشته:</label>
-          <Field
-            type="text"
-            class="form-control"
-            id="orientation"
-            name="orientation"
-            v-model="model.orientation"
-          />
-          <span class="form-text text-danger">
-            <ErrorMessage name="orientation" />
           </span>
         </div>
         <div class="form-group col-md-4 col-sm-12">
@@ -156,35 +129,36 @@
             <ErrorMessage name="gender" />
           </span>
         </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group col-md-4 col-sm-12">
-          <label for="point">امتیاز:</label>
-          <input
-            type="number"
-            class="form-control"
-            id="point"
-            readonly="readonly"
-            v-model="model.point"
-          />
-        </div>
 
-        <div class="form-group col-md-4 col-sm-12">
-          <label for="profileImage">تصویر:</label>
-          <img :src="model.profileImage" style="width: 100px" />
+        <div class="form-row">
+          <div class="form-group col-md-4 col-sm-12">
+            <label for="point">امتیاز:</label>
+            <input
+              type="number"
+              class="form-control"
+              id="point"
+              readonly="readonly"
+              v-model="model.point"
+            />
+          </div>
+          <div class="form-group col-md-4 col-sm-12">
+            <label for="profileImage">تصویر:</label>
+            <img :src="model.profileImage" style="width: 100px" />
+          </div>
         </div>
       </div>
       <button type="submit" class="btn btn-default">ذخیره</button>
-      <button @click="cancel()" class="btn btn-default">برگشت</button>
+      <button class="btn btn-default" @click="cancel()">برگشت</button>
     </Form>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { computed, defineComponent, onMounted, reactive } from 'vue';
 import '@majidh1/jalalidatepicker/dist/jalaliDatepicker.css';
 import '@majidh1/jalalidatepicker/dist/jalaliDatepicker.js';
-import { StudentServiceApi } from '@/api/services/admin/student-service';
+import { MentorServiceApi } from '@/api/services/admin/mentor-service';
 import { Form, Field, ErrorMessage } from 'vee-validate';
+import { UserDocuments } from '@/@types/user';
 import * as yup from 'yup';
 import locale from '../../../../lang/locale.json';
 import router from '@/router';
@@ -197,70 +171,69 @@ export default defineComponent({
     ErrorMessage
   },
   props: {
-    student: {
+    mentor: {
       type: String,
       default: '{}'
     }
   },
-  data() {
-    return {
-      model: {} as any
-    };
-  },
-  mounted() {
-    this.model = JSON.parse(this.$props.student);
+
+  setup(props) {
+    let model = JSON.parse(props.mentor);
     (window as any).jalaliDatepicker.startWatch();
-  },
-  methods: {
-    cancel() {
-      router.push({
-        name: 'student'
-      });
-    },
-    save() {
-      if (this.model._id) {
+
+    const save = () => {
+      let tmp = model.birthdate.split('T')[0];
+      model.birthdate = tmp;
+      console.log(model);
+      if (model._id) {
         let temp: any = {
-          firstname: this.model.firstname,
-          lastname: this.model.lastname,
-          gender: this.model.gender,
-          birthdate: this.model.birthdate,
-          phone: this.model.phone,
-          orientation: this.model.orientation,
-          profileImage: this.model.profileImage,
-          nationalId: this.model.nationalId
+          phone: model.phone,
+          firstname: model.firstname,
+          lastname: model.lastname,
+          gender: model.gender,
+          birthdate: model.birthdate,
+          profileImage: model.profileImage,
+          nationalId: model.nationalId
         };
-        StudentServiceApi.update(this.model._id, temp).then((result) => {
+        //
+        MentorServiceApi.update(model._id, temp).then((result) => {
           alertify.success(result.data.message);
           router.push({
-            name: 'student'
+            name: 'mentor'
           });
         });
       } else {
-        StudentServiceApi.create(this.model).then((result) => {
+        MentorServiceApi.create(model).then((result) => {
+          console.log(model);
           alertify.success(result.data.message);
           router.push({
-            name: 'student'
+            name: 'mentor'
           });
         });
       }
-    }
-  },
-  computed: {
-    validateSchema() {
+    };
+    // cancel
+    const cancel = () => {
+      router.push({
+        name: 'mentor'
+      });
+      alertify.notify('cancelled action');
+    };
+
+    const validateSchema = computed(() => {
       yup.setLocale(locale);
       return yup.object({
         email: yup.string().required().email().label('ایمیل'),
         username: yup.string().required().min(6).label('نام کاربری'),
-        firstname: yup.string().required().label('نام'),
-        lastname: yup.string().required().label('نام خانوادگی'),
-        phone: yup.string().required().label('تلفن'),
-        orientation: yup.string().required().label('رشته'),
-        biddingCode: yup.string().required().label('کد داوطلبی'),
-        gender: yup.string().required().label('جنسیت'),
-        birthdate: yup.string().required().label('تاریخ تولد'),
-        nationalId: yup.string().required().label('کد ملی')
+        nationalId: yup.string().required().label('کد ملی'),
+        firstname: yup.string().label('نام'),
+        lastname: yup.string().label('نام خانوادگی'),
+        phone: yup.string().label('تلفن'),
+        gender: yup.string().label('جنسیت'),
+        birthdate: yup.string().required().label('تاریخ تولد')
       });
-    }
+    });
+    return { model, save, validateSchema, cancel };
   }
 });
 </script>

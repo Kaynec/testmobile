@@ -42,6 +42,7 @@ import router from '@/router';
 const $ = require('jquery');
 const alertify = require('../../../assets/alertifyjs/alertify');
 import { StudentServiceApi } from '@/api/services/admin/student-service';
+import { string } from 'yup/lib/locale';
 export default defineComponent({
   data() {
     return {
@@ -49,7 +50,14 @@ export default defineComponent({
         {
           label: 'نام کاربری',
           data: 'username',
-          responsivePriority: 1
+          responsivePriority: 1,
+          type: () => {
+            return typeof string;
+          },
+          searchPanes: {
+            orthogonal: 'sp',
+            show: true
+          }
         },
         { label: 'ایمیل', data: 'email' },
         { label: 'نام', data: 'firstname', responsivePriority: 3 },
@@ -147,8 +155,8 @@ export default defineComponent({
     if (gridRef.getDatatable()) {
       let that = this;
       gridRef.getDatatableBody().on('click', '[data-edit-id]', (e: any) => {
-        var id = $(e.currentTarget).data().editId;
-        var filteredData = gridRef
+        let id = $(e.currentTarget).data().editId;
+        let filteredData = gridRef
           .getDatatable()
           .data()
           .filter(function (value: any) {
@@ -157,8 +165,8 @@ export default defineComponent({
         if (filteredData.length > 0) that.editStudent(filteredData[0]);
       });
       gridRef.getDatatableBody().on('click', '[data-delete-id]', (e: any) => {
-        var id = $(e.currentTarget).data().deleteId;
-        var filteredData = gridRef
+        let id = $(e.currentTarget).data().deleteId;
+        let filteredData = gridRef
           .getDatatable()
           .data()
           .filter(function (value: any) {

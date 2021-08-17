@@ -2,7 +2,7 @@ import axios from 'axios';
 import { useStore } from '@/store';
 const alertify = require('../assets/alertifyjs/alertify');
 
-export const baseUrl = 'http://localhost:8896/api/';
+export const baseUrl = 'https://www.api.devnirone.ir/api/';
 
 export const instance = axios.create({
   baseURL: baseUrl,
