@@ -25,7 +25,7 @@ class AdminService {
       }
     });
   }
-  async update(id: string, user: UserDocuments) {
+  async update(id: string, user: Partial<UserDocuments>) {
     return instance.put(`admin/${id}`, user, {
       headers: {
         // Overwrite Axios's automatically set Content-Type

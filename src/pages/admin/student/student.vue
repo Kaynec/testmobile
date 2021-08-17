@@ -81,15 +81,6 @@ export default defineComponent({
           data: 'birthdate'
         },
         {
-          label: 'تصویر',
-          data: 'profileImage',
-          render: function (profileImage: string) {
-            return profileImage
-              ? `<img src="${profileImage}" style="width:100px;"/>`
-              : '';
-          }
-        },
-        {
           className: 'edit-control',
           orderable: false,
           defaultContent: '',

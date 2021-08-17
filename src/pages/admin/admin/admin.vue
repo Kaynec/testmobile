@@ -5,12 +5,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">مشاوران</h1>
+            <h1 class="m-0">ادمین ها</h1>
           </div>
           <div class="col-sm-6">
             <button
               class="m-0 float-left btn btn-success"
-              @click="createMentor()"
+              @click="CreateAdmin()"
             >
               جدید
             </button>
@@ -42,7 +42,7 @@ import grid from '@/modules/shared/grid.vue';
 import router from '@/router';
 const $ = require('jquery');
 const alertify = require('../../../assets/alertifyjs/alertify');
-import { MentorServiceApi } from '@/api/services/admin/mentor-service';
+import { AdminServiceApi } from '@/api/services/admin/admin-service';
 // import { string } from 'yup/lib/locale';
 
 export default defineComponent({
@@ -111,28 +111,27 @@ export default defineComponent({
     ]);
 
     const options = reactive({
-      gridName: 'mentor-grid',
-      url: `${baseUrl}mentor`,
+      gridName: 'admin-grid',
+      url: `${baseUrl}admin`,
       type: 'GET'
       // data: (d: any) =< {
       //   d.extra = 111;
       // }
     });
 
-    const editMentor = (mentor: any) => {
-      mentor.birthdate = mentor.birthdate.split('T')[0];
+    const editAdmin = (admin: any) => {
       router.push({
-        name: 'mentor-edit',
-        params: { mentor: JSON.stringify(mentor) }
+        name: 'admin-edit',
+        params: { admin: JSON.stringify(admin) }
       });
     };
 
-    const deleteMentor = (mentor: any) => {
+    const deleteAdmin = (admin: any) => {
       alertify.defaults.glossary.cancel = 'بله';
       alertify.defaults.glossary.ok = 'خیر';
       alertify.confirm('حذف', 'آیا اطمینان دارید؟', function (e: any) {
         if (e) {
-          MentorServiceApi.delete(mentor._id).then((result) => {
+          AdminServiceApi.delete(admin._id).then((result) => {
             alertify.success(result.data.message);
             (grid.value as any).getDatatable().ajax.reload();
           });
@@ -140,10 +139,10 @@ export default defineComponent({
       });
     };
 
-    const createMentor = () => {
+    const CreateAdmin = () => {
       router.push({
-        name: 'mentor-create',
-        params: { mentor: JSON.stringify({}) }
+        name: 'admin-create',
+        params: { admin: JSON.stringify({}) }
       });
     };
 
@@ -159,7 +158,7 @@ export default defineComponent({
               .filter(function (value: any) {
                 return value._id == id;
               });
-            if (filteredData.length > 0) editMentor(filteredData[0]);
+            if (filteredData.length > 0) editAdmin(filteredData[0]);
           });
         grid.value
           .getDatatableBody()
@@ -171,12 +170,12 @@ export default defineComponent({
               .filter(function (value: any) {
                 return value._id == id;
               });
-            if (filteredData.length > 0) deleteMentor(filteredData[0]);
+            if (filteredData.length > 0) deleteAdmin(filteredData[0]);
           });
       }
     });
 
-    return { options, columns, createMentor, deleteMentor, editMentor, grid };
+    return { options, columns, CreateAdmin, deleteAdmin, editAdmin, grid };
   }
 });
 </script>

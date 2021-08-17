@@ -25,7 +25,7 @@ class StudentService {
       }
     });
   }
-  async update(id: number, user: UserDocuments) {
+  async update(id: number, user: Partial<UserDocuments>) {
     return instance.put(`student/${id}`, user, {
       headers: {
         // Overwrite Axios's automatically set Content-Type

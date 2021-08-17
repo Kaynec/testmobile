@@ -11,6 +11,8 @@ import Profile from '@/pages/profile/profile.vue';
 import ForgotPassword from '@/modules/forgot-password/forgot-password.vue';
 import Mentor from '@/pages/admin/mentor/mentor.vue';
 import MentorEdit from '@/pages/admin/mentor/mentor-edit.vue';
+import Admin from '@/pages/admin/admin/admin.vue';
+import AdminEdit from '@/pages/admin/admin/admin-edit.vue';
 import { useStore } from '@/store';
 const ifNotAuthenticated = (to: any, from: any, next: any) => {
   if (!useStore().getters.getUserToken) {
@@ -79,6 +81,23 @@ const routes: Array<RouteRecordRaw> = [
         name: 'mentor-edit',
         props: true,
         component: MentorEdit
+      },
+      {
+        path: 'admin',
+        name: 'admin',
+        component: Admin
+      },
+      {
+        path: 'admin-create',
+        name: 'admin-create',
+        props: true,
+        component: AdminEdit
+      },
+      {
+        path: 'admin-edit',
+        name: 'admin-edit',
+        props: true,
+        component: AdminEdit
       },
 
       {
