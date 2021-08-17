@@ -93,12 +93,12 @@ const routes: Array<RouteRecordRaw> = [
       //   props: true,
       //   component: AdminEdit
       // },
-      {
-        path: 'admin/updateProfile',
-        name: 'admin/updateProfile',
-        props: true,
-        component: AdminEdit
-      },
+      // {
+      //   path: 'admin/updateProfile',
+      //   name: 'admin/updateProfile',
+      //   props: true,
+      //   component: AdminEdit
+      // },
 
       {
         path: 'profile',
