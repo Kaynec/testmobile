@@ -26,6 +26,7 @@
             class="form-control"
             id="email"
             name="email"
+            :readonly="model._id"
             v-model="model.email"
           />
           <span class="form-text text-danger">
@@ -88,6 +89,7 @@
           </span>
         </div>
       </div>
+
       <div class="form-row">
         <div class="form-group col-md-4 col-sm-12">
           <label for="biddingCode">کد داوطلبی:</label>
@@ -103,6 +105,7 @@
             <ErrorMessage name="biddingCode" />
           </span>
         </div>
+
         <div class="form-group col-md-4 col-sm-12">
           <label for="nationalId">کد ملی:</label>
           <Field
@@ -130,6 +133,9 @@
             <ErrorMessage name="orientation" />
           </span>
         </div>
+      </div>
+
+      <div class="form-row">
         <div class="form-group col-md-4 col-sm-12">
           <label for="gender">جنسیت:</label>
           <div class="form-control" style="background: unset; border: unset">
@@ -152,12 +158,12 @@
               />مرد</label
             >
           </div>
+
           <span class="form-text text-danger">
             <ErrorMessage name="gender" />
           </span>
         </div>
-      </div>
-      <div class="form-row">
+
         <div class="form-group col-md-4 col-sm-12">
           <label for="point">امتیاز:</label>
           <input
@@ -168,14 +174,14 @@
             v-model="model.point"
           />
         </div>
-
         <div class="form-group col-md-4 col-sm-12">
           <label for="profileImage">تصویر:</label>
           <img :src="model.profileImage" style="width: 100px" />
         </div>
       </div>
-      <button type="submit" class="btn btn-default">ذخیره</button>
-      <button @click="cancel()" class="btn btn-default">برگشت</button>
+
+      <button class="btn btn-default ml-3 mt-4" @click="cancel()">برگشت</button>
+      <button type="submit" class="btn btn-default mt-4">ذخیره</button>
     </Form>
   </div>
 </template>
@@ -225,9 +231,7 @@ export default defineComponent({
           gender: this.model.gender,
           birthdate: this.model.birthdate,
           phone: this.model.phone,
-          orientation: this.model.orientation,
-          profileImage: this.model.profileImage,
-          nationalId: this.model.nationalId
+          orientation: this.model.orientation
         };
         StudentServiceApi.update(this.model._id, temp).then((result) => {
           alertify.success(result.data.message);

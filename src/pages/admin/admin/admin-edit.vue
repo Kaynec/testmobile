@@ -1,7 +1,7 @@
 <template>
   <div class="panel">
     <h2>
-      {{ model._id ? `ویرایش ${model.username}` : 'تعریف مشاور جدید' }}
+      {{ model._id ? `ویرایش ${model.username}` : 'تعریف ادمین جدید' }}
     </h2>
     <Form @submit="save" :validation-schema="validateSchema" class="mt-5">
       <div class="form-row">
@@ -34,22 +34,6 @@
           </span>
         </div>
         <div class="form-group col-md-4 col-sm-12">
-          <label for="phone">شماره تلفن:</label>
-          <Field
-            type="text"
-            class="form-control"
-            id="phone"
-            name="phone"
-            v-model="model.phone"
-          />
-          <span class="form-text text-danger">
-            <ErrorMessage name="phone" />
-          </span>
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group col-md-4 col-sm-12">
           <label for="firstname">نام:</label>
           <Field
             type="text"
@@ -62,6 +46,9 @@
             <ErrorMessage name="firstname" />
           </span>
         </div>
+      </div>
+
+      <div class="form-row">
         <div class="form-group col-md-4 col-sm-12">
           <label for="lastname">نام خانوادگی:</label>
           <Field
@@ -89,23 +76,7 @@
             <ErrorMessage name="birthdate" />
           </span>
         </div>
-      </div>
 
-      <div class="form-row">
-        <div class="form-group col-md-4 col-sm-12">
-          <label for="nationalId">کد ملی:</label>
-          <Field
-            type="text"
-            class="form-control"
-            id="nationalId"
-            name="nationalId"
-            :readonly="model._id"
-            v-model="model.nationalId"
-          />
-          <span class="form-text text-danger">
-            <ErrorMessage name="biddingCode" />
-          </span>
-        </div>
         <div class="form-group col-md-4 col-sm-12">
           <label for="gender">جنسیت:</label>
           <div class="form-control" style="background: unset; border: unset">
@@ -132,7 +103,9 @@
             <ErrorMessage name="gender" />
           </span>
         </div>
+      </div>
 
+      <div class="form-row">
         <div class="form-group col-md-4 col-sm-12">
           <label for="point">امتیاز:</label>
           <input
@@ -161,9 +134,8 @@
 import { computed, defineComponent, onMounted, reactive } from 'vue';
 import '@majidh1/jalalidatepicker/dist/jalaliDatepicker.css';
 import '@majidh1/jalalidatepicker/dist/jalaliDatepicker.js';
-import { MentorServiceApi } from '@/api/services/admin/mentor-service';
+import { AdminServiceApi } from '@/api/services/admin/admin-service';
 import { Form, Field, ErrorMessage } from 'vee-validate';
-import { UserDocuments } from '@/@types/user';
 import * as yup from 'yup';
 import locale from '../../../../lang/locale.json';
 import router from '@/router';
@@ -176,14 +148,14 @@ export default defineComponent({
     ErrorMessage
   },
   props: {
-    mentor: {
+    admin: {
       type: String,
       default: '{}'
     }
   },
 
   setup(props) {
-    let model = JSON.parse(props.mentor);
+    let model = JSON.parse(props.admin);
     (window as any).jalaliDatepicker.startWatch();
 
     const save = () => {
@@ -192,22 +164,20 @@ export default defineComponent({
         let tmp = {
           firstname: model.firstname,
           lastname: model.lastname,
-          phone: model.phone,
           gender: model.gender,
-          nationalId: model.nationalId,
           birthdate: model.birthdate
         };
-        MentorServiceApi.update(model._id, tmp).then((result) => {
+        AdminServiceApi.update(model._id, tmp).then((result) => {
           alertify.success(result.data.message);
           router.push({
-            name: 'mentor'
+            name: 'admin'
           });
         });
       } else {
-        MentorServiceApi.create(model).then((result) => {
+        AdminServiceApi.create(model).then((result) => {
           alertify.success(result.data.message);
           router.push({
-            name: 'mentor'
+            name: 'admin'
           });
         });
       }
@@ -215,7 +185,7 @@ export default defineComponent({
     // cancel
     const cancel = () => {
       router.push({
-        name: 'mentor'
+        name: 'admin'
       });
       alertify.notify('cancelled action');
     };
@@ -225,12 +195,10 @@ export default defineComponent({
       return yup.object({
         email: yup.string().required().email().label('ایمیل'),
         username: yup.string().required().min(6).label('نام کاربری'),
-        nationalId: yup.string().required().label('کد ملی'),
         firstname: yup.string().label('نام'),
         lastname: yup.string().label('نام خانوادگی'),
-        phone: yup.string().label('تلفن'),
-        gender: yup.string().label('جنسیت'),
-        birthdate: yup.string().required().label('تاریخ تولد')
+        gender: yup.string().required().label('جنسیت'),
+        birthdate: yup.string().label('تاریخ تولد')
       });
     });
     return { model, save, validateSchema, cancel };
