@@ -1,0 +1,1 @@
+<template>Edit Course</template>
