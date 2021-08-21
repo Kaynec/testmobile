@@ -163,11 +163,10 @@ import '@majidh1/jalalidatepicker/dist/jalaliDatepicker.css';
 import '@majidh1/jalalidatepicker/dist/jalaliDatepicker.js';
 import { MentorServiceApi } from '@/api/services/admin/mentor-service';
 import { Form, Field, ErrorMessage } from 'vee-validate';
-import { UserDocuments } from '@/@types/user';
 import * as yup from 'yup';
 import locale from '../../../../lang/locale.json';
 import router from '@/router';
-const alertify = require('../../../assets/alertifyjs/alertify');
+const alertify = require('@/assets/alertifyjs/alertify');
 
 export default defineComponent({
   components: {

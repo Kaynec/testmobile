@@ -82,23 +82,23 @@ const routes: Array<RouteRecordRaw> = [
         props: true,
         component: MentorEdit
       },
-      {
-        path: 'admin',
-        name: 'admin',
-        component: Admin
-      },
-      {
-        path: 'admin-create',
-        name: 'admin-create',
-        props: true,
-        component: AdminEdit
-      },
-      {
-        path: 'admin-edit',
-        name: 'admin-edit',
-        props: true,
-        component: AdminEdit
-      },
+      // {
+      //   path: 'admin',
+      //   name: 'admin',
+      //   component: Admin
+      // },
+      // {
+      //   path: 'admin-create',
+      //   name: 'admin-create',
+      //   props: true,
+      //   component: AdminEdit
+      // },
+      // {
+      //   path: 'admin/updateProfile',
+      //   name: 'admin/updateProfile',
+      //   props: true,
+      //   component: AdminEdit
+      // },
 
       {
         path: 'profile',

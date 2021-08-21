@@ -66,11 +66,11 @@ export default class MenuSidebar extends Vue {
         {
           name: 'مربی ها',
           url: '/admin/mentor'
-        },
-        {
-          name: 'ادمین ها',
-          url: '/admin/admin'
         }
+        // {
+        //   name: 'ادمین ها',
+        //   url: '/admin/admin'
+        // }
       ]
     };
   }

@@ -13,7 +13,7 @@
             id="username"
             name="username"
             :readonly="model._id"
-            v-model="model.username"
+            v-model="dude"
           />
           <span class="form-text text-danger">
             <ErrorMessage name="username" />
@@ -131,7 +131,7 @@
   </div>
 </template>
 <script lang="ts">
-import { computed, defineComponent, onMounted, reactive } from 'vue';
+import { computed, defineComponent } from 'vue';
 import '@majidh1/jalalidatepicker/dist/jalaliDatepicker.css';
 import '@majidh1/jalalidatepicker/dist/jalaliDatepicker.js';
 import { AdminServiceApi } from '@/api/services/admin/admin-service';

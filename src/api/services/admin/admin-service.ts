@@ -33,6 +33,14 @@ class AdminService {
       }
     });
   }
+  async updateCurrentUser(user: unknown) {
+    return instance.post('admin/updateProfile', user, {
+      headers: {
+        // Overwrite Axios's automatically set Content-Type
+        'Content-Type': 'application/json'
+      }
+    });
+  }
   async delete(id: string) {
     return instance.delete(`admin/${id}`, {
       headers: {
