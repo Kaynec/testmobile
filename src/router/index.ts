@@ -17,6 +17,9 @@ import Course from '@/pages/admin/course/course.vue';
 import CourseEdit from '@/pages/admin/course/course-edit.vue';
 import Session from '@/pages/admin/session/session.vue';
 import SessionEdit from '@/pages/admin/session/session-edit.vue';
+import Question from '@/pages/admin/question/question.vue';
+import QuestionEdit from '@/pages/admin/question/question-edit.vue';
+
 import { useStore } from '@/store';
 const ifNotAuthenticated = (to: any, from: any, next: any) => {
   if (!useStore().getters.getUserToken) {
@@ -119,6 +122,24 @@ const routes: Array<RouteRecordRaw> = [
         name: 'session-edit',
         props: true,
         component: SessionEdit
+      },
+
+      {
+        path: 'question',
+        name: 'question',
+        component: Question
+      },
+      {
+        path: 'question-create',
+        name: 'question-create',
+        props: true,
+        component: QuestionEdit
+      },
+      {
+        path: 'question-edit',
+        name: 'question-edit',
+        props: true,
+        component: QuestionEdit
       },
 
       // {

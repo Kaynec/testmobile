@@ -59,15 +59,10 @@
             id="checkBoxes"
             :style="[show ? { display: 'none' } : { display: 'block' }]"
           >
-            <label
-              v-for="session in sessions"
-              :for="session.title"
-              :key="session.title"
-            >
-              <Field
-                @change="setItem($event, session)"
-                :checked="session.checked"
+            <label v-for="session in sessions" :key="session._id">
+              <input
                 name="sessions"
+                v-model="session.checked"
                 type="checkbox"
               />
               {{ session.title }}
@@ -94,6 +89,7 @@ import locale from '../../../../lang/locale.json';
 import router from '@/router';
 import { CourseServiceApi } from '@/api/services/admin/course-service';
 import { SessionServiceApi } from '@/api/services/admin/session-service';
+// import removeDuplicates from '../removeDuplicate';
 const alertify = require('@/assets/alertifyjs/alertify');
 
 export default defineComponent({
@@ -108,56 +104,44 @@ export default defineComponent({
       default: '{}'
     }
   },
-
   setup(props) {
     let model = reactive(JSON.parse(props.course));
-    if (model.sessions) {
-      model.sessions = model.sessions.map((ses: any) => {
-        if (typeof ses === 'string') return { _id: ses };
-      });
-    } else {
-      model.sessions = [];
-    }
-
-    //
+    model.sessions = model.sessions ? model.sessions : [];
     (window as any).jalaliDatepicker.startWatch();
-    //
+    // empty at beggining but we fill it up later
     const sessions = reactive([] as any[]);
     let show = ref<any>(false);
-
+    // getting data from the database
     SessionServiceApi.getAll().then((res) => {
       res.data.data.forEach((ses: any) => {
-        sessions.push(ses);
+        sessions.push(
+          reactive({
+            title: ses.title,
+            _id: ses._id,
+            checked: false
+          })
+        );
       });
-      model.sessions.forEach((item: any) => {
-        sessions.forEach((ses: any) => {
-          if (ses._id === item._id) ses.checked = true;
-          console.log(item.checked);
+      // model sessions get turned into a array of strings in the database so we have to convert value to object
+      if (model.sessions) {
+        model.sessions.forEach((ses: any) => {
+          sessions.forEach((sesion: any) => {
+            if (sesion._id === ses) sesion.checked = true;
+            // we empty the sessions of model since we fill it back up later
+            model.sessions = [];
+          });
         });
-      });
+      }
     });
-    // check or not check of the input
     //
     const save = () => {
-      console.log(model);
-      // checking for duplicates
-      function removeDuplicates(originalArray: any, prop: any) {
-        let newArray: any = [];
-        let lookupObject: any = {};
-
-        for (var i in originalArray) {
-          lookupObject[originalArray[i][prop]] = originalArray[i];
-        }
-
-        for (i in lookupObject) {
-          newArray.push(lookupObject[i]);
-        }
-        return newArray;
-      }
-
-      model.sessions = removeDuplicates(model.sessions, '_id');
+      sessions.forEach((ses: any) => {
+        // if the session equals true we push it to the sessions of model
+        if (ses.checked === true) model.sessions.push({ _id: ses._id });
+      });
 
       // if user has an id update it with the current model otherwise create one
+
       if (model._id) {
         let tmp = {
           title: model.title,
@@ -165,6 +149,7 @@ export default defineComponent({
           orientation: model.orientation,
           sessions: model.sessions
         };
+        //
         CourseServiceApi.update(model._id, tmp).then((result) => {
           alertify.success(result.data.message);
           router.push({
@@ -180,18 +165,6 @@ export default defineComponent({
         });
       }
     };
-    // set the items
-
-    const setItem = (e: any, object: any) => {
-      const obj = { _id: object._id };
-      if (e.target.checked == false) {
-        model.sessions = model.sessions.filter((el: any) => el._id != obj._id);
-      } else if (e.target.checked) {
-        model.sessions = [...model.sessions, obj];
-      }
-      console.log(model);
-    };
-
     // cancel
     const cancel = () => {
       router.push({
@@ -206,6 +179,7 @@ export default defineComponent({
 
     const validateSchema = computed(() => {
       yup.setLocale(locale);
+
       return yup.object({
         title: yup.string().required().label('نام درس'),
         code: yup.string().required().label('کد درس'),
@@ -218,9 +192,9 @@ export default defineComponent({
             })
           )
           .optional()
-          .nullable()
       });
     });
+
     return {
       model,
       save,
@@ -228,14 +202,13 @@ export default defineComponent({
       cancel,
       sessions,
       showSelect,
-      show,
-      setItem
+      show
     };
   }
 });
 </script>
 
-<style>
+<style scoped>
 .multipleSelection {
   width: 300px;
   background-color: #bcc2c1;

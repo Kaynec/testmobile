@@ -49,17 +49,11 @@
             id="checkBoxes"
             :style="[showQuestion ? { display: 'block' } : { display: 'none' }]"
           >
-            <label
-              v-for="question in questions"
-              :for="question.title"
-              :key="question.title"
-            >
-              <Field
+            <label v-for="question in questions" :key="question.text">
+              <input
                 name="questions"
-                :id="question.title"
-                :value="JSON.stringify(question)"
+                v-model="question.checked"
                 type="checkbox"
-                @change="setItem"
               />
               {{ question.title }}
             </label>
@@ -85,19 +79,20 @@
             :style="[showCourse ? { display: 'block' } : { display: 'none' }]"
           >
             <label v-for="course in courses" :key="course.title">
-              <Field
+              <input
                 name="course"
+                required
                 type="radio"
-                :value="course"
                 v-model="model.course"
+                :value="{ _id: course._id }"
               />
 
               {{ course.title }}
             </label>
           </div>
         </div>
-        <span>
-          <ErrorMessage name="course" />
+        <span v-if="!!courseError" class="error">
+          {{ courseError }}
         </span>
       </div>
       <!--  -->
@@ -108,7 +103,7 @@
   </div>
 </template>
 <script lang="ts">
-import { computed, defineComponent, reactive, ref } from 'vue';
+import { computed, defineComponent, reactive, ref, watch } from 'vue';
 import '@majidh1/jalalidatepicker/dist/jalaliDatepicker.css';
 import '@majidh1/jalalidatepicker/dist/jalaliDatepicker.js';
 
@@ -136,38 +131,72 @@ export default defineComponent({
 
   setup(props) {
     let model = reactive(JSON.parse(props.session));
+
     model.questions = model.questions ? model.questions : [];
     model.course = model.course ? model.course : {};
     (window as any).jalaliDatepicker.startWatch();
 
     // All The Questions And Courses
-    let questions = [
-      { title: 'One', _id: '1' },
-      { title: 'Two', _id: '2' },
-      { title: 'Three', _id: '3' },
-      { title: 'Four', _id: '4' },
-      { title: 'Five', _id: '5' }
-    ] as any;
-    let courses = [] as any;
-    //
+    const questions = ref([] as any);
+
+    let courses = ref([] as any);
+    watch(model, function () {
+      console.log(model);
+    });
+    // if it's the one we chose then it should be checked otherwise un checked
+    if (model.course && typeof model.course === 'string') {
+      model.course = { _id: model.course };
+    }
+    /////////////////////////////////////////////////////////////////////////
+
     CourseServiceApi.getAll().then((res) => {
       res.data.data.forEach((data: any) => {
-        courses.push(data);
+        if (data._id === model.course) {
+          courses.value.push({
+            title: data.title,
+            _id: data._id,
+            checked: true
+          });
+        } else
+          courses.value.push({
+            title: data.title,
+            _id: data._id,
+            checked: false
+          });
       });
     });
+
+    ///////////////////////////////////////////////////////////////////////////
     QuestionServiceApi.getAll().then((res) => {
-      res.data.data.forEach((data: any) => {
-        questions.push(data);
+      res.data.data.forEach((question: any) => {
+        questions.value.push(
+          reactive({
+            title: question.title,
+            _id: question._id,
+            checked: false
+          })
+        );
       });
+      // model sessions get turned into a array of strings in the database so we have to convert value to object
     });
-    // // // // // // /// /// /// // // /// /// /// /// ///
+    if (model.sessions) {
+      model.sessions.forEach((ques: any) => {
+        questions.value.forEach((question: any) => {
+          if (question._id === ques) question.checked = true;
+          // we empty the sessions of model since we fill it back up later
+          model.questions = [];
+        });
+      });
+    }
+    //
 
     const save = () => {
-      // if user has an id update it with the current model otherwise create one
-      //   model course right now is the full object of course , we just want the id
-      model.course = { _id: model.course._id };
-      console.log(model);
+      // looping through the courses and questions to set the data of model
+      questions.value.forEach((question: any) => {
+        if (question.checked) model.questions.push({ _id: question._id });
+      });
 
+      // choosing to update  or create a new model
       if (model._id) {
         let tmp: any = {
           title: model.title,
@@ -196,21 +225,12 @@ export default defineComponent({
       });
       alertify.notify('cancelled action');
     };
-
+    // UI :: SHOW THE QUESTIONS AND COURSES OR NOT /////
     let showQuestion = ref<boolean>(false);
     let showCourse = ref<boolean>(false);
-    // setting item
-    const setItem = (e: any) => {
-      let object = JSON.parse(e.target.value);
-      object = { _id: object._id };
-      if (e.target.checked == false) {
-        model.questions = model.questions.filter(
-          (el: any) => el._id != object._id
-        );
-      } else if (e.target.checked) {
-        model.questions = [...model.questions, object];
-      }
-    };
+    let courseError = ref('');
+    let questionError = ref('');
+    //
     const validateSchema = computed(() => {
       yup.setLocale(locale);
       return yup.object({
@@ -233,6 +253,7 @@ export default defineComponent({
           .label('سوالات')
       });
     });
+
     return {
       model,
       save,
@@ -242,8 +263,44 @@ export default defineComponent({
       showCourse,
       questions,
       courses,
-      setItem
+      courseError,
+      questionError
     };
   }
 });
 </script>
+
+<style scoped>
+.multipleSelection {
+  width: 300px;
+  background-color: #bcc2c1;
+}
+
+.selectBox {
+  position: relative;
+}
+
+.selectBox select {
+  width: 100%;
+  font-weight: bold;
+}
+
+.overSelect {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+#checkBoxes {
+  border: 1px #8df5e4 solid;
+}
+#checkBoxes label {
+  display: block;
+}
+
+#checkBoxes label:hover {
+  background-color: #4f615e;
+}
+</style>
