@@ -1,12 +1,12 @@
 <template>
   <div class="panel">
     <h2>
-      {{ model._id ? `ویرایش ${model.title}` : 'تعریف فصل جدید' }}
+      {{ model._id ? `ویرایش ${model.title}` : 'تعریف سوال جدید' }}
     </h2>
     <Form @submit="save" :validation-schema="validateSchema" class="mt-5">
       <div class="form-row">
         <div class="form-group col-md-4 col-sm-12">
-          <label for="username">نام فصل:</label>
+          <label for="username">عنوان سوال:</label>
           <Field
             type="text"
             class="form-control"
@@ -20,7 +20,7 @@
         </div>
         <!--  -->
         <div class="form-group col-md-4 col-sm-12">
-          <label for="username"> کد فصل:</label>
+          <label for="username"> کد سوال:</label>
           <Field
             type="text"
             class="form-control"
@@ -214,23 +214,21 @@ export default defineComponent({
     const validateSchema = computed(() => {
       yup.setLocale(locale);
       return yup.object({
-        title: yup.string().min(3).max(255).required().label('عنوان فصل'),
-        code: yup.string().required().label('کد'),
-        course: yup
-          .object({
-            _id: yup.string().required()
-          })
-          .required()
-          .label('درس'),
-        questions: yup
+        text: yup.string().required(),
+        image: yup.string().optional(),
+        session: yup.object({ _id: yup.string().required() }).required(),
+        course: yup.object({ _id: yup.string().required() }).required(),
+        options: yup
           .array()
           .of(
             yup.object({
-              _id: yup.string().required()
+              text: yup.string().required(),
+              image: yup.string().optional(),
+              isAnswer: yup.boolean().optional()
             })
           )
-          .optional()
-          .label('سوالات')
+          .length(4)
+          .required()
       });
     });
     return {

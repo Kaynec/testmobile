@@ -11,8 +11,12 @@ import Profile from '@/pages/profile/profile.vue';
 import ForgotPassword from '@/modules/forgot-password/forgot-password.vue';
 import Mentor from '@/pages/admin/mentor/mentor.vue';
 import MentorEdit from '@/pages/admin/mentor/mentor-edit.vue';
-import Admin from '@/pages/admin/admin/admin.vue';
-import AdminEdit from '@/pages/admin/admin/admin-edit.vue';
+// import Admin from '@/pages/admin/admin/admin.vue';
+// import AdminEdit from '@/pages/admin/admin/admin-edit.vue';
+import Course from '@/pages/admin/course/course.vue';
+import CourseEdit from '@/pages/admin/course/course-edit.vue';
+import Session from '@/pages/admin/session/session.vue';
+import SessionEdit from '@/pages/admin/session/session-edit.vue';
 import { useStore } from '@/store';
 const ifNotAuthenticated = (to: any, from: any, next: any) => {
   if (!useStore().getters.getUserToken) {
@@ -64,7 +68,6 @@ const routes: Array<RouteRecordRaw> = [
         props: true,
         component: StudentEdit
       },
-
       {
         path: 'mentor',
         name: 'mentor',
@@ -82,6 +85,42 @@ const routes: Array<RouteRecordRaw> = [
         props: true,
         component: MentorEdit
       },
+
+      {
+        path: 'course',
+        name: 'course',
+        component: Course
+      },
+      {
+        path: 'course-create',
+        name: 'course-create',
+        props: true,
+        component: CourseEdit
+      },
+      {
+        path: 'course-edit',
+        name: 'course-edit',
+        props: true,
+        component: CourseEdit
+      },
+      {
+        path: 'session',
+        name: 'session',
+        component: Session
+      },
+      {
+        path: 'session-create',
+        name: 'session-create',
+        props: true,
+        component: SessionEdit
+      },
+      {
+        path: 'session-edit',
+        name: 'session-edit',
+        props: true,
+        component: SessionEdit
+      },
+
       // {
       //   path: 'admin',
       //   name: 'admin',

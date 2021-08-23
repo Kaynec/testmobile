@@ -1,8 +1,8 @@
 import { instance } from '../../apiclient';
 import { UserDocuments } from '@/@types';
-class CourseService {
+class QuestionService {
   async get(id: string) {
-    return instance.get(`course/${id}`, {
+    return instance.get(`question/${id}`, {
       headers: {
         // Overwrite Axios's automatically set Content-Type
         'Content-Type': 'application/json'
@@ -10,23 +10,23 @@ class CourseService {
     });
   }
   async getAll() {
-    return instance.get(`course`, {
+    return instance.get(`question`, {
       headers: {
         // Overwrite Axios's automatically set Content-Type
         'Content-Type': 'application/json'
       }
     });
   }
-  async create(course: any) {
-    return instance.post(`course`, course, {
+  async create(user: UserDocuments) {
+    return instance.post(`question`, user, {
       headers: {
         // Overwrite Axios's automatically set Content-Type
         'Content-Type': 'application/json'
       }
     });
   }
-  async update(id: string, course: any) {
-    return instance.put(`course/${id}`, course, {
+  async update(id: string, user: Partial<UserDocuments>) {
+    return instance.put(`question/${id}`, user, {
       headers: {
         // Overwrite Axios's automatically set Content-Type
         'Content-Type': 'application/json'
@@ -34,7 +34,7 @@ class CourseService {
     });
   }
   async delete(id: string) {
-    return instance.delete(`course/${id}`, {
+    return instance.delete(`question/${id}`, {
       headers: {
         // Overwrite Axios's automatically set Content-Type
         'Content-Type': 'application/json'
@@ -43,4 +43,4 @@ class CourseService {
   }
 }
 
-export const CourseServiceApi = new CourseService();
+export const QuestionServiceApi = new QuestionService();
