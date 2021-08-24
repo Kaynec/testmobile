@@ -52,12 +52,7 @@
             :style="[showCourse ? { display: 'block' } : { display: 'none' }]"
           >
             <label v-for="course in courses" :key="course.title">
-              <input
-                required
-                type="radio"
-                :value="course"
-                v-model="model.course"
-              />
+              <input type="radio" :value="course" v-model="model.course" />
 
               {{ course.title }}
             </label>
@@ -118,9 +113,35 @@
             type="file"
             accept="image/png, image/jpeg"
             class="form-control"
-            :value="model.options[0].image"
             @change="onFileChange($event, 0)"
           />
+        </div>
+
+        <!-- is answer -->
+        <!--  -->
+        <div class="form-group col-md-4 col-sm-12 answer">
+          <label> ? isAnswer </label> <br />
+          <label>
+            <input
+              type="radio"
+              name="model.options[0].isAnswer"
+              :value="true"
+              v-model="model.options[0].isAnswer"
+            />
+
+            true
+          </label>
+
+          <label>
+            <input
+              type="radio"
+              :value="false"
+              name="model.options[0].isAnswer"
+              v-model="model.options[0].isAnswer"
+            />
+
+            false
+          </label>
         </div>
       </div>
       <!--  Second Option Text  -->
@@ -142,11 +163,36 @@
             accept="image/png, image/jpeg"
             class="form-control"
             id="image"
-            :value="model.options[1].image"
             @change="onFileChange($event, 1)"
           />
         </div>
+        <!--  -->
+        <div class="form-group col-md-4 col-sm-12 answer">
+          <label> ? isAnswer </label> <br />
+          <label>
+            <input
+              type="radio"
+              name="model.options[1].isAnswer"
+              :value="true"
+              v-model="model.options[1].isAnswer"
+            />
+
+            true
+          </label>
+
+          <label>
+            <input
+              type="radio"
+              :value="false"
+              name="model.options[1].isAnswer"
+              v-model="model.options[1].isAnswer"
+            />
+
+            false
+          </label>
+        </div>
       </div>
+
       <!--  -->
       <!-- Third Option Text  -->
 
@@ -168,9 +214,34 @@
             accept="image/png, image/jpeg"
             class="form-control"
             id="image"
-            :value="model.options[2].image"
             @change="onFileChange($event, 2)"
           />
+        </div>
+        <!--  -->
+        <!--  -->
+        <div class="form-group col-md-4 col-sm-12 answer">
+          <label> ? isAnswer </label> <br />
+          <label>
+            <input
+              type="radio"
+              name="model.options[2].isAnswer"
+              :value="true"
+              v-model="model.options[2].isAnswer"
+            />
+
+            true
+          </label>
+
+          <label>
+            <input
+              type="radio"
+              :value="false"
+              name="model.options[2].isAnswer"
+              v-model="model.options[2].isAnswer"
+            />
+
+            false
+          </label>
         </div>
       </div>
       <!--  -->
@@ -195,24 +266,51 @@
             accept="image/png, image/jpeg"
             class="form-control"
             id="image"
-            :value="model.options[3].image"
             @change="onFileChange($event, 3)"
           />
         </div>
+        <!--  -->
+        <div class="form-group col-md-4 col-sm-12 answer">
+          <label> ? isAnswer </label> <br />
+          <label>
+            <input
+              type="radio"
+              name="model.options[3].isAnswer"
+              :value="true"
+              v-model="model.options[3].isAnswer"
+            />
+
+            true
+          </label>
+
+          <label>
+            <input
+              type="radio"
+              :value="false"
+              name="model.options[3].isAnswer"
+              v-model="model.options[3].isAnswer"
+            />
+
+            false
+          </label>
+        </div>
+        <!--  -->
       </div>
+      <br />
       <span>
-        <Errormessage name="options" />
+        <ErrorMessage class="form-text text-danger" name="options" />
       </span>
+      <br />
       <!--  -->
       <!-- End Of Row -->
 
-      <button class="btn btn-default ml-3 mt-4" @click="cancel()">برگشت</button>
+      <button class="btn btn-default ml-3 mt-4" @click="cancel">برگشت</button>
       <button type="submit" class="btn btn-default mt-4">ذخیره</button>
     </Form>
   </div>
 </template>
 <script lang="ts">
-import { computed, defineComponent, reactive, ref } from 'vue';
+import { computed, defineComponent, reactive, ref, watchEffect } from 'vue';
 import '@majidh1/jalalidatepicker/dist/jalaliDatepicker.css';
 import '@majidh1/jalalidatepicker/dist/jalaliDatepicker.js';
 
@@ -243,11 +341,12 @@ export default defineComponent({
     model.image = model.image ? model.image : '';
     // Setting The Options Array Of The Model
     model.options = model.options || [
-      { image: '', text: '' },
-      { image: '', text: '' },
-      { image: '', text: '' },
-      { image: '', text: '' }
+      { image: '', text: '', isAnswer: null },
+      { image: '', text: '', isAnswer: null },
+      { image: '', text: '', isAnswer: null },
+      { image: '', text: '', isAnswer: null }
     ];
+    //
     //
     model.course = model.course ? model.course : {};
     model.session = model.session ? model.session : {};
@@ -287,20 +386,20 @@ export default defineComponent({
       getBase64(files[0]).then((strFile) => {
         idx === 'test'
           ? (model.image = strFile)
-          : console.log(
-              model.options[idx].image,
-              strFile,
-              (model.options[idx].image = strFile)
-            );
+          : (model.options[idx] = {
+              text: model.options[idx].text,
+              image: strFile,
+              isAnswer: model.options[idx].isAnswer
+            });
       });
-      console.log(model);
-      // (model.options[idx].image = strFile
     };
-
+    watchEffect(function () {
+      console.log(model);
+    });
     const save = () => {
       // if user has an id update it with the current model otherwise create one
       //   model course right now is the full object of course , we just want the id
-
+      console.log(model);
       if (model._id) {
         let tmp: any = {
           title: model.title,
@@ -310,14 +409,14 @@ export default defineComponent({
         QuestionServiceApi.update(model._id, tmp).then((result) => {
           alertify.success(result.data.message);
           router.push({
-            name: 'session'
+            name: 'question'
           });
         });
       } else {
         QuestionServiceApi.create(model).then((result) => {
           alertify.success(result.data.message);
           router.push({
-            name: 'session'
+            name: 'question'
           });
         });
       }
@@ -325,14 +424,14 @@ export default defineComponent({
     // cancel //
     const cancel = () => {
       router.push({
-        name: 'session'
+        name: 'question'
       });
       alertify.notify('cancelled action');
     };
 
     let showSession = ref<boolean>(false);
     let showCourse = ref<boolean>(false);
-    let showOptions = ref<boolean>(false);
+
     // setting item //
     const validateSchema = computed(() => {
       yup.setLocale(locale);
@@ -360,15 +459,15 @@ export default defineComponent({
       validateSchema,
       cancel,
       showSession,
-      showOptions,
       showCourse,
       courses,
+      sessions,
       onFileChange
     };
   }
 });
 </script>
-<style scoped>
+<style lang="scss" scoped>
 .multipleSelection {
   width: 300px;
   background-color: #bcc2c1;
@@ -389,6 +488,15 @@ export default defineComponent({
   right: 0;
   top: 0;
   bottom: 0;
+}
+.answer {
+  position: relative;
+  right: 4rem;
+  transform: translateY(50%);
+
+  input {
+    margin-inline: 5px;
+  }
 }
 
 #checkBoxes {
