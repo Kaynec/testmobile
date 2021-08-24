@@ -28,11 +28,10 @@
             class="form-control"
             id="image"
             name="image"
+            @blur="v$.image.$touch()"
             @change="onFileChange($event)"
           />
-          <span class="form-text text-danger" v-if="v$.image.$error">
-            عنوان سوال باید بیشتر از سه حرف باشد
-          </span>
+          <span class="form-text text-danger" v-if="v$.image.$error"> </span>
         </div>
       </div>
 
@@ -56,6 +55,7 @@
                 type="radio"
                 :value="{ _id: course._id }"
                 v-model="model.course"
+                @blur="v$.course.$touch()"
               />
 
               {{ course.title }}
@@ -84,6 +84,7 @@
                 type="radio"
                 :value="{ _id: session._id }"
                 v-model="model.session"
+                @blur="v$.session.$touch()"
               />
 
               {{ session.title }}
@@ -417,11 +418,7 @@ export default defineComponent({
       getBase64(files[0]).then((strFile) => {
         idx === 'test'
           ? (model.image = strFile)
-          : (model.options[idx] = {
-              text: model.options[idx].text,
-              image: strFile,
-              isAnswer: model.options[idx].isAnswer
-            });
+          : (model.options[idx].image = strFile);
       });
     };
 
@@ -431,6 +428,7 @@ export default defineComponent({
 
     //
     const save = () => {
+      // if we haven't c
       model.course =
         typeof model.course === 'string'
           ? (model.course = { _id: model.course })
@@ -445,22 +443,14 @@ export default defineComponent({
         if (!el.image) return { text: el.text, isAnswer: el.isAnswer };
         return { text: el.text, image: el.image, isAnswer: el.isAnswer };
       });
-      const createObject = () => {
-        if (!model.image) {
-          return {
-            text: model.text,
-            options: model.options,
-            course: model.course,
-            session: model.session
-          };
-        }
-      };
-
       v$.value.$touch();
-      if (v$.value.$invalid) {
-        console.log(v$.value.$errors);
-        console.log(model);
+      const newModel: any = {};
+      for (const [key, value] of Object.entries(model)) {
+        if (value && JSON.stringify(value) != '{}') {
+          newModel[key] = value;
+        }
       }
+      // console.log(newModel);
       if (!v$.value.$invalid) {
         if (model._id) {
           let tmp: any = {
@@ -475,7 +465,7 @@ export default defineComponent({
             });
           });
         } else {
-          QuestionServiceApi.create(createObject() as any).then((result) => {
+          QuestionServiceApi.create(newModel).then((result) => {
             alertify.success(result.data.message);
             router.push({
               name: 'question'
@@ -551,12 +541,12 @@ export default defineComponent({
   background-color: #4f615e;
 }
 
-// .span {
-//   font-weight: 700;
-//   margin: 2rem 0;
-//   color: #010127 207, 236;
-//   font-family: helvetica, arial;
-//   font-size: 2rem;
-//   border-bottom: 4px solid gray;
-// }
+.span {
+  font-weight: 700;
+  margin: 2rem 0;
+  color: #010127 207, 236;
+  font-family: helvetica, arial;
+  font-size: 2rem;
+  border-bottom: 4px solid gray;
+}
 </style>

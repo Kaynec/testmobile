@@ -3,41 +3,48 @@
     <h2>
       {{ model._id ? `ویرایش ${model.title}` : 'تعریف فصل جدید' }}
     </h2>
-    <Form @submit="save" :validation-schema="validateSchema" class="mt-5">
+    <form @submit.prevent="save" class="mt-5">
       <div class="form-row">
         <div class="form-group col-md-4 col-sm-12">
-          <label for="username">نام فصل:</label>
-          <Field
+          <label for="title">نام فصل:</label>
+          <input
             type="text"
             class="form-control"
             id="title"
-            name="title"
             v-model="model.title"
+            @blur="v$.title.$touch()"
           />
-          <span class="form-text text-danger">
-            <ErrorMessage name="title" />
+          <span
+            v-for="error in v$.title.$errors"
+            :key="error.id"
+            class="form-text text-danger"
+          >
+            {{ error.$message }}
           </span>
         </div>
         <!--  -->
         <div class="form-group col-md-4 col-sm-12">
-          <label for="username"> کد فصل:</label>
-          <Field
+          <label for="code"> کد فصل:</label>
+          <input
             type="text"
             class="form-control"
             id="code"
-            name="code"
             v-model="model.code"
+            @blur="v$.code.$touch()"
           />
-          <span class="form-text text-danger">
-            <ErrorMessage name="code" />
+          <span
+            v-for="error in v$.code.$errors"
+            :key="error.id"
+            class="form-text text-danger"
+          >
+            {{ error.$message }}
           </span>
         </div>
-        <!--  -->
         <!--  !!!!   Courses   !!!! -->
       </div>
       <div class="form-row">
         <div class="form-group col-md-4 col-sm-12">
-          <label> سوال مرتبط </label>
+          <label> سوالات مرتبط </label>
           <div class="selectBox" @click="() => (showQuestion = !showQuestion)">
             <select>
               <option>Select options</option>
@@ -53,14 +60,19 @@
               <input
                 name="questions"
                 v-model="question.checked"
+                @blur="v$.questions.$touch()"
                 type="checkbox"
               />
-              {{ question.title }}
+              {{ question.text }}
             </label>
           </div>
         </div>
-        <span>
-          <ErrorMessage name="questions" />
+        <span
+          v-for="error in v$.questions.$errors"
+          :key="error.id"
+          class="form-text text-danger"
+        >
+          {{ error.$message }}
         </span>
       </div>
       <!--  !!!!   Questions    !!!!  -->
@@ -81,9 +93,9 @@
             <label v-for="course in courses" :key="course.title">
               <input
                 name="course"
-                required
                 type="radio"
                 v-model="model.course"
+                @blur="v$.course.$touch()"
                 :value="{ _id: course._id }"
               />
 
@@ -91,15 +103,19 @@
             </label>
           </div>
         </div>
-        <span v-if="!!courseError" class="error">
-          {{ courseError }}
+        <span
+          v-for="error in v$.course.$errors"
+          :key="error.id"
+          class="form-text text-danger"
+        >
+          {{ error.$message }}
         </span>
       </div>
       <!--  -->
 
       <button class="btn btn-default ml-3 mt-4" @click="cancel()">برگشت</button>
       <button type="submit" class="btn btn-default mt-4">ذخیره</button>
-    </Form>
+    </form>
   </div>
 </template>
 <script lang="ts">
@@ -110,18 +126,12 @@ import '@majidh1/jalalidatepicker/dist/jalaliDatepicker.js';
 import { CourseServiceApi } from '@/api/services/admin/course-service';
 import { QuestionServiceApi } from '@/api/services/admin/question-service';
 import { SessionServiceApi } from '@/api/services/admin/session-service';
-import { Form, Field, ErrorMessage } from 'vee-validate';
-import * as yup from 'yup';
-import locale from '../../../../lang/locale.json';
 import router from '@/router';
+import useVuelidate from '@vuelidate/core';
+import { helpers, minLength, required } from '@vuelidate/validators';
 const alertify = require('@/assets/alertifyjs/alertify');
 
 export default defineComponent({
-  components: {
-    Form,
-    Field,
-    ErrorMessage
-  },
   props: {
     session: {
       type: String,
@@ -132,37 +142,33 @@ export default defineComponent({
   setup(props) {
     let model = reactive(JSON.parse(props.session));
 
-    model.questions = model.questions ? model.questions : [];
-    model.course = model.course ? model.course : {};
+    model =
+      JSON.stringify(model) === '{}'
+        ? reactive({
+            title: '',
+            code: '',
+            course: {},
+            questions: []
+          })
+        : model;
+    //
     (window as any).jalaliDatepicker.startWatch();
 
     // All The Questions And Courses
     const questions = ref([] as any);
-
-    let courses = ref([] as any);
-    watch(model, function () {
-      console.log(model);
-    });
+    const courses = ref([] as any);
     // if it's the one we chose then it should be checked otherwise un checked
     if (model.course && typeof model.course === 'string') {
-      model.course = { _id: model.course };
+      model.course = reactive({ _id: model.course });
     }
     /////////////////////////////////////////////////////////////////////////
 
     CourseServiceApi.getAll().then((res) => {
       res.data.data.forEach((data: any) => {
-        if (data._id === model.course) {
-          courses.value.push({
-            title: data.title,
-            _id: data._id,
-            checked: true
-          });
-        } else
-          courses.value.push({
-            title: data.title,
-            _id: data._id,
-            checked: false
-          });
+        courses.value.push({
+          title: data.title,
+          _id: data._id
+        });
       });
     });
 
@@ -171,7 +177,7 @@ export default defineComponent({
       res.data.data.forEach((question: any) => {
         questions.value.push(
           reactive({
-            title: question.title,
+            text: question.text,
             _id: question._id,
             checked: false
           })
@@ -184,7 +190,7 @@ export default defineComponent({
         questions.value.forEach((question: any) => {
           if (question._id === ques) question.checked = true;
           // we empty the sessions of model since we fill it back up later
-          model.questions = [];
+          model.questions = reactive([]);
         });
       });
     }
@@ -195,29 +201,64 @@ export default defineComponent({
       questions.value.forEach((question: any) => {
         if (question.checked) model.questions.push({ _id: question._id });
       });
-
-      // choosing to update  or create a new model
-      if (model._id) {
-        let tmp: any = {
-          title: model.title,
-          code: model.code,
-          questions: model.questions
-        };
-        SessionServiceApi.update(model._id, tmp).then((result) => {
-          alertify.success(result.data.message);
-          router.push({
-            name: 'session'
+      /// error handeling
+      v$.value.$touch();
+      if (!v$.value.$invalid) {
+        if (model._id) {
+          let tmp: any = {
+            title: model.title,
+            code: model.code,
+            questions: model.questions
+          };
+          SessionServiceApi.update(model._id, tmp).then((result) => {
+            alertify.success(result.data.message);
+            router.push({
+              name: 'session'
+            });
           });
-        });
-      } else {
-        SessionServiceApi.create(model).then((result) => {
-          alertify.success(result.data.message);
-          router.push({
-            name: 'session'
+        } else {
+          SessionServiceApi.create(model).then((result) => {
+            alertify.success(result.data.message);
+            router.push({
+              name: 'session'
+            });
           });
-        });
+        }
       }
     };
+
+    // Validations
+    const rules = computed(() => ({
+      title: {
+        required: helpers.withMessage('عتوان فصل را وارد کنید', required),
+        minLength: helpers.withMessage(
+          'عتوان باید حدقا 3 حرف باشد',
+          minLength(3)
+        )
+      },
+      code: {
+        required: helpers.withMessage('کد فصل را وارد کنید', required),
+        minLength: helpers.withMessage(
+          'عتوان باید حدقا 2 حرف باشد',
+          minLength(3)
+        )
+      },
+      course: {
+        required: helpers.withMessage(' لطفا یک درس را انتخاب کنید', required)
+      },
+      questions: {
+        $each: {
+          _id: {
+            required: helpers.withMessage(
+              'id سوال انتخابی صحیح نیست ',
+              required
+            )
+          }
+        }
+      }
+    }));
+
+    const v$ = useVuelidate(rules, model);
     // cancel //
     const cancel = () => {
       router.push({
@@ -228,43 +269,17 @@ export default defineComponent({
     // UI :: SHOW THE QUESTIONS AND COURSES OR NOT /////
     let showQuestion = ref<boolean>(false);
     let showCourse = ref<boolean>(false);
-    let courseError = ref('');
-    let questionError = ref('');
     //
-    const validateSchema = computed(() => {
-      yup.setLocale(locale);
-      return yup.object({
-        title: yup.string().min(3).max(255).required().label('عنوان فصل'),
-        code: yup.string().required().label('کد'),
-        course: yup
-          .object({
-            _id: yup.string().required()
-          })
-          .required()
-          .label('درس'),
-        questions: yup
-          .array()
-          .of(
-            yup.object({
-              _id: yup.string().required()
-            })
-          )
-          .optional()
-          .label('سوالات')
-      });
-    });
 
     return {
       model,
       save,
-      validateSchema,
       cancel,
       showQuestion,
       showCourse,
       questions,
       courses,
-      courseError,
-      questionError
+      v$
     };
   }
 });
