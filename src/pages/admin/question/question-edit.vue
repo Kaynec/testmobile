@@ -15,7 +15,7 @@
             @blur="v$.text.$touch()"
           />
           <span class="form-text text-danger" v-if="v$.text.$error">
-            Error
+            عنوان سوال باید بیشتر از سه حرف باشد
           </span>
         </div>
         <!--  -->
@@ -30,8 +30,8 @@
             name="image"
             @change="onFileChange($event)"
           />
-          <span class="form-text text-danger">
-            <!-- <ErrorMessage name="image" /> -->
+          <span class="form-text text-danger" v-if="v$.image.$error">
+            عنوان سوال باید بیشتر از سه حرف باشد
           </span>
         </div>
       </div>
@@ -61,9 +61,8 @@
               {{ course.title }}
             </label>
           </div>
-
           <span class="form-text text-danger" v-if="v$.course.$error">
-            لطفا درس مورد نظر را انتخاب کنید
+            لطفا یک گزینه را انتخاب کنید
           </span>
         </div>
         <!-- Session -->
@@ -92,7 +91,7 @@
           </div>
 
           <span class="form-text text-danger" v-if="v$.session.$error">
-            لطفا فصل مورد نظر را انتخاب کنید
+            لطفا یک گزینه را انتخاب کنید
           </span>
         </div>
       </div>
@@ -300,8 +299,8 @@
         <!--  -->
       </div>
       <br />
-      <span>
-        <!-- <ErrorMessage class="form-text text-danger" name="options" /> -->
+      <span class="form-text text-danger" v-if="v$.options.$error">
+        لطفا موارد صحیح انتخاب کنید
       </span>
       <br />
       <!--  -->
@@ -320,9 +319,6 @@ import '@majidh1/jalalidatepicker/dist/jalaliDatepicker.js';
 import { CourseServiceApi } from '@/api/services/admin/course-service';
 import { QuestionServiceApi } from '@/api/services/admin/question-service';
 import { SessionServiceApi } from '@/api/services/admin/session-service';
-// import { Form, input, ErrorMessage } from 'vee-validate';
-// import * as yup from 'yup';
-// import locale from '../../../../lang/locale.json';
 import router from '@/router';
 const alertify = require('@/assets/alertifyjs/alertify');
 
@@ -342,7 +338,7 @@ export default defineComponent({
 
     model =
       JSON.stringify(model) === '{}'
-        ? {
+        ? reactive({
             text: '',
             image: '',
             session: {},
@@ -369,7 +365,7 @@ export default defineComponent({
                 isAnswer: false
               }
             ]
-          }
+          })
         : model;
     //
     const imageRule = helpers.regex('image', /\.(gif|jpe?g|tiff|png)$/);
@@ -380,19 +376,19 @@ export default defineComponent({
       session: { required, _id: { required } },
       options: {
         required,
-        each: {
+        $each: {
           text: { required, minLength: minLength(3) },
           image: { imageRule },
           isAnswer: {}
         }
       }
     }));
+    //
     (window as any).jalaliDatepicker.startWatch();
-
     // All The Questions And Courses
     let courses = reactive([] as any);
     let sessions = reactive([] as any);
-    // // /// /// /// /// / / /  // / / / / / Change The Image to Base64
+    ///////////// Change The Image to Base64
     const getBase64 = (file: any) => {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -401,20 +397,16 @@ export default defineComponent({
         reader.onerror = (error) => reject(error);
       });
     };
-    //
+    /////////////
     CourseServiceApi.getAll().then((res) => {
       res.data.data.forEach((data: any) => {
-        if (data._id === model.course || data._id === model.course._id)
-          model.course = { _id: model.course };
-        else courses.push(data);
+        courses.push(data);
       });
     });
     // we use this syntax because the session and course are initially strings
     SessionServiceApi.getAll().then((res) => {
       res.data.data.forEach((data: any) => {
-        if (data._id === model.course || data._id === model.session._id)
-          model.session = { _id: model.session };
-        else sessions.push(data);
+        sessions.push(data);
       });
     });
 
@@ -433,7 +425,20 @@ export default defineComponent({
       });
     };
 
+    // validation
+
+    const v$ = useVuelidate(rules, model);
+
+    //
     const save = () => {
+      model.course =
+        typeof model.course === 'string'
+          ? (model.course = { _id: model.course })
+          : model.course;
+      model.session =
+        typeof model.session === 'string'
+          ? (model.session = { _id: model.session })
+          : model.session;
       // if user has an id update it with the current model otherwise create one
       //   model course right now is the full object of course , we just want the id
       model.options = model.options.map((el: any) => {
@@ -450,26 +455,33 @@ export default defineComponent({
           };
         }
       };
-      console.log(model);
-      if (model._id) {
-        let tmp: any = {
-          text: model.text,
-          image: model.image,
-          options: model.options
-        };
-        QuestionServiceApi.update(model._id, tmp).then((result) => {
-          alertify.success(result.data.message);
-          router.push({
-            name: 'question'
+
+      v$.value.$touch();
+      if (v$.value.$invalid) {
+        console.log(v$.value.$errors);
+        console.log(model);
+      }
+      if (!v$.value.$invalid) {
+        if (model._id) {
+          let tmp: any = {
+            text: model.text,
+            image: model.image,
+            options: model.options
+          };
+          QuestionServiceApi.update(model._id, tmp).then((result) => {
+            alertify.success(result.data.message);
+            router.push({
+              name: 'question'
+            });
           });
-        });
-      } else {
-        QuestionServiceApi.create(createObject() as any).then((result) => {
-          alertify.success(result.data.message);
-          router.push({
-            name: 'question'
+        } else {
+          QuestionServiceApi.create(createObject() as any).then((result) => {
+            alertify.success(result.data.message);
+            router.push({
+              name: 'question'
+            });
           });
-        });
+        }
       }
     };
     // cancel //
@@ -482,15 +494,6 @@ export default defineComponent({
 
     let showSession = ref<boolean>(false);
     let showCourse = ref<boolean>(false);
-
-    // validation
-
-    const v$ = useVuelidate(rules, model);
-
-    //
-
-    // setting item //
-
     return {
       model,
       save,
@@ -548,12 +551,12 @@ export default defineComponent({
   background-color: #4f615e;
 }
 
-.span {
-  font-weight: 700;
-  margin: 2rem 0;
-  color: #010127 207, 236;
-  font-family: helvetica, arial;
-  font-size: 2rem;
-  border-bottom: 4px solid gray;
-}
+// .span {
+//   font-weight: 700;
+//   margin: 2rem 0;
+//   color: #010127 207, 236;
+//   font-family: helvetica, arial;
+//   font-size: 2rem;
+//   border-bottom: 4px solid gray;
+// }
 </style>
