@@ -1,28 +1,28 @@
 <template>
   <div class="panel">
     <h2>
-      {{ model._id ? `ویرایش ${model.title}` : 'تعریف سوال جدید' }}
+      {{ model._id ? `ویرایش ${model.text}` : 'تعریف سوال جدید' }}
     </h2>
-    <Form @submit="save" :validation-schema="validateSchema" class="mt-5">
+    <form @submit.prevent="save" class="mt-5">
       <div class="form-row">
         <div class="form-group col-md-4 col-sm-12">
-          <label for="username">عنوان سوال:</label>
-          <Field
+          <label for="text">عنوان سوال:</label>
+          <input
             type="text"
             class="form-control"
             id="text"
-            name="text"
             v-model="model.text"
+            @blur="v$.text.$touch()"
           />
-          <span class="form-text text-danger">
-            <ErrorMessage name="text" />
+          <span class="form-text text-danger" v-if="v$.text.$error">
+            Error
           </span>
         </div>
         <!--  -->
 
         <div class="form-group col-md-4 col-sm-12">
           <label for="image"> تصویر سوال:</label>
-          <Field
+          <input
             type="file"
             accept="image/png, image/jpeg , image/svg"
             class="form-control"
@@ -31,14 +31,14 @@
             @change="onFileChange($event)"
           />
           <span class="form-text text-danger">
-            <ErrorMessage name="image" />
+            <!-- <ErrorMessage name="image" /> -->
           </span>
         </div>
       </div>
 
       <!--  !!!!   Course    !!!!  -->
       <div class="form-row">
-        <div class="form-group col-md-4 col-sm-12">
+        <div class="form-group col-md-4 col-sm-12" v-if="!model._id">
           <label> درس مرتبط </label>
           <div class="selectBox" @click="() => (showCourse = !showCourse)">
             <select>
@@ -52,18 +52,22 @@
             :style="[showCourse ? { display: 'block' } : { display: 'none' }]"
           >
             <label v-for="course in courses" :key="course.title">
-              <input type="radio" :value="course" v-model="model.course" />
+              <input
+                type="radio"
+                :value="{ _id: course._id }"
+                v-model="model.course"
+              />
 
               {{ course.title }}
             </label>
           </div>
 
-          <span>
-            <ErrorMessage name="course" />
+          <span class="form-text text-danger" v-if="v$.course.$error">
+            لطفا درس مورد نظر را انتخاب کنید
           </span>
         </div>
         <!-- Session -->
-        <div class="form-group col-md-4 col-sm-12">
+        <div class="form-group col-md-4 col-sm-12" v-if="!model._id">
           <label> فصل مرتبط </label>
           <div class="selectBox" @click="() => (showSession = !showSession)">
             <select>
@@ -79,8 +83,7 @@
             <label v-for="session in sessions" :key="session.title">
               <input
                 type="radio"
-                required
-                :value="session"
+                :value="{ _id: session._id }"
                 v-model="model.session"
               />
 
@@ -88,8 +91,8 @@
             </label>
           </div>
 
-          <span>
-            <ErrorMessage name="session" />
+          <span class="form-text text-danger" v-if="v$.session.$error">
+            لطفا فصل مورد نظر را انتخاب کنید
           </span>
         </div>
       </div>
@@ -298,7 +301,7 @@
       </div>
       <br />
       <span>
-        <ErrorMessage class="form-text text-danger" name="options" />
+        <!-- <ErrorMessage class="form-text text-danger" name="options" /> -->
       </span>
       <br />
       <!--  -->
@@ -306,50 +309,84 @@
 
       <button class="btn btn-default ml-3 mt-4" @click="cancel">برگشت</button>
       <button type="submit" class="btn btn-default mt-4">ذخیره</button>
-    </Form>
+    </form>
   </div>
 </template>
 <script lang="ts">
-import { computed, defineComponent, reactive, ref, watchEffect } from 'vue';
+import { computed, defineComponent, reactive, ref } from 'vue';
 import '@majidh1/jalalidatepicker/dist/jalaliDatepicker.css';
 import '@majidh1/jalalidatepicker/dist/jalaliDatepicker.js';
 
 import { CourseServiceApi } from '@/api/services/admin/course-service';
 import { QuestionServiceApi } from '@/api/services/admin/question-service';
 import { SessionServiceApi } from '@/api/services/admin/session-service';
-import { Form, Field, ErrorMessage } from 'vee-validate';
-import * as yup from 'yup';
-import locale from '../../../../lang/locale.json';
+// import { Form, input, ErrorMessage } from 'vee-validate';
+// import * as yup from 'yup';
+// import locale from '../../../../lang/locale.json';
 import router from '@/router';
 const alertify = require('@/assets/alertifyjs/alertify');
 
+import useVuelidate from '@vuelidate/core';
+import { required, minLength, helpers } from '@vuelidate/validators';
+
 export default defineComponent({
-  components: {
-    Form,
-    Field,
-    ErrorMessage
-  },
   props: {
-    session: {
+    question: {
       type: String,
       default: '{}'
     }
   },
 
   setup(props) {
-    let model = reactive(JSON.parse(props.session));
-    model.image = model.image ? model.image : '';
-    // Setting The Options Array Of The Model
-    model.options = model.options || [
-      { image: '', text: '', isAnswer: null },
-      { image: '', text: '', isAnswer: null },
-      { image: '', text: '', isAnswer: null },
-      { image: '', text: '', isAnswer: null }
-    ];
+    let model = reactive(JSON.parse(props.question));
+
+    model =
+      JSON.stringify(model) === '{}'
+        ? {
+            text: '',
+            image: '',
+            session: {},
+            course: {},
+            options: [
+              {
+                text: '',
+                image: '',
+                isAnswer: false
+              },
+              {
+                text: '',
+                image: '',
+                isAnswer: false
+              },
+              {
+                text: '',
+                image: '',
+                isAnswer: false
+              },
+              {
+                text: '',
+                image: '',
+                isAnswer: false
+              }
+            ]
+          }
+        : model;
     //
-    //
-    model.course = model.course ? model.course : {};
-    model.session = model.session ? model.session : {};
+    const imageRule = helpers.regex('image', /\.(gif|jpe?g|tiff|png)$/);
+    const rules = computed(() => ({
+      text: { required, minLength: minLength(3) },
+      image: { imageRule },
+      course: { required, _id: { required } },
+      session: { required, _id: { required } },
+      options: {
+        required,
+        each: {
+          text: { required, minLength: minLength(3) },
+          image: { imageRule },
+          isAnswer: {}
+        }
+      }
+    }));
     (window as any).jalaliDatepicker.startWatch();
 
     // All The Questions And Courses
@@ -367,14 +404,16 @@ export default defineComponent({
     //
     CourseServiceApi.getAll().then((res) => {
       res.data.data.forEach((data: any) => {
-        if (data._id === model.course) model.course = { _id: model.course };
+        if (data._id === model.course || data._id === model.course._id)
+          model.course = { _id: model.course };
         else courses.push(data);
       });
     });
     // we use this syntax because the session and course are initially strings
     SessionServiceApi.getAll().then((res) => {
       res.data.data.forEach((data: any) => {
-        if (data._id === model.course) model.session = { _id: model.session };
+        if (data._id === model.course || data._id === model.session._id)
+          model.session = { _id: model.session };
         else sessions.push(data);
       });
     });
@@ -393,17 +432,29 @@ export default defineComponent({
             });
       });
     };
-    watchEffect(function () {
-      console.log(model);
-    });
+
     const save = () => {
       // if user has an id update it with the current model otherwise create one
       //   model course right now is the full object of course , we just want the id
+      model.options = model.options.map((el: any) => {
+        if (!el.image) return { text: el.text, isAnswer: el.isAnswer };
+        return { text: el.text, image: el.image, isAnswer: el.isAnswer };
+      });
+      const createObject = () => {
+        if (!model.image) {
+          return {
+            text: model.text,
+            options: model.options,
+            course: model.course,
+            session: model.session
+          };
+        }
+      };
       console.log(model);
       if (model._id) {
         let tmp: any = {
-          title: model.title,
-          code: model.code,
+          text: model.text,
+          image: model.image,
           options: model.options
         };
         QuestionServiceApi.update(model._id, tmp).then((result) => {
@@ -413,7 +464,7 @@ export default defineComponent({
           });
         });
       } else {
-        QuestionServiceApi.create(model).then((result) => {
+        QuestionServiceApi.create(createObject() as any).then((result) => {
           alertify.success(result.data.message);
           router.push({
             name: 'question'
@@ -432,37 +483,24 @@ export default defineComponent({
     let showSession = ref<boolean>(false);
     let showCourse = ref<boolean>(false);
 
+    // validation
+
+    const v$ = useVuelidate(rules, model);
+
+    //
+
     // setting item //
-    const validateSchema = computed(() => {
-      yup.setLocale(locale);
-      return yup.object({
-        text: yup.string().required(),
-        image: yup.mixed().optional(),
-        session: yup.object({ _id: yup.string().required() }).required(),
-        course: yup.object({ _id: yup.string().required() }).required(),
-        options: yup
-          .array()
-          .of(
-            yup.object({
-              text: yup.string().required(),
-              image: yup.mixed().optional(),
-              isAnswer: yup.boolean().optional()
-            })
-          )
-          .length(4)
-          .required()
-      });
-    });
+
     return {
       model,
       save,
-      validateSchema,
       cancel,
       showSession,
       showCourse,
       courses,
       sessions,
-      onFileChange
+      onFileChange,
+      v$
     };
   }
 });

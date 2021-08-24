@@ -41,6 +41,7 @@ import { baseUrl } from '@/api/apiclient';
 import grid from '@/modules/shared/grid.vue';
 import router from '@/router';
 import { SessionServiceApi } from '@/api/services/admin/session-service';
+import { QuestionServiceApi } from '@/api/services/admin/question-service';
 const $ = require('jquery');
 const alertify = require('../../../assets/alertifyjs/alertify');
 
@@ -68,7 +69,10 @@ export default defineComponent({
         data: 'image',
         responsivePriority: 3,
         render(data: any) {
-          return `<img src=${data}  width="125" height="125"/>`;
+          return `<img src=${
+            data ||
+            'https://images.unsplash.com/photo-1541963463532-d68292c34b19?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxleHBsb3JlLWZlZWR8Mnx8fGVufDB8fHx8&w=1000&q=80'
+          }  width="100" height="100"/>`;
         }
       },
       {
@@ -112,7 +116,7 @@ export default defineComponent({
       alertify.defaults.glossary.ok = 'خیر';
       alertify.confirm('حذف', 'آیا اطمینان دارید؟', function (e: any) {
         if (e) {
-          SessionServiceApi.delete(question._id).then((result) => {
+          QuestionServiceApi.delete(question._id).then((result) => {
             alertify.success(result.data.message);
             (grid.value as any).getDatatable().ajax.reload();
           });
