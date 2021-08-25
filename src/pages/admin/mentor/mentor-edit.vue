@@ -158,7 +158,7 @@
   </div>
 </template>
 <script lang="ts">
-import { computed, defineComponent, onMounted, reactive } from 'vue';
+import { computed, defineComponent } from 'vue';
 import '@majidh1/jalalidatepicker/dist/jalaliDatepicker.css';
 import '@majidh1/jalalidatepicker/dist/jalaliDatepicker.js';
 import { MentorServiceApi } from '@/api/services/admin/mentor-service';

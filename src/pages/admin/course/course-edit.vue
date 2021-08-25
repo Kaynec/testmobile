@@ -127,7 +127,7 @@ export default defineComponent({
     const sessions = reactive([] as any[]);
     let show = ref<any>(false);
     // getting data from the database
-    SessionServiceApi.getAll().then((res) => {
+    SessionServiceApi.getAll({}).then((res) => {
       res.data.data.forEach((ses: any) => {
         sessions.push(
           reactive({

@@ -106,10 +106,10 @@ export default defineComponent({
     const options = reactive({
       gridName: 'session-grid',
       url: `${baseUrl}session`,
-      type: 'GET'
-      // data: (d: any) =< {
-      //   d.extra = 111;
-      // }
+      type: 'GET',
+      data: (d: any) => {
+        // d.filter = { course: { _id: '61269b9df51d734330fc7ff9' } };
+      }
     });
 
     const editSession = (session: any) => {

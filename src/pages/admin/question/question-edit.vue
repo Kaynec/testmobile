@@ -405,7 +405,7 @@ export default defineComponent({
       });
     });
     // we use this syntax because the session and course are initially strings
-    SessionServiceApi.getAll().then((res) => {
+    SessionServiceApi.getAll({}).then((res) => {
       res.data.data.forEach((data: any) => {
         sessions.push(data);
       });

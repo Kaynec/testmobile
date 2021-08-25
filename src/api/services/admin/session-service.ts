@@ -9,11 +9,14 @@ class SessionService {
       }
     });
   }
-  async getAll() {
+  async getAll(filter: any) {
     return instance.get(`session`, {
       headers: {
         // Overwrite Axios's automatically set Content-Type
         'Content-Type': 'application/json'
+      },
+      params: {
+        filter: filter
       }
     });
   }
