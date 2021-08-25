@@ -3,45 +3,54 @@
     <h2>
       {{ model._id ? `ویرایش ${model.title}` : 'تعریف درس جدید' }}
     </h2>
-    <Form @submit="save" :validation-schema="validateSchema" class="mt-5">
+    <form @submit.prevent="save" class="mt-5">
       <div class="form-row">
         <div class="form-group col-md-4 col-sm-12">
           <label for="username">نام درس:</label>
-          <Field
+          <input
             type="text"
             class="form-control"
             id="title"
-            name="title"
             v-model="model.title"
           />
-          <span class="form-text text-danger">
-            <ErrorMessage name="title" />
+          <span
+            v-for="error in v$.title.$errors"
+            :key="error"
+            class="form-text text-danger"
+          >
+            {{ error.$message }}
           </span>
         </div>
         <div class="form-group col-md-4 col-sm-12">
           <label for="code">کد درس:</label>
-          <Field
+          <input
             type="code"
             class="form-control"
             id="code"
-            name="code"
             v-model="model.code"
           />
-          <span class="form-text text-danger">
-            <ErrorMessage name="code" />
+          <span
+            v-for="error in v$.code.$errors"
+            :key="error"
+            class="form-text text-danger"
+          >
+            {{ error.$message }}
           </span>
         </div>
         <div class="form-group col-md-4 col-sm-12">
           <label for="orientation"> رشته:</label>
-          <Field
+          <input
             type="text"
             class="form-control"
             id="orientation"
-            name="orientation"
             v-model="model.orientation"
           />
-          <span class="form-text text-danger">
-            <ErrorMessage name="orientation" />
+          <span
+            v-for="error in v$.orientation.$errors"
+            :key="error"
+            class="form-text text-danger"
+          >
+            {{ error.$message }}
           </span>
         </div>
       </div>
@@ -69,35 +78,33 @@
             </label>
           </div>
         </div>
-        <span>
-          <ErrorMessage name="sessions" />
+        <span
+          v-for="error in v$.sessions.$errors"
+          :key="error"
+          class="form-text text-danger"
+        >
+          {{ error.$message }}
         </span>
       </div>
 
       <button class="btn btn-default ml-3 mt-4" @click="cancel()">برگشت</button>
       <button type="submit" class="btn btn-default mt-4">ذخیره</button>
-    </Form>
+    </form>
   </div>
 </template>
 <script lang="ts">
 import { computed, defineComponent, reactive, ref } from 'vue';
 import '@majidh1/jalalidatepicker/dist/jalaliDatepicker.css';
 import '@majidh1/jalalidatepicker/dist/jalaliDatepicker.js';
-import { Form, Field, ErrorMessage } from 'vee-validate';
-import * as yup from 'yup';
-import locale from '../../../../lang/locale.json';
 import router from '@/router';
 import { CourseServiceApi } from '@/api/services/admin/course-service';
 import { SessionServiceApi } from '@/api/services/admin/session-service';
-// import removeDuplicates from '../removeDuplicate';
+import useVuelidate from '@vuelidate/core';
+import { required, minLength, helpers } from '@vuelidate/validators';
+//
 const alertify = require('@/assets/alertifyjs/alertify');
 
 export default defineComponent({
-  components: {
-    Form,
-    Field,
-    ErrorMessage
-  },
   props: {
     course: {
       type: String,
@@ -106,9 +113,17 @@ export default defineComponent({
   },
   setup(props) {
     let model = reactive(JSON.parse(props.course));
-    model.sessions = model.sessions ? model.sessions : [];
-    (window as any).jalaliDatepicker.startWatch();
-    // empty at beggining but we fill it up later
+    // This decides if model should be the same thing or re created
+    model =
+      JSON.stringify(model) === '{}'
+        ? reactive({
+            title: '',
+            code: '',
+            orientation: '',
+            sessions: reactive([])
+          })
+        : model;
+    // we push the sessions from database to this array
     const sessions = reactive([] as any[]);
     let show = ref<any>(false);
     // getting data from the database
@@ -122,19 +137,21 @@ export default defineComponent({
           })
         );
       });
-      // model sessions get turned into a array of strings in the database so we have to convert value to object
-      if (model.sessions) {
+
+      // model sessions get turned into a array of strings when passed to the component so we have to convert value to object
+      if (model.sessions != []) {
         model.sessions.forEach((ses: any) => {
           sessions.forEach((sesion: any) => {
             if (sesion._id === ses) sesion.checked = true;
             // we empty the sessions of model since we fill it back up later
-            model.sessions = [];
+            model.sessions = reactive([]);
           });
         });
       }
     });
     //
     const save = () => {
+      v$.value.$touch();
       sessions.forEach((ses: any) => {
         // if the session equals true we push it to the sessions of model
         if (ses.checked === true) model.sessions.push({ _id: ses._id });
@@ -177,32 +194,47 @@ export default defineComponent({
       show.value = !show.value;
     };
 
-    const validateSchema = computed(() => {
-      yup.setLocale(locale);
+    const rules = computed(() => ({
+      title: {
+        required: helpers.withMessage('اسم نباید خالی باشد', required),
+        minLength: helpers.withMessage(
+          'اسم باید بیشتر از 3 حرف باشد ',
+          minLength(3)
+        )
+      },
+      code: {
+        required: helpers.withMessage('کد نباید خالی باشد', required),
+        minLength: helpers.withMessage(
+          'کد باید بیشتر از 4 رقم باشد',
+          minLength(4)
+        )
+      },
+      orientation: {
+        required: helpers.withMessage('لطفا رشته را وارد کنید', required),
+        minLength: helpers.withMessage(
+          'رشته باید بیشتر از 2 رقم باشد',
+          minLength(2)
+        )
+      },
+      sessions: {
+        $each: {
+          _id: {
+            required: helpers.withMessage(' Id نمیتواند خالی باشد', required)
+          }
+        }
+      }
+    }));
 
-      return yup.object({
-        title: yup.string().required().label('نام درس'),
-        code: yup.string().required().label('کد درس'),
-        orientation: yup.string().required().label(' رشته'),
-        sessions: yup
-          .array()
-          .of(
-            yup.object({
-              _id: yup.string().required()
-            })
-          )
-          .optional()
-      });
-    });
+    const v$ = useVuelidate(rules, model);
 
     return {
       model,
       save,
-      validateSchema,
       cancel,
       sessions,
       showSelect,
-      show
+      show,
+      v$
     };
   }
 });
