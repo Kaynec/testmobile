@@ -38,21 +38,25 @@
 <script lang="ts">
 import { defineComponent, ref, onMounted, reactive } from 'vue';
 import { baseUrl } from '@/api/apiclient';
+
 import grid from '@/modules/shared/grid.vue';
-import router from '@/router';
-import { SessionServiceApi } from '@/api/services/admin/session-service';
+
 import { QuestionServiceApi } from '@/api/services/admin/question-service';
+import { useRoute } from 'vue-router';
+import router from '@/router';
 const $ = require('jquery');
 const alertify = require('../../../assets/alertifyjs/alertify');
 
-// import { string } from 'yup/lib/locale';
-
 export default defineComponent({
   components: { grid },
+
   setup() {
+    const route = useRoute();
     // ref
     const grid = ref();
     // Data
+    let session: any;
+    if (route.params.session) session = JSON.parse(route.params.session as any);
 
     const columns = reactive([
       {
@@ -81,6 +85,7 @@ export default defineComponent({
         defaultContent: '',
         label: '',
         data: '_id',
+        width: 100,
         action: 'update',
         render: function (data: any) {
           return `<button type="button" data-edit-id="${data}" class="btn btn-default edit-button">ویرایش</button>`;
@@ -91,6 +96,7 @@ export default defineComponent({
         label: '',
         data: '_id',
         action: 'delete',
+        width: 100,
         render: function (data: any) {
           return `<button type="button" data-delete-id="${data}" class="btn btn-danger edit-button">حذف</button>`;
         },
@@ -102,7 +108,12 @@ export default defineComponent({
       gridName: 'question-grid',
       url: `${baseUrl}question`,
       type: 'GET'
-    });
+    } as any);
+    session &&
+      (options.data = (d: any) => {
+        d.filter = { session: session ? { _id: session._id } : '' };
+      });
+    //
 
     const editQuestion = (question: any) => {
       router.push({
@@ -155,7 +166,7 @@ export default defineComponent({
               .filter(function (value: any) {
                 return value._id == id;
               });
-            if (filteredData.length > 0) console.log(filteredData[0]);
+            if (filteredData.length > 0) deleteQuestion(filteredData[0]);
           });
       }
     });

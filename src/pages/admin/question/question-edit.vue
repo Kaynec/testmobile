@@ -19,7 +19,6 @@
           </span>
         </div>
         <!--  -->
-
         <div class="form-group col-md-4 col-sm-12">
           <label for="image"> تصویر سوال:</label>
           <input
@@ -37,7 +36,7 @@
 
       <!--  !!!!   Course    !!!!  -->
       <div class="form-row">
-        <div class="form-group col-md-4 col-sm-12">
+        <div class="form-group col-md-4 col-sm-12" v-if="!model._id">
           <label> درس مرتبط </label>
           <select
             v-model="model.course"
@@ -59,7 +58,7 @@
           </span>
         </div>
         <!-- Session -->
-        <div class="form-group col-md-4 col-sm-12">
+        <div class="form-group col-md-4 col-sm-12" v-if="!model._id">
           <label> فصل مرتبط </label>
 
           <select
@@ -238,7 +237,7 @@
   </div>
 </template>
 <script lang="ts">
-import { computed, defineComponent, reactive, ref, watch } from 'vue';
+import { computed, defineComponent, reactive, ref } from 'vue';
 import { CourseServiceApi } from '@/api/services/admin/course-service';
 import { QuestionServiceApi } from '@/api/services/admin/question-service';
 import { SessionServiceApi } from '@/api/services/admin/session-service';
@@ -365,27 +364,30 @@ export default defineComponent({
         return { text: el.text, image: el.image, isAnswer: el.isAnswer };
       });
       v$.value.$touch();
-      const newModel: any = {};
-      for (const [key, value] of Object.entries(model)) {
-        if (value && JSON.stringify(value) != '{}' && key != '_id') {
-          newModel[key] = value;
-        }
-      }
-      console.log(newModel);
+
       if (!v$.value.$invalid) {
-        QuestionServiceApi.update(model._id, newModel).then((result) => {
-          alertify.success(result.data.message);
-          router.push({
-            name: 'question'
+        let tmp: any = {};
+        model.image && (tmp.image = model.image);
+        model.options && (tmp.options = model.options);
+        model.text && (tmp.text = model.text);
+
+        if (model._id) {
+          QuestionServiceApi.update(model._id, tmp).then((result) => {
+            alertify.success(result.data.message);
+            router.push({
+              name: 'question'
+            });
           });
-        });
-      } else {
-        QuestionServiceApi.create(model).then((result) => {
-          alertify.success(result.data.message);
-          router.push({
-            name: 'question'
+        } else {
+          model.course && (tmp.course = model.course);
+          model.session && (tmp.session = model.session);
+          QuestionServiceApi.create(tmp).then((result) => {
+            alertify.success(result.data.message);
+            router.push({
+              name: 'question'
+            });
           });
-        });
+        }
       }
     };
     // cancel //

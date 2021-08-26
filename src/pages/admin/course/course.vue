@@ -73,9 +73,10 @@ export default defineComponent({
         defaultContent: '',
         label: '',
         data: '_id',
+        width: 100,
         action: 'read',
         render: function (data: any) {
-          return `<button type="button" data-session-id="${data}" class="btn btn-default edit-button">  فصل های این درس  </button>`;
+          return `<button type="button" data-session-id="${data}" class="btn btn-default edit-button">فصل ها</button>`;
         },
         responsivePriority: 2
       },
@@ -86,6 +87,7 @@ export default defineComponent({
         label: '',
         data: '_id',
         action: 'update',
+        width: 100,
         render: function (data: any) {
           return `<button type="button" data-edit-id="${data}" class="btn btn-default edit-button">ویرایش</button>`;
         },
@@ -95,6 +97,7 @@ export default defineComponent({
         label: '',
         data: '_id',
         action: 'delete',
+        width: 100,
         render: function (data: any) {
           return `<button type="button" data-delete-id="${data}" class="btn btn-danger edit-button">حذف</button>`;
         },
@@ -142,15 +145,6 @@ export default defineComponent({
         params: { course: JSON.stringify({}) }
       });
     };
-    // Filter by course
-    const showCourse = (course: any) => {
-      router.push({
-        path: 'session',
-        params: { course: JSON.stringify({ course }) }
-      });
-    };
-
-    //
 
     onMounted(() => {
       if (grid.value.getDatatable()) {
@@ -176,7 +170,12 @@ export default defineComponent({
               .filter(function (value: any) {
                 return value._id == id;
               });
-            if (filteredData.length > 0) showCourse(filteredData[0]);
+            if (filteredData.length >= 0) {
+              router.push({
+                name: 'question',
+                params: { course: JSON.stringify(filteredData[0]) }
+              });
+            }
           });
         grid.value
           .getDatatableBody()

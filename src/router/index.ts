@@ -144,7 +144,6 @@ const routes: Array<RouteRecordRaw> = [
         props: true,
         component: QuestionEdit
       },
-
       // {
       //   path: 'admin',
       //   name: 'admin',
@@ -162,7 +161,6 @@ const routes: Array<RouteRecordRaw> = [
       //   props: true,
       //   component: AdminEdit
       // },
-
       {
         path: 'profile',
         name: 'Profile',

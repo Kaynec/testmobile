@@ -43,7 +43,7 @@
         <!--  !!!!   Courses   !!!! -->
       </div>
       <div class="form-row">
-        <div class="form-group col-md-4 col-sm-12">
+        <div class="form-group col-md-4 col-sm-12" v-if="!model._id">
           <label> درس مرتبط </label>
           <select
             v-model="model.course"
@@ -68,15 +68,6 @@
           </span>
         </div>
       </div>
-
-      <!--  -->
-      <div class="customDiv" v-if="questions.length">
-        <h3 class="h3 text-end">سوالات</h3>
-        <span class="tag" v-for="question in questions" :key="question.text">
-          {{ question.text }}
-        </span>
-      </div>
-      <!--  -->
 
       <button class="btn btn-default ml-3 mt-4" @click="cancel()">برگشت</button>
       <button type="submit" class="btn btn-default mt-4">ذخیره</button>
@@ -145,7 +136,6 @@ export default defineComponent({
     }
     //
     const save = () => {
-      console.log(model);
       /// error handeling
       v$.value.$touch();
       if (!v$.value.$invalid) {

@@ -16,7 +16,7 @@ class SessionService {
         'Content-Type': 'application/json'
       },
       params: {
-        filter: filter
+        filter
       }
     });
   }
