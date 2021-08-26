@@ -48,19 +48,21 @@ const alertify = require('../../../assets/alertifyjs/alertify');
 
 export default defineComponent({
   components: { grid },
-  setup() {
+  props: {
+    course: {
+      type: String
+    }
+  },
+  setup(props) {
+    console.log(props);
     // ref
     const grid = ref();
     // Data
-
     const columns = reactive([
       {
         label: 'نام درس',
         data: 'title',
         responsivePriority: 1,
-        // type: () => {
-        //   return typeof string;
-        // },
         searchPanes: {
           orthogonal: 'sp',
           show: true
@@ -163,7 +165,17 @@ export default defineComponent({
               .filter(function (value: any) {
                 return value._id == id;
               });
-            if (filteredData.length > 0) deleteSession(filteredData[0]);
+
+            // if (filteredData.length > 0) {
+            //   let session = filteredData[0];
+            //   console.log(filteredData);
+            //   if (session.questions)
+            //     alertify.alert(
+            //       'لطفا اول سوالات مربوط به این فصل را حذف نمایید'
+            //     );
+            //   else deleteSession(session);
+            // }
+            console.log(filteredData[0]);
           });
       }
     });

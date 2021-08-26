@@ -56,7 +56,7 @@ export default defineComponent({
 
     const columns = reactive([
       {
-        label: 'محتوا',
+        label: 'عنوان سوال',
         data: 'text',
         responsivePriority: 1,
         searchPanes: {
@@ -155,7 +155,7 @@ export default defineComponent({
               .filter(function (value: any) {
                 return value._id == id;
               });
-            if (filteredData.length > 0) deleteQuestion(filteredData[0]);
+            if (filteredData.length > 0) console.log(filteredData[0]);
           });
       }
     });

@@ -92,6 +92,7 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'course',
         name: 'course',
+        props: true,
         component: Course
       },
       {
@@ -109,6 +110,7 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'session',
         name: 'session',
+        props: true,
         component: Session
       },
       {
@@ -127,6 +129,7 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'question',
         name: 'question',
+        props: true,
         component: Question
       },
       {

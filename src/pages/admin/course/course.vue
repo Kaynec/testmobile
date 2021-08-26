@@ -119,16 +119,21 @@ export default defineComponent({
     };
 
     const deleteCourse = (course: any) => {
-      alertify.defaults.glossary.cancel = 'بله';
-      alertify.defaults.glossary.ok = 'خیر';
-      alertify.confirm('حذف', 'آیا اطمینان دارید؟', function (e: any) {
-        if (e) {
-          CourseServiceApi.delete(course._id).then((result) => {
-            alertify.success(result.data.message);
-            (grid.value as any).getDatatable().ajax.reload();
-          });
-        }
-      });
+      if (course.sessions.length)
+        alertify.alert('لطفا اول فصل های مرتبط با این درس را حذف نمایید');
+      else {
+        console.log(course);
+        alertify.defaults.glossary.cancel = 'بله';
+        alertify.defaults.glossary.ok = 'خیر';
+        alertify.confirm('حذف', 'آیا اطمینان دارید؟', function (e: any) {
+          if (e) {
+            CourseServiceApi.delete(course._id).then((result) => {
+              alertify.success(result.data.message);
+              (grid.value as any).getDatatable().ajax.reload();
+            });
+          }
+        });
+      }
     };
 
     const createCourse = () => {
@@ -137,6 +142,15 @@ export default defineComponent({
         params: { course: JSON.stringify({}) }
       });
     };
+    // Filter by course
+    const showCourse = (course: any) => {
+      router.push({
+        path: 'session',
+        params: { course: JSON.stringify({ course }) }
+      });
+    };
+
+    //
 
     onMounted(() => {
       if (grid.value.getDatatable()) {
@@ -151,6 +165,18 @@ export default defineComponent({
                 return value._id == id;
               });
             if (filteredData.length > 0) editCourse(filteredData[0]);
+          });
+        grid.value
+          .getDatatableBody()
+          .on('click', '[data-session-id]', (e: any) => {
+            let id = $(e.currentTarget).data().sessionId;
+            let filteredData = grid.value
+              .getDatatable()
+              .data()
+              .filter(function (value: any) {
+                return value._id == id;
+              });
+            if (filteredData.length > 0) showCourse(filteredData[0]);
           });
         grid.value
           .getDatatableBody()
