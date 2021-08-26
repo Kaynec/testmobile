@@ -173,7 +173,7 @@ export default defineComponent({
     });
 
     ///////////////////////////////////////////////////////////////////////////
-    QuestionServiceApi.getAll({}).then((res) => {
+    QuestionServiceApi.getAll({ session: { _id: model._id } }).then((res) => {
       res.data.data.forEach((question: any) => {
         questions.value.push(
           reactive({
