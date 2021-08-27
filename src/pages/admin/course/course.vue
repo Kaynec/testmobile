@@ -43,6 +43,7 @@ import router from '@/router';
 const $ = require('jquery');
 const alertify = require('../../../assets/alertifyjs/alertify');
 import { CourseServiceApi } from '@/api/services/admin/course-service';
+import { SessionServiceApi } from '@/api/services/admin/session-service';
 // import { string } from 'yup/lib/locale';
 
 export default defineComponent({
@@ -122,21 +123,35 @@ export default defineComponent({
     };
 
     const deleteCourse = (course: any) => {
-      if (course.sessions.length)
-        alertify.alert('لطفا اول فصل های مرتبط با این درس را حذف نمایید');
-      else {
-        console.log(course);
-        alertify.defaults.glossary.cancel = 'بله';
-        alertify.defaults.glossary.ok = 'خیر';
-        alertify.confirm('حذف', 'آیا اطمینان دارید؟', function (e: any) {
-          if (e) {
-            CourseServiceApi.delete(course._id).then((result) => {
-              alertify.success(result.data.message);
-              (grid.value as any).getDatatable().ajax.reload();
-            });
-          }
-        });
-      }
+      const allQuestions = async () => {
+        const Questions = await SessionServiceApi.getAll({
+          course: { _id: course._id }
+        })
+          .then((res) => {
+            return res.data.data.length > 0;
+          })
+          .then((res) => {
+            return res;
+          });
+        return await Questions;
+      };
+      allQuestions().then((res) => {
+        if (res === true) {
+          alertify.defaults.glossary.ok = 'بله';
+          alertify.alert('هشدار', 'لطفا اول فصل های این درس را حذف کنید');
+        } else {
+          alertify.defaults.glossary.ok = 'خیر';
+          alertify.defaults.glossary.cancel = 'بله';
+          alertify.confirm('حذف', 'آیا اطمینان دارید؟', function (e: any) {
+            if (e) {
+              CourseServiceApi.delete(course._id).then((result) => {
+                alertify.success(result.data.message);
+                (grid.value as any).getDatatable().ajax.reload();
+              });
+            }
+          });
+        }
+      });
     };
 
     const createCourse = () => {
@@ -172,7 +187,7 @@ export default defineComponent({
               });
             if (filteredData.length >= 0) {
               router.push({
-                name: 'question',
+                name: 'session',
                 params: { course: JSON.stringify(filteredData[0]) }
               });
             }

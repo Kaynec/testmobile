@@ -136,14 +136,33 @@ export default defineComponent({
       });
     };
 
-    const deleteSession = (mentor: any) => {
-      alertify.defaults.glossary.cancel = 'بله';
-      alertify.defaults.glossary.ok = 'خیر';
-      alertify.confirm('حذف', 'آیا اطمینان دارید؟', function (e: any) {
-        if (e) {
-          SessionServiceApi.delete(mentor._id).then((result) => {
-            alertify.success(result.data.message);
-            (grid.value as any).getDatatable().ajax.reload();
+    const deleteSession = (session: any) => {
+      const allQuestions = async () => {
+        const Questions = await QuestionServiceApi.getAll({
+          session: { _id: session._id }
+        })
+          .then((res) => {
+            return res.data.data.length > 0;
+          })
+          .then((res) => {
+            return res;
+          });
+        return await Questions;
+      };
+      allQuestions().then((res) => {
+        if (res === true) {
+          alertify.defaults.glossary.ok = 'بله';
+          alertify.alert('هشدار', 'لطفا اول سوالات این فصل را حذف کنید');
+        } else {
+          alertify.defaults.glossary.ok = 'خیر';
+          alertify.defaults.glossary.cancel = 'بله';
+          alertify.confirm('حذف', 'آیا اطمینان دارید؟', function (e: any) {
+            if (e) {
+              SessionServiceApi.delete(session._id).then((result) => {
+                alertify.success(result.data.message);
+                (grid.value as any).getDatatable().ajax.reload();
+              });
+            }
           });
         }
       });

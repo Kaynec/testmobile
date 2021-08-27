@@ -76,8 +76,6 @@
 </template>
 <script lang="ts">
 import { computed, defineComponent, reactive, ref } from 'vue';
-import '@majidh1/jalalidatepicker/dist/jalaliDatepicker.css';
-import '@majidh1/jalalidatepicker/dist/jalaliDatepicker.js';
 
 import { CourseServiceApi } from '@/api/services/admin/course-service';
 import { QuestionServiceApi } from '@/api/services/admin/question-service';
