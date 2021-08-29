@@ -67,6 +67,10 @@
             {{ error.$message }}
           </span>
         </div>
+        <div v-else class="label">
+          <h3>درس مرتبط</h3>
+          <span> {{ currentCourse.title }} </span>
+        </div>
       </div>
 
       <button class="btn btn-default ml-3 mt-4" @click="cancel()">برگشت</button>
@@ -78,7 +82,6 @@
 import { computed, defineComponent, reactive, ref } from 'vue';
 
 import { CourseServiceApi } from '@/api/services/admin/course-service';
-import { QuestionServiceApi } from '@/api/services/admin/question-service';
 import { SessionServiceApi } from '@/api/services/admin/session-service';
 import router from '@/router';
 import useVuelidate from '@vuelidate/core';
@@ -104,17 +107,21 @@ export default defineComponent({
             course: {}
           })
         : model;
-    //
-    (window as any).jalaliDatepicker.startWatch();
-
     // All The Questions And Courses
-    const questions = ref([] as any);
+    let currentCourse = ref({});
     const courses = ref([] as any);
     // if it's the one we chose then it should be checked otherwise un checked
     if (model.course && typeof model.course === 'string') {
       model.course = reactive({ _id: model.course });
     }
-    //////////////////////////////
+    ////////////////////////////// INCASE OF UPDATE SHOW THE COURSE OF THE SESSION
+
+    if (model._id) {
+      CourseServiceApi.get(model.course._id).then((res) => {
+        currentCourse.value = res.data.data;
+      });
+      //
+    }
 
     CourseServiceApi.getAll().then((res) => {
       res.data.data.forEach((data: any) => {
@@ -124,14 +131,6 @@ export default defineComponent({
         });
       });
     });
-
-    if (model._id) {
-      QuestionServiceApi.getAll({ _id: model._id }).then((res) => {
-        res.data.data.forEach((data: any) => {
-          questions.value.push({ title: data.title, _id: data });
-        });
-      });
-    }
     //
     const save = () => {
       /// error handeling
@@ -196,8 +195,8 @@ export default defineComponent({
       save,
       cancel,
       showCourse,
-      questions,
       courses,
+      currentCourse,
       v$
     };
   }
@@ -205,12 +204,14 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-.customDiv {
-  margin: 2rem auto;
-  wordwrap: wrap;
-}
-.tag {
-  margin: 0.5rem;
-  font-weight: 600;
+.label {
+  margin: 3rem 1rem 1rem 0;
+  span {
+    font-size: larger;
+    font-weight: 600;
+    margin-top: 1rem;
+    display: block;
+    border-bottom: 2px solid #333;
+  }
 }
 </style>

@@ -20,6 +20,9 @@ import SessionEdit from '@/pages/admin/session/session-edit.vue';
 import Question from '@/pages/admin/question/question.vue';
 import QuestionEdit from '@/pages/admin/question/question-edit.vue';
 
+import Store from '@/pages/admin/store/store.vue';
+import StoreEdit from '@/pages/admin/store/store-edit.vue';
+
 import { useStore } from '@/store';
 const ifNotAuthenticated = (to: any, from: any, next: any) => {
   if (!useStore().getters.getUserToken) {
@@ -143,6 +146,25 @@ const routes: Array<RouteRecordRaw> = [
         name: 'question-edit',
         props: true,
         component: QuestionEdit
+      },
+
+      {
+        path: 'store',
+        name: 'store',
+        props: true,
+        component: Store
+      },
+      {
+        path: 'store-create',
+        name: 'store-create',
+        props: true,
+        component: StoreEdit
+      },
+      {
+        path: 'store-edit',
+        name: 'store-edit',
+        props: true,
+        component: StoreEdit
       },
       // {
       //   path: 'admin',
