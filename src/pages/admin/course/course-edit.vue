@@ -54,39 +54,16 @@
           </span>
         </div>
       </div>
-      <div class="form-row">
-        <div class="form-group col-md-4 col-sm-12">
-          <label> فصل ها </label>
-          <div class="selectBox" @click="showSelect()">
-            <select>
-              <option>Select options</option>
-            </select>
-            <div class="overSelect"></div>
-          </div>
+      <!--  -->
+      <div class="customDiv" v-if="model._id">
+        <h3 class="h3 text-end">فصل ها</h3>
 
-          <div
-            id="checkBoxes"
-            :style="[show ? { display: 'none' } : { display: 'block' }]"
-          >
-            <label v-for="session in sessions" :key="session._id">
-              <input
-                name="sessions"
-                v-model="session.checked"
-                type="checkbox"
-              />
-              {{ session.title }}
-            </label>
-          </div>
-        </div>
-        <span
-          v-for="error in v$.sessions.$errors"
-          :key="error"
-          class="form-text text-danger"
-        >
-          {{ error.$message }}
+        <span class="tag" v-for="session in sessions" :key="session.title">
+          {{ session.title }}
         </span>
       </div>
 
+      <!--  -->
       <button class="btn btn-default ml-3 mt-4" @click="cancel()">برگشت</button>
       <button type="submit" class="btn btn-default mt-4">ذخیره</button>
     </form>
@@ -111,6 +88,7 @@ export default defineComponent({
       default: '{}'
     }
   },
+
   setup(props) {
     let model = reactive(JSON.parse(props.course));
     // This decides if model should be the same thing or re created
@@ -119,52 +97,28 @@ export default defineComponent({
         ? reactive({
             title: '',
             code: '',
-            orientation: '',
-            sessions: reactive([])
+            orientation: ''
           })
         : model;
     // we push the sessions from database to this array
     const sessions = reactive([] as any[]);
-    let show = ref<any>(false);
     // getting data from the database
-    SessionServiceApi.getAll({}).then((res) => {
-      res.data.data.forEach((ses: any) => {
-        sessions.push(
-          reactive({
-            title: ses.title,
-            _id: ses._id,
-            checked: false
-          })
-        );
-      });
-
-      // model sessions get turned into a array of strings when passed to the component so we have to convert value to object
-      if (model.sessions != []) {
-        model.sessions.forEach((ses: any) => {
-          sessions.forEach((sesion: any) => {
-            if (sesion._id === ses) sesion.checked = true;
-            // we empty the sessions of model since we fill it back up later
-            model.sessions = reactive([]);
-          });
+    if (model._id) {
+      SessionServiceApi.getAll({ _id: model._id }).then((res) => {
+        res.data.data.forEach((ses: any) => {
+          sessions.push(ses);
         });
-      }
-    });
+      });
+    }
     //
     const save = () => {
       v$.value.$touch();
-      sessions.forEach((ses: any) => {
-        // if the session equals true we push it to the sessions of model
-        if (ses.checked === true) model.sessions.push({ _id: ses._id });
-      });
-
       // if user has an id update it with the current model otherwise create one
-
       if (model._id) {
         let tmp = {
           title: model.title,
           code: model.code,
-          orientation: model.orientation,
-          sessions: model.sessions
+          orientation: model.orientation
         };
         //
         CourseServiceApi.update(model._id, tmp).then((result) => {
@@ -189,10 +143,6 @@ export default defineComponent({
       });
       alertify.notify('cancelled action');
     };
-    // showSelect
-    const showSelect = () => {
-      show.value = !show.value;
-    };
 
     const rules = computed(() => ({
       title: {
@@ -215,13 +165,6 @@ export default defineComponent({
           'رشته باید بیشتر از 2 رقم باشد',
           minLength(2)
         )
-      },
-      sessions: {
-        $each: {
-          _id: {
-            required: helpers.withMessage(' Id نمیتواند خالی باشد', required)
-          }
-        }
       }
     }));
 
@@ -232,45 +175,20 @@ export default defineComponent({
       save,
       cancel,
       sessions,
-      showSelect,
-      show,
       v$
     };
   }
 });
 </script>
 
-<style scoped>
-.multipleSelection {
-  width: 300px;
-  background-color: #bcc2c1;
+<style scoped lang="scss">
+.customDiv {
+  width: 50;
+  margin: 0 auto;
+  wordwrap: wrap;
 }
-
-.selectBox {
-  position: relative;
-}
-
-.selectBox select {
-  width: 100%;
-  font-weight: bold;
-}
-
-.overSelect {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-}
-
-#checkBoxes {
-  border: 1px #8df5e4 solid;
-}
-#checkBoxes label {
-  display: block;
-}
-
-#checkBoxes label:hover {
-  background-color: #4f615e;
+.tag {
+  margin: 0.5rem;
+  font-weight: 600;
 }
 </style>

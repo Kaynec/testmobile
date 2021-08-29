@@ -41,6 +41,8 @@ import { baseUrl } from '@/api/apiclient';
 import grid from '@/modules/shared/grid.vue';
 import router from '@/router';
 import { SessionServiceApi } from '@/api/services/admin/session-service';
+import { QuestionServiceApi } from '@/api/services/admin/question-service';
+import { useRoute } from 'vue-router';
 const $ = require('jquery');
 const alertify = require('../../../assets/alertifyjs/alertify');
 
@@ -48,38 +50,36 @@ const alertify = require('../../../assets/alertifyjs/alertify');
 
 export default defineComponent({
   components: { grid },
+  props: {
+    course: {
+      type: String
+    },
+    salam: {
+      type: String
+    }
+  },
+
   setup() {
+    const route = useRoute();
     // ref
     const grid = ref();
+    let course: any;
+    if (route.params.course) {
+      course = JSON.parse(route.params.course as any);
+    }
+    console.log(route.params);
     // Data
-
     const columns = reactive([
       {
         label: 'نام درس',
         data: 'title',
         responsivePriority: 1,
-        // type: () => {
-        //   return typeof string;
-        // },
         searchPanes: {
           orthogonal: 'sp',
           show: true
         }
       },
       { label: 'کد', data: 'code', responsivePriority: 3 },
-
-      {
-        className: 'edit-control',
-        orderable: false,
-        defaultContent: '',
-        label: '',
-        data: '_id',
-        action: 'update',
-        render: function (data: any) {
-          return `<button type="button" data-edit-id="${data}" class="btn btn-default edit-button">ویرایش</button>`;
-        },
-        responsivePriority: 2
-      },
       {
         className: 'edit-control',
         orderable: false,
@@ -87,15 +87,31 @@ export default defineComponent({
         label: '',
         data: '_id',
         action: 'read',
+        width: 100,
         render: function (data: any) {
-          return `<button type="button" data-question-id="${data}" class="btn btn-default edit-button">سوالات مربوطه</button>`;
+          return `<button type="button" data-question-id="${data}" class="btn btn-default edit-button">سوالات</button>`;
         },
         responsivePriority: 2
       },
       {
+        className: 'edit-control',
+        orderable: false,
+        defaultContent: '',
+        label: '',
+        data: '_id',
+        action: 'update',
+        width: 100,
+        render: function (data: any) {
+          return `<button type="button" data-edit-id="${data}" class="btn btn-default edit-button">ویرایش</button>`;
+        },
+        responsivePriority: 2
+      },
+
+      {
         label: '',
         data: '_id',
         action: 'delete',
+        width: 100,
         render: function (data: any) {
           return `<button type="button" data-delete-id="${data}" class="btn btn-danger edit-button">حذف</button>`;
         },
@@ -106,11 +122,12 @@ export default defineComponent({
     const options = reactive({
       gridName: 'session-grid',
       url: `${baseUrl}session`,
-      type: 'GET',
-      data: (d: any) => {
-        // d.filter = { course: { _id: '61269b9df51d734330fc7ff9' } };
-      }
-    });
+      type: 'GET'
+    } as any);
+    course &&
+      (options.data = (d: any) => {
+        d.filter = { course: course ? { _id: course._id } : '' };
+      });
 
     const editSession = (session: any) => {
       router.push({
@@ -119,14 +136,33 @@ export default defineComponent({
       });
     };
 
-    const deleteSession = (mentor: any) => {
-      alertify.defaults.glossary.cancel = 'بله';
-      alertify.defaults.glossary.ok = 'خیر';
-      alertify.confirm('حذف', 'آیا اطمینان دارید؟', function (e: any) {
-        if (e) {
-          SessionServiceApi.delete(mentor._id).then((result) => {
-            alertify.success(result.data.message);
-            (grid.value as any).getDatatable().ajax.reload();
+    const deleteSession = (session: any) => {
+      const allQuestions = async () => {
+        const Questions = await QuestionServiceApi.getAll({
+          session: { _id: session._id }
+        })
+          .then((res) => {
+            return res.data.data.length > 0;
+          })
+          .then((res) => {
+            return res;
+          });
+        return await Questions;
+      };
+      allQuestions().then((res) => {
+        if (res === true) {
+          alertify.defaults.glossary.ok = 'بله';
+          alertify.alert('هشدار', 'لطفا اول سوالات این فصل را حذف کنید');
+        } else {
+          alertify.defaults.glossary.ok = 'خیر';
+          alertify.defaults.glossary.cancel = 'بله';
+          alertify.confirm('حذف', 'آیا اطمینان دارید؟', function (e: any) {
+            if (e) {
+              SessionServiceApi.delete(session._id).then((result) => {
+                alertify.success(result.data.message);
+                (grid.value as any).getDatatable().ajax.reload();
+              });
+            }
           });
         }
       });
@@ -138,7 +174,6 @@ export default defineComponent({
         params: { session: JSON.stringify({}) }
       });
     };
-
     onMounted(() => {
       if (grid.value.getDatatable()) {
         grid.value
@@ -164,6 +199,22 @@ export default defineComponent({
                 return value._id == id;
               });
             if (filteredData.length > 0) deleteSession(filteredData[0]);
+          });
+        grid.value
+          .getDatatableBody()
+          .on('click', '[data-question-id]', (e: any) => {
+            let id = $(e.currentTarget).data().questionId;
+
+            let filteredData = grid.value
+              .getDatatable()
+              .data()
+              .filter(function (value: any) {
+                return value._id == id;
+              })[0];
+            router.push({
+              name: 'question',
+              params: { session: JSON.stringify(filteredData) }
+            });
           });
       }
     });

@@ -43,6 +43,7 @@ import router from '@/router';
 const $ = require('jquery');
 const alertify = require('../../../assets/alertifyjs/alertify');
 import { CourseServiceApi } from '@/api/services/admin/course-service';
+import { SessionServiceApi } from '@/api/services/admin/session-service';
 // import { string } from 'yup/lib/locale';
 
 export default defineComponent({
@@ -73,9 +74,10 @@ export default defineComponent({
         defaultContent: '',
         label: '',
         data: '_id',
+        width: 100,
         action: 'read',
         render: function (data: any) {
-          return `<button type="button" data-session-id="${data}" class="btn btn-default edit-button">  فصل های این درس  </button>`;
+          return `<button type="button" data-session-id="${data}" class="btn btn-default edit-button">فصل ها</button>`;
         },
         responsivePriority: 2
       },
@@ -86,6 +88,7 @@ export default defineComponent({
         label: '',
         data: '_id',
         action: 'update',
+        width: 100,
         render: function (data: any) {
           return `<button type="button" data-edit-id="${data}" class="btn btn-default edit-button">ویرایش</button>`;
         },
@@ -95,6 +98,7 @@ export default defineComponent({
         label: '',
         data: '_id',
         action: 'delete',
+        width: 100,
         render: function (data: any) {
           return `<button type="button" data-delete-id="${data}" class="btn btn-danger edit-button">حذف</button>`;
         },
@@ -119,13 +123,32 @@ export default defineComponent({
     };
 
     const deleteCourse = (course: any) => {
-      alertify.defaults.glossary.cancel = 'بله';
-      alertify.defaults.glossary.ok = 'خیر';
-      alertify.confirm('حذف', 'آیا اطمینان دارید؟', function (e: any) {
-        if (e) {
-          CourseServiceApi.delete(course._id).then((result) => {
-            alertify.success(result.data.message);
-            (grid.value as any).getDatatable().ajax.reload();
+      const allQuestions = async () => {
+        const Questions = await SessionServiceApi.getAll({
+          course: { _id: course._id }
+        })
+          .then((res) => {
+            return res.data.data.length > 0;
+          })
+          .then((res) => {
+            return res;
+          });
+        return await Questions;
+      };
+      allQuestions().then((res) => {
+        if (res === true) {
+          alertify.defaults.glossary.ok = 'بله';
+          alertify.alert('هشدار', 'لطفا اول فصل های این درس را حذف کنید');
+        } else {
+          alertify.defaults.glossary.ok = 'خیر';
+          alertify.defaults.glossary.cancel = 'بله';
+          alertify.confirm('حذف', 'آیا اطمینان دارید؟', function (e: any) {
+            if (e) {
+              CourseServiceApi.delete(course._id).then((result) => {
+                alertify.success(result.data.message);
+                (grid.value as any).getDatatable().ajax.reload();
+              });
+            }
           });
         }
       });
@@ -151,6 +174,23 @@ export default defineComponent({
                 return value._id == id;
               });
             if (filteredData.length > 0) editCourse(filteredData[0]);
+          });
+        grid.value
+          .getDatatableBody()
+          .on('click', '[data-session-id]', (e: any) => {
+            let id = $(e.currentTarget).data().sessionId;
+            let filteredData = grid.value
+              .getDatatable()
+              .data()
+              .filter(function (value: any) {
+                return value._id == id;
+              });
+            if (filteredData.length >= 0) {
+              router.push({
+                name: 'session',
+                params: { course: JSON.stringify(filteredData[0]) }
+              });
+            }
           });
         grid.value
           .getDatatableBody()

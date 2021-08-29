@@ -19,7 +19,6 @@
           </span>
         </div>
         <!--  -->
-
         <div class="form-group col-md-4 col-sm-12">
           <label for="image"> تصویر سوال:</label>
           <input
@@ -39,28 +38,21 @@
       <div class="form-row">
         <div class="form-group col-md-4 col-sm-12" v-if="!model._id">
           <label> درس مرتبط </label>
-          <div class="selectBox" @click="() => (showCourse = !showCourse)">
-            <select>
-              <option>Select options</option>
-            </select>
-            <div class="overSelect"></div>
-          </div>
-
-          <div
-            id="checkBoxes"
-            :style="[showCourse ? { display: 'block' } : { display: 'none' }]"
+          <select
+            v-model="model.course"
+            class="form-select"
+            aria-label="درس را انتخاب کنید "
+            placeholder="Choose a course"
           >
-            <label v-for="course in courses" :key="course.title">
-              <input
-                type="radio"
-                :value="{ _id: course._id }"
-                v-model="model.course"
-                @blur="v$.course.$touch()"
-              />
-
+            <option
+              v-for="course in courses"
+              :key="course.title"
+              @blur="v$.course.$touch()"
+              :value="{ _id: course._id }"
+            >
               {{ course.title }}
-            </label>
-          </div>
+            </option>
+          </select>
           <span class="form-text text-danger" v-if="v$.course.$error">
             لطفا یک گزینه را انتخاب کنید
           </span>
@@ -68,28 +60,21 @@
         <!-- Session -->
         <div class="form-group col-md-4 col-sm-12" v-if="!model._id">
           <label> فصل مرتبط </label>
-          <div class="selectBox" @click="() => (showSession = !showSession)">
-            <select>
-              <option>Select options</option>
-            </select>
-            <div class="overSelect"></div>
-          </div>
 
-          <div
-            id="checkBoxes"
-            :style="[showSession ? { display: 'block' } : { display: 'none' }]"
+          <select
+            v-model="model.session"
+            class="form-select"
+            aria-label="فصل را انتخاب کنید  "
           >
-            <label v-for="session in sessions" :key="session.title">
-              <input
-                type="radio"
-                :value="{ _id: session._id }"
-                v-model="model.session"
-                @blur="v$.session.$touch()"
-              />
-
+            <option
+              v-for="session in filteredSessions"
+              :key="session.title"
+              @blur="v$.session.$touch()"
+              :value="{ _id: session._id }"
+            >
               {{ session.title }}
-            </label>
-          </div>
+            </option>
+          </select>
 
           <span class="form-text text-danger" v-if="v$.session.$error">
             لطفا یک گزینه را انتخاب کنید
@@ -97,17 +82,17 @@
         </div>
       </div>
       <!-- New Row -->
+      <h3 class="span">گزینه صحیح</h3>
 
-      <!--  -->
-      <span class="span"> امکانات </span>
       <div class="form-row">
         <div class="form-group col-md-4 col-sm-12">
-          <label for="username">عنوان سوال :</label>
-          <input
+          <label for="username"> پاسخ 1 :</label>
+          <textarea
             type="text"
             class="form-control"
             v-model="model.options[0].text"
-          />
+          >
+          </textarea>
         </div>
         <!-- first option img -->
         <div class="form-group col-md-4 col-sm-12">
@@ -119,44 +104,27 @@
             @change="onFileChange($event, 0)"
           />
         </div>
-
         <!-- is answer -->
-        <!--  -->
-        <div class="form-group col-md-4 col-sm-12 answer">
-          <label> ? isAnswer </label> <br />
-          <label>
-            <input
-              type="radio"
-              name="model.options[0].isAnswer"
-              :value="true"
-              v-model="model.options[0].isAnswer"
-            />
-
-            true
-          </label>
-
-          <label>
-            <input
-              type="radio"
-              :value="false"
-              name="model.options[0].isAnswer"
-              v-model="model.options[0].isAnswer"
-            />
-
-            false
-          </label>
+        <div class="form-group col-md-4 p-5 col-sm-12 answer">
+          <input
+            class="form-check-input"
+            type="radio"
+            :value="true"
+            name="isAnswer"
+            v-model="model.options[0].isAnswer"
+          />
         </div>
       </div>
       <!--  Second Option Text  -->
       <div class="form-row">
         <div class="form-group col-md-4 col-sm-12">
-          <label for="username">عنوان سوال :</label>
-          <input
+          <label for="username"> پاسخ 2 :</label>
+          <textarea
             type="text"
             class="form-control"
-            id="text"
             v-model="model.options[1].text"
-          />
+          >
+          </textarea>
         </div>
         <!--  Second Option Img -->
         <div class="form-group col-md-4 col-sm-12">
@@ -170,44 +138,27 @@
           />
         </div>
         <!--  -->
-        <div class="form-group col-md-4 col-sm-12 answer">
-          <label> ? isAnswer </label> <br />
-          <label>
-            <input
-              type="radio"
-              name="model.options[1].isAnswer"
-              :value="true"
-              v-model="model.options[1].isAnswer"
-            />
-
-            true
-          </label>
-
-          <label>
-            <input
-              type="radio"
-              :value="false"
-              name="model.options[1].isAnswer"
-              v-model="model.options[1].isAnswer"
-            />
-
-            false
-          </label>
+        <div class="form-group col-md-4 p-5 col-sm-12 answer">
+          <input
+            class="form-check-input"
+            type="radio"
+            :value="true"
+            name="isAnswer"
+            v-model="model.options[1].isAnswer"
+          />
         </div>
       </div>
-
       <!--  -->
       <!-- Third Option Text  -->
-
       <div class="form-row">
         <div class="form-group col-md-4 col-sm-12">
-          <label for="username">عنوان سوال :</label>
-          <input
+          <label for="username"> پاسخ 3 :</label>
+          <textarea
             type="text"
             class="form-control"
-            id="text"
             v-model="model.options[2].text"
-          />
+          >
+          </textarea>
         </div>
         <!--  Third Option Img -->
         <div class="form-group col-md-4 col-sm-12">
@@ -222,44 +173,28 @@
         </div>
         <!--  -->
         <!--  -->
-        <div class="form-group col-md-4 col-sm-12 answer">
-          <label> ? isAnswer </label> <br />
-          <label>
-            <input
-              type="radio"
-              name="model.options[2].isAnswer"
-              :value="true"
-              v-model="model.options[2].isAnswer"
-            />
-
-            true
-          </label>
-
-          <label>
-            <input
-              type="radio"
-              :value="false"
-              name="model.options[2].isAnswer"
-              v-model="model.options[2].isAnswer"
-            />
-
-            false
-          </label>
+        <div class="form-group col-md-4 p-5 col-sm-12 answer">
+          <input
+            class="form-check-input"
+            type="radio"
+            :value="true"
+            name="isAnswer"
+            v-model="model.options[2].isAnswer"
+          />
         </div>
       </div>
       <!--  -->
-
       <!--  -->
       <div class="form-row">
         <!-- Fourth Option Text  -->
         <div class="form-group col-md-4 col-sm-12">
-          <label for="username">عنوان سوال :</label>
-          <input
+          <label for="username"> پاسخ 4 :</label>
+          <textarea
             type="text"
             class="form-control"
-            id="text"
             v-model="model.options[3].text"
-          />
+          >
+          </textarea>
         </div>
         <!--  Fourth Option Img -->
         <div class="form-group col-md-4 col-sm-12">
@@ -273,35 +208,24 @@
           />
         </div>
         <!--  -->
-        <div class="form-group col-md-4 col-sm-12 answer">
-          <label> ? isAnswer </label> <br />
-          <label>
-            <input
-              type="radio"
-              name="model.options[3].isAnswer"
-              :value="true"
-              v-model="model.options[3].isAnswer"
-            />
-
-            true
-          </label>
-
-          <label>
-            <input
-              type="radio"
-              :value="false"
-              name="model.options[3].isAnswer"
-              v-model="model.options[3].isAnswer"
-            />
-
-            false
-          </label>
+        <div class="form-group col-md-4 p-5 col-sm-12 answer">
+          <input
+            class="form-check-input"
+            type="radio"
+            :value="true"
+            name="isAnswer"
+            v-model="model.options[3].isAnswer"
+          />
         </div>
         <!--  -->
       </div>
       <br />
-      <span class="form-text text-danger" v-if="v$.options.$error">
-        لطفا موارد صحیح انتخاب کنید
+      <span
+        class="form-text text-danger"
+        v-for="error in v$.options.$errors"
+        :key="error.id"
+      >
+        {{ error.$message }}
       </span>
       <br />
       <!--  -->
@@ -314,15 +238,11 @@
 </template>
 <script lang="ts">
 import { computed, defineComponent, reactive, ref } from 'vue';
-import '@majidh1/jalalidatepicker/dist/jalaliDatepicker.css';
-import '@majidh1/jalalidatepicker/dist/jalaliDatepicker.js';
-
 import { CourseServiceApi } from '@/api/services/admin/course-service';
 import { QuestionServiceApi } from '@/api/services/admin/question-service';
 import { SessionServiceApi } from '@/api/services/admin/session-service';
 import router from '@/router';
 const alertify = require('@/assets/alertifyjs/alertify');
-
 import useVuelidate from '@vuelidate/core';
 import { required, minLength, helpers } from '@vuelidate/validators';
 
@@ -348,7 +268,7 @@ export default defineComponent({
               {
                 text: '',
                 image: '',
-                isAnswer: false
+                isAnswer: true
               },
               {
                 text: '',
@@ -376,7 +296,11 @@ export default defineComponent({
       course: { required, _id: { required } },
       session: { required, _id: { required } },
       options: {
-        required,
+        required: helpers.withMessage('لطفا تمام موارد را کامل کنید', required),
+        minLength: helpers.withMessage(
+          'لطفا تمام موارد را کامل کنید',
+          minLength(4)
+        ),
         $each: {
           text: { required, minLength: minLength(3) },
           image: { imageRule },
@@ -384,12 +308,10 @@ export default defineComponent({
         }
       }
     }));
-    //
-    (window as any).jalaliDatepicker.startWatch();
     // All The Questions And Courses
-    let courses = reactive([] as any);
-    let sessions = reactive([] as any);
-    ///////////// Change The Image to Base64
+    let courses = ref([] as any);
+    let sessions = ref([] as any);
+    // Change The Image to Base64
     const getBase64 = (file: any) => {
       return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -401,17 +323,20 @@ export default defineComponent({
     /////////////
     CourseServiceApi.getAll().then((res) => {
       res.data.data.forEach((data: any) => {
-        courses.push(data);
+        courses.value.push(data);
       });
     });
-    // we use this syntax because the session and course are initially strings
     SessionServiceApi.getAll({}).then((res) => {
       res.data.data.forEach((data: any) => {
-        sessions.push(data);
+        sessions.value.push(data);
       });
     });
+    //
+    const filteredSessions = computed(() => {
+      return sessions.value.filter((el: any) => el.course == model.course._id);
+    });
 
-    // // // // // // /// /// /// // // /// /// /// /// /// Handle The Image
+    /// Handle The Image
     const onFileChange = (e: any, idx: number | string = 'test') => {
       const files = e.target.files || e.dataTransfer.files;
       if (!files.length) return;
@@ -421,14 +346,10 @@ export default defineComponent({
           : (model.options[idx].image = strFile);
       });
     };
-
     // validation
-
     const v$ = useVuelidate(rules, model);
-
     //
     const save = () => {
-      // if we haven't c
       model.course =
         typeof model.course === 'string'
           ? (model.course = { _id: model.course })
@@ -438,26 +359,19 @@ export default defineComponent({
           ? (model.session = { _id: model.session })
           : model.session;
       // if user has an id update it with the current model otherwise create one
-      //   model course right now is the full object of course , we just want the id
       model.options = model.options.map((el: any) => {
         if (!el.image) return { text: el.text, isAnswer: el.isAnswer };
         return { text: el.text, image: el.image, isAnswer: el.isAnswer };
       });
       v$.value.$touch();
-      const newModel: any = {};
-      for (const [key, value] of Object.entries(model)) {
-        if (value && JSON.stringify(value) != '{}') {
-          newModel[key] = value;
-        }
-      }
-      // console.log(newModel);
+
       if (!v$.value.$invalid) {
+        let tmp: any = {};
+        model.image && (tmp.image = model.image);
+        model.options && (tmp.options = model.options);
+        model.text && (tmp.text = model.text);
+
         if (model._id) {
-          let tmp: any = {
-            text: model.text,
-            image: model.image,
-            options: model.options
-          };
           QuestionServiceApi.update(model._id, tmp).then((result) => {
             alertify.success(result.data.message);
             router.push({
@@ -465,7 +379,9 @@ export default defineComponent({
             });
           });
         } else {
-          QuestionServiceApi.create(newModel).then((result) => {
+          model.course && (tmp.course = model.course);
+          model.session && (tmp.session = model.session);
+          QuestionServiceApi.create(tmp).then((result) => {
             alertify.success(result.data.message);
             router.push({
               name: 'question'
@@ -493,60 +409,29 @@ export default defineComponent({
       courses,
       sessions,
       onFileChange,
-      v$
+      v$,
+      filteredSessions
     };
   }
 });
 </script>
 <style lang="scss" scoped>
-.multipleSelection {
-  width: 300px;
-  background-color: #bcc2c1;
-}
-
-.selectBox {
-  position: relative;
-}
-
-.selectBox select {
-  width: 100%;
-  font-weight: bold;
-}
-
-.overSelect {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 0;
-  bottom: 0;
-}
-.answer {
-  position: relative;
-  right: 4rem;
-  transform: translateY(50%);
-
-  input {
-    margin-inline: 5px;
-  }
-}
-
-#checkBoxes {
-  border: 1px #8df5e4 solid;
-}
-#checkBoxes label {
-  display: block;
-}
-
-#checkBoxes label:hover {
-  background-color: #4f615e;
-}
-
 .span {
   font-weight: 700;
-  margin: 2rem 0;
+  margin: 1rem;
+  width: 85%;
   color: #010127 207, 236;
   font-family: helvetica, arial;
   font-size: 2rem;
-  border-bottom: 4px solid gray;
+  position: relative;
+  font-size: 1.5rem;
+  transform: translateY(100%);
+  text-align: left;
+}
+textarea {
+  resize: none;
+}
+.answer {
+  transform: translateX(-35%);
 }
 </style>
