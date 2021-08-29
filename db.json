@@ -1,0 +1,13 @@
+{
+  "items": [
+    {
+      "_id": 2,
+      "title": "کتاب کد تمیز",
+      "type": "book",
+      "price": "120",
+      "spacialPrice": "99",
+      "demo": "demo",
+      "file": "actual file"
+    }
+  ]
+}

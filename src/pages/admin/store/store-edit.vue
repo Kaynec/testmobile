@@ -1,5 +1,6 @@
 <template>Store Edit</template>
 <script>
+import { computed, reactive } from 'vue';
 export default {
   props: {
     item: {
@@ -7,6 +8,10 @@ export default {
       default: '{}'
     }
   },
-  setup() {}
+  setup(props) {
+    let model = reactive(JSON.parse(props.item));
+
+    const rules = computed(() => ({}));
+  }
 };
 </script>
