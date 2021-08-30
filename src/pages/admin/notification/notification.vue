@@ -5,12 +5,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">فصل ها</h1>
+            <h1 class="m-0">نوتیفیکیشن ها</h1>
           </div>
           <div class="col-sm-6">
             <button
               class="m-0 float-left btn btn-success"
-              @click="createItem()"
+              @click="createNotification()"
             >
               جدید
             </button>
@@ -40,9 +40,8 @@ import { defineComponent, ref, onMounted, reactive } from 'vue';
 import { baseUrl } from '@/api/apiclient';
 import grid from '@/modules/shared/grid.vue';
 import router from '@/router';
+import { NotificationServiceApi } from '@/api/services/admin/notification-service';
 const $ = require('jquery');
-import { StoreServiceApi } from '@/api/services/admin/store-service';
-import { instance } from '../../../api/apiclient';
 const alertify = require('../../../assets/alertifyjs/alertify');
 
 // import { string } from 'yup/lib/locale';
@@ -51,12 +50,11 @@ export default defineComponent({
   components: { grid },
 
   setup() {
-    // ref
     const grid = ref();
     // Data
     const columns = reactive([
       {
-        label: 'عنوان محصول',
+        label: 'نام ',
         data: 'title',
         responsivePriority: 1,
         searchPanes: {
@@ -65,19 +63,37 @@ export default defineComponent({
         }
       },
       {
-        label: 'نوع محصول',
-        data: 'type',
-        responsivePriority: 1
+        label: 'متن ',
+        data: 'description',
+        responsivePriority: 1,
+        searchPanes: {
+          orthogonal: 'sp',
+          show: true
+        }
       },
+
       {
-        label: 'قیمت ',
-        data: 'price',
-        responsivePriority: 1
+        label: 'دریافت کنندگان ',
+        data: 'description',
+        responsivePriority: 1,
+        searchPanes: {
+          orthogonal: 'sp',
+          show: true
+        }
       },
+
       {
-        label: 'قیمت ویژه ',
-        data: 'spacialPrice',
-        responsivePriority: 3
+        className: 'edit-control',
+        orderable: false,
+        defaultContent: '',
+        label: '',
+        data: '_id',
+        action: 'read',
+        width: 100,
+        render: function (data: any) {
+          return `<button type="button" data-question-id="${data}" class="btn btn-default edit-button">سوالات</button>`;
+        },
+        responsivePriority: 2
       },
       {
         className: 'edit-control',
@@ -106,36 +122,38 @@ export default defineComponent({
     ]);
 
     const options = reactive({
-      // gridName: 'session-grid',
-      gridName: 'store-grid',
-      //   url: `${baseUrl}session`,
-      url: 'https://612c823fab461c00178b5d22.mockapi.io/items',
+      gridName: 'notification-grid',
+      //   url: `${baseUrl}announcement`,
+      url: 'https://612c823fab461c00178b5d22.mockapi.io/notification',
       type: 'GET'
     });
 
-    const editItem = (item: any) => {
+    const editNotification = (notification: any) => {
       router.push({
-        name: 'store-edit',
-        params: { item: JSON.stringify(item) }
+        name: 'notification-edit',
+        params: { notification: JSON.stringify(notification) }
       });
     };
 
-    const deleteItem = (item: any) => {
+    const deleteNotification = (notification: any) => {
       alertify.defaults.glossary.ok = 'خیر';
       alertify.defaults.glossary.cancel = 'بله';
       alertify.confirm('حذف', 'آیا اطمینان دارید؟', function (e: any) {
         if (e) {
-          StoreServiceApi.delete(item._id).then((result: any) => {
-            alertify.success(result.data.message);
-            (grid.value as any).getDatatable().ajax.reload();
-          });
+          NotificationServiceApi.delete(notification._id).then(
+            (result: any) => {
+              alertify.success(result.data.message);
+              (grid.value as any).getDatatable().ajax.reload();
+            }
+          );
         }
       });
     };
 
-    const createItem = () => {
+    const createNotification = () => {
       router.push({
-        name: 'store-edit'
+        name: 'notification-create',
+        params: { announcement: JSON.stringify({}) }
       });
     };
     onMounted(() => {
@@ -150,7 +168,7 @@ export default defineComponent({
               .filter(function (value: any) {
                 return value._id == id;
               });
-            if (filteredData.length > 0) editItem(filteredData[0]);
+            if (filteredData.length > 0) editNotification(filteredData[0]);
           });
         grid.value
           .getDatatableBody()
@@ -162,7 +180,7 @@ export default defineComponent({
               .filter(function (value: any) {
                 return value._id == id;
               });
-            if (filteredData.length > 0) deleteItem(filteredData[0]);
+            if (filteredData.length > 0) deleteNotification(filteredData[0]);
           });
       }
     });
@@ -170,10 +188,8 @@ export default defineComponent({
     return {
       options,
       columns,
-      grid,
-      createItem,
-      deleteItem,
-      editItem
+      createNotification,
+      grid
     };
   }
 });

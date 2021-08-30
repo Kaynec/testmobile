@@ -45,6 +45,7 @@ export default defineComponent({
     };
   },
   mounted(): void {
+    console.log(this.options.data);
     this.appElement = document.getElementById('app') as HTMLElement;
     this.datatable = $('#' + this.options.gridName).DataTable({
       language: {

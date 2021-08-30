@@ -23,6 +23,12 @@ import QuestionEdit from '@/pages/admin/question/question-edit.vue';
 import Store from '@/pages/admin/store/store.vue';
 import StoreEdit from '@/pages/admin/store/store-edit.vue';
 
+import Announcement from '@/pages/admin/announcement/announcement.vue';
+import AnnouncementEdit from '@/pages/admin/announcement/announcement-edit.vue';
+
+import Notification from '@/pages/admin/notification/notification.vue';
+import NotificationEdit from '@/pages/admin/notification/notification-edit.vue';
+
 import { useStore } from '@/store';
 const ifNotAuthenticated = (to: any, from: any, next: any) => {
   if (!useStore().getters.getUserToken) {
@@ -151,7 +157,6 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'store',
         name: 'store',
-        props: true,
         component: Store
       },
       {
@@ -165,6 +170,44 @@ const routes: Array<RouteRecordRaw> = [
         name: 'store-edit',
         props: true,
         component: StoreEdit
+      },
+
+      {
+        path: 'announcement',
+        name: 'announcement',
+        props: true,
+        component: Announcement
+      },
+      {
+        path: 'announcement-create',
+        name: 'announcement-create',
+        props: true,
+        component: AnnouncementEdit
+      },
+      {
+        path: 'announcement-edit',
+        name: 'announcement-edit',
+        props: true,
+        component: AnnouncementEdit
+      },
+
+      {
+        path: 'notification',
+        name: 'notification',
+        props: true,
+        component: Notification
+      },
+      {
+        path: 'notification-create',
+        name: 'notification-create',
+        props: true,
+        component: NotificationEdit
+      },
+      {
+        path: 'notification-edit',
+        name: 'notification-edit',
+        props: true,
+        component: NotificationEdit
       },
       // {
       //   path: 'admin',

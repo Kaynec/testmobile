@@ -5,12 +5,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">فصل ها</h1>
+            <h1 class="m-0">اعلانات</h1>
           </div>
           <div class="col-sm-6">
             <button
               class="m-0 float-left btn btn-success"
-              @click="createItem()"
+              @click="createAnnouncement()"
             >
               جدید
             </button>
@@ -40,9 +40,9 @@ import { defineComponent, ref, onMounted, reactive } from 'vue';
 import { baseUrl } from '@/api/apiclient';
 import grid from '@/modules/shared/grid.vue';
 import router from '@/router';
+import { AnnouncementServiceApi } from '@/api/services/admin/announcement-service';
+import { SessionServiceApi } from '@/api/services/admin/session-service';
 const $ = require('jquery');
-import { StoreServiceApi } from '@/api/services/admin/store-service';
-import { instance } from '../../../api/apiclient';
 const alertify = require('../../../assets/alertifyjs/alertify');
 
 // import { string } from 'yup/lib/locale';
@@ -51,12 +51,11 @@ export default defineComponent({
   components: { grid },
 
   setup() {
-    // ref
     const grid = ref();
     // Data
     const columns = reactive([
       {
-        label: 'عنوان محصول',
+        label: 'نام ',
         data: 'title',
         responsivePriority: 1,
         searchPanes: {
@@ -65,19 +64,27 @@ export default defineComponent({
         }
       },
       {
-        label: 'نوع محصول',
-        data: 'type',
-        responsivePriority: 1
+        label: 'متن ',
+        data: 'description',
+        responsivePriority: 1,
+        searchPanes: {
+          orthogonal: 'sp',
+          show: true
+        }
       },
+
       {
-        label: 'قیمت ',
-        data: 'price',
-        responsivePriority: 1
-      },
-      {
-        label: 'قیمت ویژه ',
-        data: 'spacialPrice',
-        responsivePriority: 3
+        className: 'edit-control',
+        orderable: false,
+        defaultContent: '',
+        label: '',
+        data: '_id',
+        action: 'read',
+        width: 100,
+        render: function (data: any) {
+          return `<button type="button" data-question-id="${data}" class="btn btn-default edit-button">سوالات</button>`;
+        },
+        responsivePriority: 2
       },
       {
         className: 'edit-control',
@@ -106,36 +113,46 @@ export default defineComponent({
     ]);
 
     const options = reactive({
-      // gridName: 'session-grid',
-      gridName: 'store-grid',
-      //   url: `${baseUrl}session`,
-      url: 'https://612c823fab461c00178b5d22.mockapi.io/items',
+      gridName: 'announcement-grid',
+      //   url: `${baseUrl}announcement`,
+      url: 'https://612c823fab461c00178b5d22.mockapi.io/announcement',
       type: 'GET'
     });
 
-    const editItem = (item: any) => {
+    const editAnnouncement = (announcement: any) => {
       router.push({
-        name: 'store-edit',
-        params: { item: JSON.stringify(item) }
+        name: 'announcement-edit',
+        params: { announcement: JSON.stringify(announcement) }
       });
     };
 
-    const deleteItem = (item: any) => {
+    AnnouncementServiceApi.getAll().then((res) => {
+      console.log(res);
+    });
+
+    SessionServiceApi.getAll({}).then((res) => {
+      console.log(res);
+    });
+
+    const deleteAnnouncement = (announcement: any) => {
       alertify.defaults.glossary.ok = 'خیر';
       alertify.defaults.glossary.cancel = 'بله';
       alertify.confirm('حذف', 'آیا اطمینان دارید؟', function (e: any) {
         if (e) {
-          StoreServiceApi.delete(item._id).then((result: any) => {
-            alertify.success(result.data.message);
-            (grid.value as any).getDatatable().ajax.reload();
-          });
+          AnnouncementServiceApi.delete(announcement._id).then(
+            (result: any) => {
+              alertify.success(result.data.message);
+              (grid.value as any).getDatatable().ajax.reload();
+            }
+          );
         }
       });
     };
 
-    const createItem = () => {
+    const createAnnouncement = () => {
       router.push({
-        name: 'store-edit'
+        name: 'announcement-create',
+        params: { announcement: JSON.stringify({}) }
       });
     };
     onMounted(() => {
@@ -150,7 +167,7 @@ export default defineComponent({
               .filter(function (value: any) {
                 return value._id == id;
               });
-            if (filteredData.length > 0) editItem(filteredData[0]);
+            if (filteredData.length > 0) editAnnouncement(filteredData[0]);
           });
         grid.value
           .getDatatableBody()
@@ -162,7 +179,7 @@ export default defineComponent({
               .filter(function (value: any) {
                 return value._id == id;
               });
-            if (filteredData.length > 0) deleteItem(filteredData[0]);
+            if (filteredData.length > 0) deleteAnnouncement(filteredData[0]);
           });
       }
     });
@@ -170,10 +187,8 @@ export default defineComponent({
     return {
       options,
       columns,
-      grid,
-      createItem,
-      deleteItem,
-      editItem
+      createAnnouncement,
+      grid
     };
   }
 });

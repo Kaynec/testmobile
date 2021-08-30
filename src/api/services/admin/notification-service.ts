@@ -1,17 +1,8 @@
-import axios from 'axios';
-
-const instance = axios.create({
-  baseURL: 'https://612c823fab461c00178b5d22.mockapi.io/',
-  // 5 minutes
-  timeout: 300000,
-  headers: {}
-});
-
-// import { instance } from '../../apiclient';
-
-class StoreService {
+import { instance } from '../../apiclient';
+// import { UserDocuments } from '@/@types';
+class NotificationService {
   async get(id: string) {
-    return instance.get(`items/${id}`, {
+    return instance.get(`notofication/${id}`, {
       headers: {
         // Overwrite Axios's automatically set Content-Type
         'Content-Type': 'application/json'
@@ -19,23 +10,23 @@ class StoreService {
     });
   }
   async getAll() {
-    return instance.get(`items`, {
+    return instance.get(`notofication`, {
       headers: {
         // Overwrite Axios's automatically set Content-Type
         'Content-Type': 'application/json'
       }
     });
   }
-  async create(user: any) {
-    return instance.post(`items`, user, {
+  async create(notification: any) {
+    return instance.post(`notofication`, notification, {
       headers: {
         // Overwrite Axios's automatically set Content-Type
         'Content-Type': 'application/json'
       }
     });
   }
-  async update(id: number, user: any) {
-    return instance.put(`items/${id}`, user, {
+  async update(id: number, notification: any) {
+    return instance.put(`notofication/${id}`, notification, {
       headers: {
         // Overwrite Axios's automatically set Content-Type
         'Content-Type': 'application/json'
@@ -43,7 +34,7 @@ class StoreService {
     });
   }
   async delete(id: string) {
-    return instance.delete(`items/${id}`, {
+    return instance.delete(`notofication/${id}`, {
       headers: {
         // Overwrite Axios's automatically set Content-Type
         'Content-Type': 'application/json'
@@ -52,4 +43,4 @@ class StoreService {
   }
 }
 
-export const StoreServiceApi = new StoreService();
+export const NotificationServiceApi = new NotificationService();
