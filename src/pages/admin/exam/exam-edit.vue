@@ -23,36 +23,52 @@
           </span>
         </div>
         <!--  -->
-        <div class="form-group col-md-4 col-sm-12">
-          <label for="birthdate">تاریخ :</label>
+
+        <div class="form-group col-md-2 col-sm-12">
+          <label for="date">تاریخ :</label>
+
           <input
             type="text"
             class="form-control"
             v-model="model.date"
             data-jdp
           />
+          <span
+            v-for="error in v$.date.$errors"
+            :key="error.id"
+            class="form-text text-danger"
+          >
+            {{ error.$message }}
+          </span>
         </div>
-        <span
-          v-for="error in v$.date.$errors"
-          :key="error.id"
-          class="form-text text-danger"
-        >
-          {{ error.$message }}
-        </span>
+
+        <div class="form-group col-md-2 col">
+          <label for="date">ساعت :</label>
+
+          <input type="time" v-model="model.hour" class="form-control" />
+          <span
+            v-for="error in v$.hour.$errors"
+            :key="error.id"
+            class="form-text text-danger"
+          >
+            {{ error.$message }}
+          </span>
+        </div>
 
         <!--  -->
-        <!--  -->
-        <div class="form-group col-md-2 col-sm-12">
+        <div class="form-group col-md-3 col-sm-12">
           <label>مدت زمان آزمون :</label>
           <input type="number" class="form-control" v-model="model.time" />
+          <small> مدت زمان به دقیقه است </small>
+          <span
+            v-for="error in v$.time.$errors"
+            :key="error.id"
+            class="form-text text-danger"
+          >
+            {{ error.$message }}
+          </span>
         </div>
-        <span
-          v-for="error in v$.time.$errors"
-          :key="error.id"
-          class="form-text text-danger"
-        >
-          {{ error.$message }}
-        </span>
+
         <!--!!!!!!!!-->
       </div>
 
@@ -66,12 +82,12 @@
       >
         <div class="form-group col-md-4 col-sm-12">
           <label for="birthdate"> درس :</label>
-          <select class="form-select" v-model="course.course">
-            <option
-              v-for="Course in filteredCourses(Course)"
-              :value="Course"
-              :key="Course._id"
-            >
+          <select
+            class="form-select"
+            v-model="course.course"
+            @blur="v$.courses.$touch()"
+          >
+            <option v-for="Course in Courses" :value="Course" :key="Course._id">
               {{ Course.title }}
             </option>
           </select>
@@ -79,7 +95,12 @@
         <!--  -->
         <div class="form-group col-md-4 col-sm-12">
           <label> تعداد سوالات این درس در آزمون :</label>
-          <input type="number" class="form-control" v-model="course.number" />
+          <input
+            type="number"
+            min="1"
+            class="form-control"
+            v-model="course.number"
+          />
         </div>
         <div class="div">
           <button
@@ -101,13 +122,14 @@
 
       <!--  -->
       <div class="form-group col-md-4 col-sm-12">
-        <button class="btn btn-primary ml-3 mt-4" @click="addCourse()">
+        <button
+          class="btn btn-primary ml-3 mt-4"
+          type="button"
+          @click="addCourse()"
+        >
           اضافه کردن درس
         </button>
       </div>
-
-      <!--  -->
-
       <button class="btn btn-default ml-3 mt-4" @click="cancel()">برگشت</button>
       <button type="submit" class="btn btn-default mt-4">ذخیره</button>
     </form>
@@ -115,7 +137,7 @@
 </template>
 
 <script lang="ts">
-import { reactive, defineComponent, computed, ref } from 'vue';
+import { reactive, defineComponent, computed, ref, onMounted } from 'vue';
 import router from '@/router';
 import useVuelidate from '@vuelidate/core';
 import { helpers, minLength, required } from '@vuelidate/validators';
@@ -131,7 +153,6 @@ export default defineComponent({
       default: '{}'
     }
   },
-
   setup(props) {
     let model = reactive(JSON.parse(props.exam));
     (window as any).jalaliDatepicker.startWatch();
@@ -140,11 +161,11 @@ export default defineComponent({
         ? reactive({
             title: '',
             date: '',
-            time: 0,
-            courses: reactive([{ course: {}, number: 0 }])
+            hour: '',
+            time: 10,
+            courses: [{ course: {}, number: 1 }]
           })
         : model;
-
     //
     let Courses = ref<any>([]);
     CourseServiceApi.getAll().then((res) => {
@@ -152,15 +173,13 @@ export default defineComponent({
         Courses.value.push(el);
       });
     });
-
     //
-    const addCourse = () => model.courses.push({ course: {}, number: 0 });
+    const addCourse = () => model.courses.push({ course: {}, number: 1 });
     const deleteCourse = (idx: number) =>
       (model.courses = model.courses.filter(
         (course: any, index: number) => index != idx
       ));
     //
-
     const save = () => {
       /// error handeling
       v$.value.$touch();
@@ -185,6 +204,20 @@ export default defineComponent({
     };
 
     // Validations
+    const unique = (group: any): any => {
+      return (value: any) => {
+        for (let i = 0; i < group.length; i++) {
+          for (let j = 0; i < group.length; j++) {
+            console.log(group[i], group[j]);
+            if (group[i].course._id == group[j].course._id) {
+              if (i != j) return false;
+              break;
+            }
+          }
+        }
+        return true;
+      };
+    };
     const rules = computed(() => ({
       title: {
         required: helpers.withMessage('عنوان آزمون ضروری است', required),
@@ -200,26 +233,31 @@ export default defineComponent({
         required: helpers.withMessage(
           'لطفا مدت زمان آزمون را مشخص کنید',
           required
+        ),
+        hour: {
+          required: helpers.withMessage(
+            'لطفا  ساعت آزمون را مشخص کنید',
+            required
+          )
+        },
+        minLength: helpers.withMessage(
+          'زمان آزمون باید حداقل ده دقیقه باشد',
+          minLength(10)
         )
       },
       courses: {
         required: helpers.withMessage('لطفا حداقل یک مورد مشخص کنید', required),
+        unique: helpers.withMessage(
+          'لطفا موارد تکراری را حذف کنید',
+          unique(model.courses) as any
+        ),
         $each: {
-          course: { required },
           number: { required }
         }
       }
     }));
-    const filteredCourses = (course: any) => {
-      return Courses.value.filter((cours: any) => {
-        const tmp = model.courses.find(
-          (el: any) => el.course._id == cours._id && el._id != course._id
-        );
-        return tmp == null;
-      });
-    };
-
     const v$ = useVuelidate(rules, model);
+
     // cancel //
     const cancel = () => {
       router.push({
@@ -235,8 +273,7 @@ export default defineComponent({
       v$,
       Courses,
       addCourse,
-      deleteCourse,
-      filteredCourses
+      deleteCourse
     };
   }
 });
@@ -256,5 +293,8 @@ export default defineComponent({
   align-items: center;
   margin-right: 1rem;
   transform: translateY(10%);
+}
+small {
+  color: rgb(151, 144, 144);
 }
 </style>
