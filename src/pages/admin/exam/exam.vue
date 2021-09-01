@@ -5,12 +5,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">نوتیفیکیشن ها</h1>
+            <h1 class="m-0">آزمون ها</h1>
           </div>
           <div class="col-sm-6">
             <button
               class="m-0 float-left btn btn-success"
-              @click="createNotification()"
+              @click="createExam()"
             >
               جدید
             </button>
@@ -40,7 +40,7 @@ import { defineComponent, ref, onMounted, reactive } from 'vue';
 import { baseUrl } from '@/api/apiclient';
 import grid from '@/modules/shared/grid.vue';
 import router from '@/router';
-import { NotificationServiceApi } from '@/api/services/admin/notification-service';
+import { ExamServiceApi } from '@/api/services/admin/exam-service';
 const $ = require('jquery');
 const alertify = require('../../../assets/alertifyjs/alertify');
 
@@ -63,8 +63,8 @@ export default defineComponent({
         }
       },
       {
-        label: 'متن ',
-        data: 'description',
+        label: 'زمان ',
+        data: 'time',
         responsivePriority: 1,
         searchPanes: {
           orthogonal: 'sp',
@@ -73,8 +73,8 @@ export default defineComponent({
       },
 
       {
-        label: 'دریافت کنندگان ',
-        data: 'description',
+        label: 'تاریخ',
+        data: 'date',
         responsivePriority: 1,
         searchPanes: {
           orthogonal: 'sp',
@@ -108,38 +108,36 @@ export default defineComponent({
     ]);
 
     const options = reactive({
-      gridName: 'notification-grid',
-      //   url: `${baseUrl}announcement`,
-      url: 'https://612c823fab461c00178b5d22.mockapi.io/notification',
+      gridName: 'exam-grid',
+      //   url: `${baseUrl}exam`,
+      url: 'https://612c823fab461c00178b5d22.mockapi.io/exam',
       type: 'GET'
     });
 
-    const editNotification = (notification: any) => {
+    const editExam = (exam: any) => {
       router.push({
-        name: 'notification-edit',
-        params: { notification: JSON.stringify(notification) }
+        name: 'exam-edit',
+        params: { exam: JSON.stringify(exam) }
       });
     };
 
-    const deleteNotification = (notification: any) => {
+    const deleteExam = (exam: any) => {
       alertify.defaults.glossary.ok = 'خیر';
       alertify.defaults.glossary.cancel = 'بله';
       alertify.confirm('حذف', 'آیا اطمینان دارید؟', function (e: any) {
         if (e) {
-          NotificationServiceApi.delete(notification._id).then(
-            (result: any) => {
-              alertify.success(result.data.message);
-              (grid.value as any).getDatatable().ajax.reload();
-            }
-          );
+          ExamServiceApi.delete(exam._id).then((result: any) => {
+            alertify.success(result.data.message);
+            (grid.value as any).getDatatable().ajax.reload();
+          });
         }
       });
     };
 
-    const createNotification = () => {
+    const createExam = () => {
       router.push({
-        name: 'notification-create',
-        params: { announcement: JSON.stringify({}) }
+        name: 'exam-create',
+        params: { exam: JSON.stringify({}) }
       });
     };
     onMounted(() => {
@@ -154,7 +152,7 @@ export default defineComponent({
               .filter(function (value: any) {
                 return value._id == id;
               });
-            if (filteredData.length > 0) editNotification(filteredData[0]);
+            if (filteredData.length > 0) editExam(filteredData[0]);
           });
         grid.value
           .getDatatableBody()
@@ -166,7 +164,7 @@ export default defineComponent({
               .filter(function (value: any) {
                 return value._id == id;
               });
-            if (filteredData.length > 0) deleteNotification(filteredData[0]);
+            if (filteredData.length > 0) deleteExam(filteredData[0]);
           });
       }
     });
@@ -174,7 +172,7 @@ export default defineComponent({
     return {
       options,
       columns,
-      createNotification,
+      createExam,
       grid
     };
   }

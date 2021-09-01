@@ -29,6 +29,9 @@ import AnnouncementEdit from '@/pages/admin/announcement/announcement-edit.vue';
 import Notification from '@/pages/admin/notification/notification.vue';
 import NotificationEdit from '@/pages/admin/notification/notification-edit.vue';
 
+import Exam from '@/pages/admin/exam/exam.vue';
+import ExamEdit from '@/pages/admin/exam/exam-edit.vue';
+
 import { useStore } from '@/store';
 const ifNotAuthenticated = (to: any, from: any, next: any) => {
   if (!useStore().getters.getUserToken) {
@@ -208,6 +211,25 @@ const routes: Array<RouteRecordRaw> = [
         name: 'notification-edit',
         props: true,
         component: NotificationEdit
+      },
+
+      {
+        path: 'exam',
+        name: 'exam',
+        props: true,
+        component: Exam
+      },
+      {
+        path: 'exam-create',
+        name: 'exam-create',
+        props: true,
+        component: ExamEdit
+      },
+      {
+        path: 'exam-edit',
+        name: 'exam-edit',
+        props: true,
+        component: ExamEdit
       },
       // {
       //   path: 'admin',

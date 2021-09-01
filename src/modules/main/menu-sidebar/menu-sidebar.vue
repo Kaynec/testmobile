@@ -90,6 +90,10 @@ export default class MenuSidebar extends Vue {
         {
           name: 'نوتیفیکیشن ها',
           url: '/admin/notification'
+        },
+        {
+          name: 'آزمون ها',
+          url: '/admin/exam'
         }
         // {
         //   name: 'ادمین ها',
