@@ -1,35 +1,5 @@
 // import { instance } from '../../apiclient';
-const alertify = require('../../../assets/alertifyjs/alertify');
-import { useStore } from '@/store';
-
-import axios from 'axios';
-const instance = axios.create({
-  baseURL: 'https://612c823fab461c00178b5d22.mockapi.io/',
-  // 5 minutes
-  timeout: 300000,
-  headers: {}
-});
-
-instance.interceptors.request.use((config) => {
-  const token = useStore().getters.getUserToken;
-  if (token) {
-    config.headers.token = `${token}`;
-  }
-  return config;
-});
-instance.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  (error) => {
-    // Any status codes that falls outside the range of 2xx cause this function to trigger
-    // Do something with response error
-    if (error.response && error.response.data && error.response.data.message) {
-      alertify.error(error.response.data.message);
-    }
-    return Promise.reject(error);
-  }
-);
+import { instance } from '../../apiclient';
 
 // import { UserDocuments } from '@/@types';
 class AnnouncementService {

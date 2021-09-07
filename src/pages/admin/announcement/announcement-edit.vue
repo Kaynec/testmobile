@@ -1,7 +1,7 @@
 <template>
   <div class="panel">
     <h2>
-      {{ model._id ? `ویرایش ${model.title}` : 'تعریف اعلانیه جدید' }}
+      {{ model._id ? `ویرایش ${model.title}` : 'تعریف اطلاعیه جدید' }}
     </h2>
     <form @submit.prevent="save" class="mt-5">
       <div class="form-row">
@@ -79,11 +79,11 @@ export default defineComponent({
       /// error handeling
       v$.value.$touch();
       if (!v$.value.$invalid) {
+        let tmp: any = {
+          title: model.title,
+          description: model.description
+        };
         if (model._id) {
-          let tmp: any = {
-            title: model.title,
-            description: model.description
-          };
           AnnouncementServiceApi.update(model._id, tmp).then((result) => {
             alertify.success(result.data.message);
             router.push({
@@ -91,7 +91,7 @@ export default defineComponent({
             });
           });
         } else {
-          AnnouncementServiceApi.create(model._id).then((result) => {
+          AnnouncementServiceApi.create(tmp).then((result) => {
             alertify.success(result.data.message);
             router.push({
               name: 'announcement'

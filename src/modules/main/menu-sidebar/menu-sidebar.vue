@@ -84,7 +84,7 @@ export default class MenuSidebar extends Vue {
           url: '/admin/store'
         },
         {
-          name: 'اعلانات',
+          name: 'اطلاعیه ها',
           url: '/admin/announcement'
         },
         {

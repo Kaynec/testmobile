@@ -1,17 +1,8 @@
-import axios from 'axios';
-
-const instance = axios.create({
-  baseURL: 'https://612c823fab461c00178b5d22.mockapi.io/',
-  // 5 minutes
-  timeout: 300000,
-  headers: {}
-});
-
-// import { instance } from '../../apiclient';
+import { instance } from '../../apiclient';
 
 class StoreService {
   async get(id: string) {
-    return instance.get(`items/${id}`, {
+    return instance.get(`product/${id}`, {
       headers: {
         // Overwrite Axios's automatically set Content-Type
         'Content-Type': 'application/json'
@@ -19,7 +10,7 @@ class StoreService {
     });
   }
   async getAll() {
-    return instance.get(`items`, {
+    return instance.get(`product`, {
       headers: {
         // Overwrite Axios's automatically set Content-Type
         'Content-Type': 'application/json'
@@ -27,15 +18,14 @@ class StoreService {
     });
   }
   async create(user: any) {
-    return instance.post(`items`, user, {
+    return instance.post(`product`, user, {
       headers: {
-        // Overwrite Axios's automatically set Content-Type
-        'Content-Type': 'application/json'
+        // 'Content-Type': 'multipart/form-data'
       }
     });
   }
   async update(id: number, user: any) {
-    return instance.put(`items/${id}`, user, {
+    return instance.put(`product/${id}`, user, {
       headers: {
         // Overwrite Axios's automatically set Content-Type
         'Content-Type': 'application/json'
@@ -43,7 +33,7 @@ class StoreService {
     });
   }
   async delete(id: string) {
-    return instance.delete(`items/${id}`, {
+    return instance.delete(`product/${id}`, {
       headers: {
         // Overwrite Axios's automatically set Content-Type
         'Content-Type': 'application/json'

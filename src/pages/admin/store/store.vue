@@ -5,7 +5,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">فصل ها</h1>
+            <h1 class="m-0">محصولات</h1>
           </div>
           <div class="col-sm-6">
             <button
@@ -42,7 +42,6 @@ import grid from '@/modules/shared/grid.vue';
 import router from '@/router';
 const $ = require('jquery');
 import { StoreServiceApi } from '@/api/services/admin/store-service';
-import { instance } from '../../../api/apiclient';
 const alertify = require('../../../assets/alertifyjs/alertify');
 
 // import { string } from 'yup/lib/locale';
@@ -66,7 +65,7 @@ export default defineComponent({
       },
       {
         label: 'نوع محصول',
-        data: 'type',
+        data: 'category',
         responsivePriority: 1
       },
       {
@@ -76,7 +75,7 @@ export default defineComponent({
       },
       {
         label: 'قیمت ویژه ',
-        data: 'spacialPrice',
+        data: 'specialPrice',
         responsivePriority: 3
       },
       {
@@ -104,12 +103,10 @@ export default defineComponent({
         responsivePriority: 2
       }
     ]);
-
     const options = reactive({
       // gridName: 'session-grid',
       gridName: 'store-grid',
-      //   url: `${baseUrl}session`,
-      url: 'https://612c823fab461c00178b5d22.mockapi.io/items',
+      url: `${baseUrl}product`,
       type: 'GET'
     });
 

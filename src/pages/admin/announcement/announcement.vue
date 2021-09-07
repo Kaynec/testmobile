@@ -5,7 +5,7 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">اعلانات</h1>
+            <h1 class="m-0">اطلاعیه ها</h1>
           </div>
           <div class="col-sm-6">
             <button
@@ -114,8 +114,7 @@ export default defineComponent({
 
     const options = reactive({
       gridName: 'announcement-grid',
-      //   url: `${baseUrl}announcement`,
-      url: 'https://612c823fab461c00178b5d22.mockapi.io/announcement',
+      url: `${baseUrl}announcement`,
       type: 'GET'
     });
 
@@ -125,14 +124,6 @@ export default defineComponent({
         params: { announcement: JSON.stringify(announcement) }
       });
     };
-
-    AnnouncementServiceApi.getAll().then((res) => {
-      console.log(res);
-    });
-
-    SessionServiceApi.getAll({}).then((res) => {
-      console.log(res);
-    });
 
     const deleteAnnouncement = (announcement: any) => {
       alertify.defaults.glossary.ok = 'خیر';

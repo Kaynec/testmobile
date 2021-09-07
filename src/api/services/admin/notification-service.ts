@@ -2,7 +2,7 @@ import { instance } from '../../apiclient';
 // import { UserDocuments } from '@/@types';
 class NotificationService {
   async get(id: string) {
-    return instance.get(`notofication/${id}`, {
+    return instance.get(`notification/${id}`, {
       headers: {
         // Overwrite Axios's automatically set Content-Type
         'Content-Type': 'application/json'
@@ -10,7 +10,7 @@ class NotificationService {
     });
   }
   async getAll() {
-    return instance.get(`notofication`, {
+    return instance.get(`notification`, {
       headers: {
         // Overwrite Axios's automatically set Content-Type
         'Content-Type': 'application/json'
@@ -18,7 +18,7 @@ class NotificationService {
     });
   }
   async create(notification: any) {
-    return instance.post(`notofication`, notification, {
+    return instance.post(`notification`, notification, {
       headers: {
         // Overwrite Axios's automatically set Content-Type
         'Content-Type': 'application/json'
@@ -26,7 +26,7 @@ class NotificationService {
     });
   }
   async update(id: number, notification: any) {
-    return instance.put(`notofication/${id}`, notification, {
+    return instance.put(`notification/${id}`, notification, {
       headers: {
         // Overwrite Axios's automatically set Content-Type
         'Content-Type': 'application/json'
@@ -34,7 +34,7 @@ class NotificationService {
     });
   }
   async delete(id: string) {
-    return instance.delete(`notofication/${id}`, {
+    return instance.delete(`notification/${id}`, {
       headers: {
         // Overwrite Axios's automatically set Content-Type
         'Content-Type': 'application/json'

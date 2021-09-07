@@ -109,8 +109,7 @@ export default defineComponent({
 
     const options = reactive({
       gridName: 'notification-grid',
-      //   url: `${baseUrl}announcement`,
-      url: 'https://612c823fab461c00178b5d22.mockapi.io/notification',
+      url: `${baseUrl}notification`,
       type: 'GET'
     });
 

@@ -205,7 +205,7 @@ export default defineComponent({
 
     // Validations
     const unique = (group: any): any => {
-      return (value: any) => {
+      return (value: unknown) => {
         for (let i = 0; i < group.length; i++) {
           for (let j = 0; i < group.length; j++) {
             console.log(group[i], group[j]);
@@ -219,6 +219,9 @@ export default defineComponent({
       };
     };
     const rules = computed(() => ({
+      hour: {
+        required: helpers.withMessage('لطفا  ساعت آزمون را مشخص کنید', required)
+      },
       title: {
         required: helpers.withMessage('عنوان آزمون ضروری است', required),
         minLength: helpers.withMessage(
@@ -234,12 +237,6 @@ export default defineComponent({
           'لطفا مدت زمان آزمون را مشخص کنید',
           required
         ),
-        hour: {
-          required: helpers.withMessage(
-            'لطفا  ساعت آزمون را مشخص کنید',
-            required
-          )
-        },
         minLength: helpers.withMessage(
           'زمان آزمون باید حداقل ده دقیقه باشد',
           minLength(10)

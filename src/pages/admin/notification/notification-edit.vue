@@ -67,14 +67,14 @@
         <div class="form-group col-md-5 col-sm-12">
           <label for="code"> دریافت کنندگان :</label>
 
-          <select v-model="model.receivers" class="form-select">
-            <option class="" value="student">دانشجویان</option>
-            <option class="" value="mentor">مشاوران</option>
-            <option class="" value="all">همه</option>
+          <select v-model="model.receptor" class="form-select">
+            <option value="student">دانشجویان</option>
+            <option value="mentor">مشاوران</option>
+            <option value="all">همه</option>
           </select>
 
           <span
-            v-for="error in v$.receivers.$errors"
+            v-for="error in v$.receptor.$errors"
             :key="error.id"
             class="form-text text-danger"
           >
@@ -100,14 +100,14 @@ const alertify = require('@/assets/alertifyjs/alertify');
 
 export default defineComponent({
   props: {
-    announcement: {
+    notification: {
       type: String,
       default: '{}'
     }
   },
 
   setup(props) {
-    let model = reactive(JSON.parse(props.announcement));
+    let model = reactive(JSON.parse(props.notification));
 
     model =
       JSON.stringify(model) === '{}'
@@ -115,32 +115,34 @@ export default defineComponent({
             title: '',
             description: '',
             link: '',
-            receivers: ''
+            receptor: ''
           })
         : model;
 
     const save = () => {
+      console.log(model);
       /// error handeling
       v$.value.$touch();
       if (!v$.value.$invalid) {
+        let tmp: any = {
+          title: model.title,
+          description: model.description,
+          receptor: model.receptor
+        };
+        model.link && (tmp.link = model.link);
+        //
         if (model._id) {
-          let tmp: any = {
-            title: model.title,
-            description: model.description,
-            link: model.link,
-            receivers: model.receivers
-          };
           NotificationServiceApi.update(model._id, tmp).then((result) => {
             alertify.success(result.data.message);
             router.push({
-              name: 'announcement'
+              name: 'notification'
             });
           });
         } else {
-          NotificationServiceApi.create(model._id).then((result) => {
+          NotificationServiceApi.create(tmp).then((result) => {
             alertify.success(result.data.message);
             router.push({
-              name: 'announcement'
+              name: 'notification'
             });
           });
         }
@@ -164,7 +166,7 @@ export default defineComponent({
         )
       },
       link: {},
-      receivers: {
+      receptor: {
         required: helpers.withMessage(
           ' لطفا دریافت کنندگان را مشخص کنید',
           required
