@@ -79,19 +79,19 @@ export default defineComponent({
           show: true
         }
       },
-      { label: 'کد', data: 'code', responsivePriority: 3 },
+      { label: 'کد', data: 'code' },
       {
         className: 'edit-control',
         orderable: false,
         defaultContent: '',
         label: '',
         data: '_id',
-        action: 'read',
         width: 100,
+        action: 'read',
         render: function (data: any) {
           return `<button type="button" data-question-id="${data}" class="btn btn-default edit-button">سوالات</button>`;
         },
-        responsivePriority: 2
+        responsivePriority: 3
       },
       {
         className: 'edit-control',
@@ -99,8 +99,8 @@ export default defineComponent({
         defaultContent: '',
         label: '',
         data: '_id',
-        action: 'update',
         width: 100,
+        action: 'update',
         render: function (data: any) {
           return `<button type="button" data-edit-id="${data}" class="btn btn-default edit-button">ویرایش</button>`;
         },
@@ -115,7 +115,7 @@ export default defineComponent({
         render: function (data: any) {
           return `<button type="button" data-delete-id="${data}" class="btn btn-danger edit-button">حذف</button>`;
         },
-        responsivePriority: 2
+        responsivePriority: 1
       }
     ]);
 

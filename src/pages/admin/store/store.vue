@@ -65,18 +65,16 @@ export default defineComponent({
       },
       {
         label: 'نوع محصول',
-        data: 'category',
-        responsivePriority: 1
+        data: 'category'
       },
       {
         label: 'قیمت ',
         data: 'price',
-        responsivePriority: 1
+        responsivePriority: 3
       },
       {
         label: 'قیمت ویژه ',
-        data: 'specialPrice',
-        responsivePriority: 3
+        data: 'specialPrice'
       },
       {
         className: 'edit-control',
@@ -100,7 +98,7 @@ export default defineComponent({
         render: function (data: any) {
           return `<button type="button" data-delete-id="${data}" class="btn btn-danger edit-button">حذف</button>`;
         },
-        responsivePriority: 2
+        responsivePriority: 1
       }
     ]);
     const options = reactive({

@@ -66,25 +66,11 @@ export default defineComponent({
       {
         label: 'متن ',
         data: 'description',
-        responsivePriority: 1,
+        responsivePriority: 3,
         searchPanes: {
           orthogonal: 'sp',
           show: true
         }
-      },
-
-      {
-        className: 'edit-control',
-        orderable: false,
-        defaultContent: '',
-        label: '',
-        data: '_id',
-        action: 'read',
-        width: 100,
-        render: function (data: any) {
-          return `<button type="button" data-question-id="${data}" class="btn btn-default edit-button">سوالات</button>`;
-        },
-        responsivePriority: 2
       },
       {
         className: 'edit-control',
@@ -108,7 +94,7 @@ export default defineComponent({
         render: function (data: any) {
           return `<button type="button" data-delete-id="${data}" class="btn btn-danger edit-button">حذف</button>`;
         },
-        responsivePriority: 2
+        responsivePriority: 1
       }
     ]);
 

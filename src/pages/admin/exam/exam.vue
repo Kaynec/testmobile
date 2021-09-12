@@ -63,9 +63,9 @@ export default defineComponent({
         }
       },
       {
-        label: 'زمان ',
+        label: 'مدت زمان ',
         data: 'time',
-        responsivePriority: 1,
+        responsivePriority: 3,
         searchPanes: {
           orthogonal: 'sp',
           show: true
@@ -75,7 +75,7 @@ export default defineComponent({
       {
         label: 'تاریخ',
         data: 'date',
-        responsivePriority: 1,
+        responsivePriority: 3,
         searchPanes: {
           orthogonal: 'sp',
           show: true
@@ -103,14 +103,14 @@ export default defineComponent({
         render: function (data: any) {
           return `<button type="button" data-delete-id="${data}" class="btn btn-danger edit-button">حذف</button>`;
         },
-        responsivePriority: 2
+        responsivePriority: 1
       }
     ]);
 
     const options = reactive({
       gridName: 'exam-grid',
-      //   url: `${baseUrl}exam`,
-      url: 'https://612c823fab461c00178b5d22.mockapi.io/exam',
+      url: `${baseUrl}exam`,
+      // url: 'https://612c823fab461c00178b5d22.mockapi.io/exam',
       type: 'GET'
     });
 

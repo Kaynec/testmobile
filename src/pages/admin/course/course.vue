@@ -92,7 +92,7 @@ export default defineComponent({
         render: function (data: any) {
           return `<button type="button" data-edit-id="${data}" class="btn btn-default edit-button">ویرایش</button>`;
         },
-        responsivePriority: 2
+        responsivePriority: 1
       },
       {
         label: '',
@@ -102,7 +102,7 @@ export default defineComponent({
         render: function (data: any) {
           return `<button type="button" data-delete-id="${data}" class="btn btn-danger edit-button">حذف</button>`;
         },
-        responsivePriority: 2
+        responsivePriority: 1
       }
     ]);
 

@@ -1,5 +1,5 @@
 import { instance } from '../../apiclient';
-// import { UserDocuments } from '@/@types';
+
 class NotificationService {
   async get(id: string) {
     return instance.get(`notification/${id}`, {

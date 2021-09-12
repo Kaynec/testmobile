@@ -65,7 +65,7 @@ export default defineComponent({
       {
         label: 'متن ',
         data: 'description',
-        responsivePriority: 1,
+        responsivePriority: 3,
         searchPanes: {
           orthogonal: 'sp',
           show: true
@@ -74,8 +74,8 @@ export default defineComponent({
 
       {
         label: 'دریافت کنندگان ',
-        data: 'description',
-        responsivePriority: 1,
+        data: 'receptor',
+        responsivePriority: 3,
         searchPanes: {
           orthogonal: 'sp',
           show: true

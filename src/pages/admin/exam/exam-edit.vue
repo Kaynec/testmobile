@@ -58,10 +58,10 @@
         <!--  -->
         <div class="form-group col-md-3 col-sm-12">
           <label>مدت زمان آزمون :</label>
-          <input type="number" class="form-control" v-model="model.time" />
+          <input type="number" class="form-control" v-model="model.duration" />
           <small> مدت زمان به دقیقه است </small>
           <span
-            v-for="error in v$.time.$errors"
+            v-for="error in v$.duration.$errors"
             :key="error.id"
             class="form-text text-danger"
           >
@@ -77,7 +77,7 @@
       <span class="span">سوالات آزمون</span>
       <div
         class="form-row"
-        v-for="(course, index) in model.courses"
+        v-for="(course, firstIdx) in model.budgeting"
         :key="course.title"
       >
         <div class="form-group col-md-4 col-sm-12">
@@ -93,7 +93,34 @@
           </select>
         </div>
         <!--  -->
-        <div class="form-group col-md-4 col-sm-12">
+        <!-- Inner Nested Sessions -->
+
+        <div
+          class="form-row"
+          v-for="course in model.budgeting[firstIdx]"
+          :key="course.title"
+        >
+          <label for="birthdate"> درس :</label>
+          <div class="form-group col-md-4 col-sm-12">
+            <select
+              class="form-select"
+              v-model="course.course"
+              @blur="v$.courses.$touch()"
+            >
+              <option
+                v-for="Session in Sessions"
+                :value="Session"
+                :key="Session._id"
+              >
+                {{ Course.title }}
+              </option>
+            </select>
+          </div>
+        </div>
+
+        <!--  -->
+
+        <!-- <div class="form-group col-md-4 col-sm-12">
           <label> تعداد سوالات این درس در آزمون :</label>
           <input
             type="number"
@@ -101,18 +128,18 @@
             class="form-control"
             v-model="course.number"
           />
-        </div>
+        </div> -->
         <div class="div">
           <button
             type="button"
             class="btn btn-default"
-            @click="deleteCourse(index)"
+            @click="deleteCourse(firstIdx)"
           >
             حذف درس
           </button>
         </div>
         <span
-          v-for="error in v$.courses.$errors"
+          v-for="error in v$.budgeting.$errors"
           :key="error.id"
           class="form-text text-danger"
         >
@@ -137,11 +164,12 @@
 </template>
 
 <script lang="ts">
-import { reactive, defineComponent, computed, ref, onMounted } from 'vue';
+import { reactive, defineComponent, computed, ref } from 'vue';
 import router from '@/router';
 import useVuelidate from '@vuelidate/core';
 import { helpers, minLength, required } from '@vuelidate/validators';
 import { CourseServiceApi } from '@/api/services/admin/course-service';
+import { SessionServiceApi } from '@/api/services/admin/session-service';
 import '@majidh1/jalalidatepicker/dist/jalaliDatepicker.css';
 import '@majidh1/jalalidatepicker/dist/jalaliDatepicker.js';
 import { ExamServiceApi } from '@/api/services/admin/exam-service';
@@ -155,28 +183,37 @@ export default defineComponent({
   },
   setup(props) {
     let model = reactive(JSON.parse(props.exam));
-    (window as any).jalaliDatepicker.startWatch();
+    (window as any).jalaliDatepicker.startWatch({
+      time: true,
+      timePicker: true
+    });
     model =
       JSON.stringify(model) === '{}'
         ? reactive({
             title: '',
             date: '',
             hour: '',
-            time: 10,
-            courses: [{ course: {}, number: 1 }]
+            duration: 10,
+            budgeting: [{ course: {}, number: 1 }]
           })
         : model;
     //
     let Courses = ref<any>([]);
+    let Sessions = ref<any>([]);
     CourseServiceApi.getAll().then((res) => {
       res.data.data.forEach((el: any) => {
         Courses.value.push(el);
       });
     });
-    //
-    const addCourse = () => model.courses.push({ course: {}, number: 1 });
+    SessionServiceApi.getAll({}).then((res) => {
+      res.data.data.forEach((el: any) => {
+        Sessions.value.push(el);
+      });
+    });
+    // // // // //
+    const addCourse = () => model.budgeting.push({ course: {}, number: 1 });
     const deleteCourse = (idx: number) =>
-      (model.courses = model.courses.filter(
+      (model.budgeting = model.budgeting.filter(
         (course: any, index: number) => index != idx
       ));
     //
@@ -218,6 +255,7 @@ export default defineComponent({
         return true;
       };
     };
+
     const rules = computed(() => ({
       hour: {
         required: helpers.withMessage('لطفا  ساعت آزمون را مشخص کنید', required)
@@ -229,10 +267,11 @@ export default defineComponent({
           minLength(3)
         )
       },
+
       date: {
         required: helpers.withMessage('لطفا تاریخ آزمون را مشخص کنید', required)
       },
-      time: {
+      duration: {
         required: helpers.withMessage(
           'لطفا مدت زمان آزمون را مشخص کنید',
           required
@@ -242,17 +281,26 @@ export default defineComponent({
           minLength(10)
         )
       },
-      courses: {
+      budgeting: {
         required: helpers.withMessage('لطفا حداقل یک مورد مشخص کنید', required),
         unique: helpers.withMessage(
           'لطفا موارد تکراری را حذف کنید',
-          unique(model.courses) as any
+          unique(model.budgeting) as any
         ),
         $each: {
-          number: { required }
+          questionCount: {
+            required,
+            minLength: helpers.withMessage(
+              'تعداد سوالات باید بیشتر از 0 باشد',
+              minLength(1)
+            )
+          },
+          course: { required, _id: { required } },
+          sessions: { required, _id: { required } }
         }
       }
     }));
+
     const v$ = useVuelidate(rules, model);
 
     // cancel //
@@ -270,7 +318,8 @@ export default defineComponent({
       v$,
       Courses,
       addCourse,
-      deleteCourse
+      deleteCourse,
+      Sessions
     };
   }
 });

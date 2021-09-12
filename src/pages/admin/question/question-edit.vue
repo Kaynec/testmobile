@@ -119,6 +119,7 @@
           />
         </div>
         <!-- is answer -->
+        <span class="info"> گزینه صحیح ؟ </span>
         <div class="form-group col-md-4 p-5 col-sm-12 answer">
           <input
             class="form-check-input"
@@ -129,6 +130,7 @@
           />
         </div>
       </div>
+      <hr class="mobile" />
       <!--  Second Option Text  -->
       <div class="form-row">
         <div class="form-group col-md-4 col-sm-12">
@@ -152,6 +154,7 @@
           />
         </div>
         <!--  -->
+        <span class="info"> گزینه صحیح ؟ </span>
         <div class="form-group col-md-4 p-5 col-sm-12 answer">
           <input
             class="form-check-input"
@@ -162,6 +165,7 @@
           />
         </div>
       </div>
+      <hr class="mobile" />
       <!--  -->
       <!-- Third Option Text  -->
       <div class="form-row">
@@ -187,6 +191,7 @@
         </div>
         <!--  -->
         <!--  -->
+        <span class="info"> گزینه صحیح ؟ </span>
         <div class="form-group col-md-4 p-5 col-sm-12 answer">
           <input
             class="form-check-input"
@@ -197,6 +202,7 @@
           />
         </div>
       </div>
+      <hr class="mobile" />
       <!--  -->
       <!--  -->
       <div class="form-row">
@@ -222,6 +228,7 @@
           />
         </div>
         <!--  -->
+        <span class="info"> گزینه صحیح ؟ </span>
         <div class="form-group col-md-4 p-5 col-sm-12 answer">
           <input
             class="form-check-input"
@@ -446,6 +453,14 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
+.info {
+  display: none;
+}
+
+.mobile {
+  display: none;
+}
+
 .span {
   font-weight: 700;
   margin: 1rem;
@@ -467,7 +482,6 @@ textarea {
   justify-content: center;
   align-items: center;
 }
-
 .label {
   width: 40%;
   margin: 5rem 0 2rem 0;
@@ -478,6 +492,34 @@ textarea {
     font-weight: 600;
     display: block;
     padding: 1rem 0 1rem 0;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .span {
+    display: none;
+  }
+
+  .label {
+    h3 {
+      font-size: 1.5rem;
+    }
+    span {
+      font-size: 1rem !important;
+      padding: 0;
+    }
+  }
+  .info {
+    display: block;
+    transform: translateY(250%);
+    margin-right: 1rem;
+  }
+  .answer {
+    justify-content: space-evenly;
+  }
+  .mobile {
+    display: block;
+    margin: 2rem 0 1rem 0;
   }
 }
 </style>

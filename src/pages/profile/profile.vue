@@ -55,6 +55,7 @@
                 <label for="firstname">نام : </label>
                 <Field
                   type="text"
+                  name="firstname"
                   class="form-control"
                   id="firstname"
                   v-model="currentUser.firstname"

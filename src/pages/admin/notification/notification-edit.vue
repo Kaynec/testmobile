@@ -120,7 +120,9 @@ export default defineComponent({
         : model;
 
     const save = () => {
-      console.log(model);
+      NotificationServiceApi.getAll().then((result) => {
+        console.log(result, model);
+      });
       /// error handeling
       v$.value.$touch();
       if (!v$.value.$invalid) {
@@ -154,7 +156,7 @@ export default defineComponent({
       title: {
         required: helpers.withMessage('عتوان  را وارد کنید', required),
         minLength: helpers.withMessage(
-          'عتوان باید حدقا 3 حرف باشد',
+          'عتوان باید حداقل 3 حرف باشد',
           minLength(3)
         )
       },
@@ -178,7 +180,7 @@ export default defineComponent({
     // cancel //
     const cancel = () => {
       router.push({
-        name: 'announcement'
+        name: 'notification'
       });
       alertify.notify('cancelled action');
     };
