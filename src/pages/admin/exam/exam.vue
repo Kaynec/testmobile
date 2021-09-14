@@ -44,8 +44,6 @@ import { ExamServiceApi } from '@/api/services/admin/exam-service';
 const $ = require('jquery');
 const alertify = require('../../../assets/alertifyjs/alertify');
 
-// import { string } from 'yup/lib/locale';
-
 export default defineComponent({
   components: { grid },
 
@@ -64,7 +62,7 @@ export default defineComponent({
       },
       {
         label: 'مدت زمان ',
-        data: 'time',
+        data: 'duration',
         responsivePriority: 3,
         searchPanes: {
           orthogonal: 'sp',
@@ -75,6 +73,15 @@ export default defineComponent({
       {
         label: 'تاریخ',
         data: 'date',
+        responsivePriority: 3,
+        searchPanes: {
+          orthogonal: 'sp',
+          show: true
+        }
+      },
+      {
+        label: 'ساعت',
+        data: 'time',
         responsivePriority: 3,
         searchPanes: {
           orthogonal: 'sp',
@@ -110,7 +117,6 @@ export default defineComponent({
     const options = reactive({
       gridName: 'exam-grid',
       url: `${baseUrl}exam`,
-      // url: 'https://612c823fab461c00178b5d22.mockapi.io/exam',
       type: 'GET'
     });
 

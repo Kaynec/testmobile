@@ -23,13 +23,52 @@
           </span>
         </div>
         <!--  -->
-
+        <div class="form-group col-md-2 col">
+          <label>ساعت :</label>
+          <select
+            class="form-select"
+            v-model="model.time"
+            @blur="v$.time.$touch()"
+          >
+            <option value="00.00">00:00</option>
+            <option value="00:30">00:30</option>
+            <template v-for="number in 23" :key="number">
+              <option
+                :value="
+                  number < 10
+                    ? (number1 = `0${number}:00`)
+                    : (number1 = `${number}:00`)
+                "
+              >
+                {{ number1 }}
+              </option>
+              <option
+                :value="
+                  number < 10
+                    ? (number2 = '0' + number + ':' + '30')
+                    : (number2 = number + ':' + '30')
+                "
+              >
+                {{ number2 }}
+              </option>
+            </template>
+          </select>
+          <!--  -->
+          <span
+            v-for="error in v$.time.$errors"
+            :key="error.id"
+            class="form-text text-danger"
+          >
+            {{ error.$message }}
+          </span>
+        </div>
+        <!--  -->
         <div class="form-group col-md-2 col-sm-12">
-          <label for="date">تاریخ :</label>
-
+          <label>تاریخ :</label>
           <input
             type="text"
             class="form-control"
+            @blur="v$.date.$touch()"
             v-model="model.date"
             data-jdp
           />
@@ -42,23 +81,15 @@
           </span>
         </div>
 
-        <div class="form-group col-md-2 col">
-          <label for="date">ساعت :</label>
-
-          <input type="time" v-model="model.hour" class="form-control" />
-          <span
-            v-for="error in v$.hour.$errors"
-            :key="error.id"
-            class="form-text text-danger"
-          >
-            {{ error.$message }}
-          </span>
-        </div>
-
         <!--  -->
         <div class="form-group col-md-3 col-sm-12">
           <label>مدت زمان آزمون :</label>
-          <input type="number" class="form-control" v-model="model.duration" />
+          <input
+            @blur="v$.duration.$touch()"
+            type="number"
+            class="form-control"
+            v-model="model.duration"
+          />
           <small> مدت زمان به دقیقه است </small>
           <span
             v-for="error in v$.duration.$errors"
@@ -68,85 +99,100 @@
             {{ error.$message }}
           </span>
         </div>
-
         <!--!!!!!!!!-->
       </div>
-
       <!--  -->
-
       <span class="span">سوالات آزمون</span>
-      <div
-        class="form-row"
-        v-for="(course, firstIdx) in model.budgeting"
-        :key="course.title"
-      >
-        <div class="form-group col-md-4 col-sm-12">
-          <label for="birthdate"> درس :</label>
-          <select
-            class="form-select"
-            v-model="course.course"
-            @blur="v$.courses.$touch()"
-          >
-            <option v-for="Course in Courses" :value="Course" :key="Course._id">
-              {{ Course.title }}
-            </option>
-          </select>
-        </div>
-        <!--  -->
-        <!-- Inner Nested Sessions -->
 
-        <div
-          class="form-row"
-          v-for="course in model.budgeting[firstIdx]"
-          :key="course.title"
-        >
-          <label for="birthdate"> درس :</label>
-          <div class="form-group col-md-4 col-sm-12">
+      <div v-for="(item, firstIdx) in items" :key="item" class="custom-div">
+        <!--  -->
+        <div class="form-group col-md-4 col-sm-12">
+          <!--  -->
+          <div>
+            <label> درس :</label>
             <select
               class="form-select"
-              v-model="course.course"
-              @blur="v$.courses.$touch()"
+              v-model="item.course"
+              @blur="v$$.items.$touch()"
             >
               <option
-                v-for="Session in Sessions"
-                :value="Session"
-                :key="Session._id"
+                v-for="Course in Courses"
+                :value="{ _id: Course._id, title: Course.title }"
+                :key="Course._id"
               >
                 {{ Course.title }}
               </option>
             </select>
           </div>
-        </div>
-
-        <!--  -->
-
-        <!-- <div class="form-group col-md-4 col-sm-12">
-          <label> تعداد سوالات این درس در آزمون :</label>
-          <input
-            type="number"
-            min="1"
-            class="form-control"
-            v-model="course.number"
-          />
-        </div> -->
-        <div class="div">
+          <!--  -->
           <button
+            style="margin: 0.5rem"
             type="button"
-            class="btn btn-default"
-            @click="deleteCourse(firstIdx)"
+            class="btn btn-secondary"
+            @click="addSession(firstIdx)"
           >
-            حذف درس
+            <i class="fas fa-plus-square fa-2x"></i>
           </button>
         </div>
-        <span
-          v-for="error in v$.budgeting.$errors"
-          :key="error.id"
-          class="form-text text-danger"
-        >
-          {{ error.$message }}
-        </span>
-      </div>
 
+        <div
+          class="form-row custom-session-div"
+          v-for="(session, index) in item.sessions"
+          :key="session"
+        >
+          <div class="form-group col-md-4 col-sm-12">
+            <label> فصل :</label>
+            <select
+              class="form-select"
+              v-model="session.session"
+              :key="session"
+              @blur="v$$.items.$touch()"
+            >
+              <option
+                v-for="Session in filteredSessions(item)"
+                :key="Session._id"
+                :value="{ _id: Session._id, title: Session.title }"
+              >
+                {{ Session.title }}
+              </option>
+            </select>
+          </div>
+
+          <div class="form-group col-md-4 col-sm-12">
+            <label> تعداد سوالات این فصل :</label>
+
+            <input
+              style="display: block"
+              @blur="v$$.items.$touch()"
+              v-model="session.questionCount"
+              type="number"
+            />
+          </div>
+          <button
+            type="button"
+            class="btn btn-secondary"
+            @click="deleteSession(firstIdx, index)"
+          >
+            <i class="fas fa-trash fa-2x"></i>
+          </button>
+        </div>
+        <!--  -->
+        <button
+          type="button"
+          class="btn btn-primary div"
+          @click="deleteCourse(firstIdx)"
+        >
+          حذف کردن درس
+        </button>
+        <!--  -->
+      </div>
+      <span
+        v-for="error in v$$.items.$errors"
+        :key="error.id"
+        class="form-text text-danger"
+      >
+        {{ error.$message }}
+      </span>
       <!--  -->
       <div class="form-group col-md-4 col-sm-12">
         <button
@@ -164,10 +210,16 @@
 </template>
 
 <script lang="ts">
-import { reactive, defineComponent, computed, ref } from 'vue';
+import { reactive, defineComponent, computed, ref, watch } from 'vue';
 import router from '@/router';
 import useVuelidate from '@vuelidate/core';
-import { helpers, minLength, required } from '@vuelidate/validators';
+import {
+  helpers,
+  minLength,
+  required,
+  minValue,
+  numeric
+} from '@vuelidate/validators';
 import { CourseServiceApi } from '@/api/services/admin/course-service';
 import { SessionServiceApi } from '@/api/services/admin/session-service';
 import '@majidh1/jalalidatepicker/dist/jalaliDatepicker.css';
@@ -183,23 +235,11 @@ export default defineComponent({
   },
   setup(props) {
     let model = reactive(JSON.parse(props.exam));
-    (window as any).jalaliDatepicker.startWatch({
-      time: true,
-      timePicker: true
-    });
-    model =
-      JSON.stringify(model) === '{}'
-        ? reactive({
-            title: '',
-            date: '',
-            hour: '',
-            duration: 10,
-            budgeting: [{ course: {}, number: 1 }]
-          })
-        : model;
-    //
     let Courses = ref<any>([]);
     let Sessions = ref<any>([]);
+    let items = ref<any>([]);
+    // getting a list of all courses and sessions from the database
+
     CourseServiceApi.getAll().then((res) => {
       res.data.data.forEach((el: any) => {
         Courses.value.push(el);
@@ -210,19 +250,107 @@ export default defineComponent({
         Sessions.value.push(el);
       });
     });
-    // // // // //
-    const addCourse = () => model.budgeting.push({ course: {}, number: 1 });
-    const deleteCourse = (idx: number) =>
-      (model.budgeting = model.budgeting.filter(
-        (course: any, index: number) => index != idx
-      ));
+
+    // for each item make a course and if the course exists push a session into it
+    if (JSON.stringify(model) != '{}') {
+      model.budgeting.forEach((item: any) => {
+        const duplicate = items.value.find(
+          (el: any) => el.course._id == item.course
+        );
+        // if an item with that id does not exist on the items array create one
+        if (!duplicate)
+          items.value.push({
+            sessions: [],
+            course: { _id: item.course }
+          });
+      });
+      // push the sessions into it's appropiate place
+      items.value.forEach((itemel: any) => {
+        CourseServiceApi.get(itemel.course._id).then((res) => {
+          itemel.course = {
+            title: res.data.data.title,
+            _id: res.data.data._id
+          };
+        });
+
+        model.budgeting.forEach((item: any) => {
+          if (itemel.course._id == item.course) {
+            //
+            SessionServiceApi.get(item.session).then((res) => {
+              itemel.sessions.push({
+                questionCount: item.questionCount,
+                session: { _id: item.session, title: res.data.data.title }
+              });
+            });
+            //
+          }
+        });
+      });
+    }
+    // initializing date picker
+    (window as any).jalaliDatepicker.startWatch();
+    //
+    model =
+      JSON.stringify(model) === '{}'
+        ? reactive({
+            title: '',
+            date: '',
+            time: '',
+            duration: 10
+          })
+        : model;
+    // The filteredSessions => sessions only for that course
+    let filteredSessions = (item: any) => {
+      return Sessions.value.filter((el: any) => {
+        return el.course == item.course._id;
+      });
+    };
+    //
+    const addCourse = () =>
+      items.value.push({
+        questionCount: 1,
+        sessions: [],
+        course: {}
+      });
+
+    const deleteCourse = (idx: number) => {
+      items.value.splice(idx, 1);
+    };
+
+    const addSession = (index: number) => {
+      items.value[index].sessions.push({
+        session: {},
+        questionCount: 1
+      });
+    };
+
+    const deleteSession = (courseIdx: number, index: number) =>
+      items.value[courseIdx].sessions.splice(index, 1);
     //
     const save = () => {
       /// error handeling
       v$.value.$touch();
-      if (!v$.value.$invalid) {
+      v$$.value.$touch();
+      let budgeting: any = [];
+      items.value.forEach((item: any) => {
+        item.sessions.forEach((ses: any) => {
+          budgeting.push({
+            questionCount: ses.questionCount,
+            course: { _id: item.course._id },
+            session: { _id: ses.session._id }
+          });
+        });
+      });
+      //
+      if (!v$.value.$invalid && !v$$.value.$invalid) {
+        let tmp: any = {
+          title: model.title,
+          date: model.date,
+          time: model.time,
+          duration: model.duration,
+          budgeting: budgeting
+        };
         if (model._id) {
-          let tmp: any = {};
           ExamServiceApi.update(model._id, tmp).then((result) => {
             alertify.success(result.data.message);
             router.push({
@@ -230,7 +358,7 @@ export default defineComponent({
             });
           });
         } else {
-          ExamServiceApi.create(model._id).then((result) => {
+          ExamServiceApi.create(tmp).then((result) => {
             alertify.success(result.data.message);
             router.push({
               name: 'exam'
@@ -239,25 +367,39 @@ export default defineComponent({
         }
       }
     };
-
     // Validations
     const unique = (group: any): any => {
       return (value: unknown) => {
-        for (let i = 0; i < group.length; i++) {
-          for (let j = 0; i < group.length; j++) {
-            console.log(group[i], group[j]);
-            if (group[i].course._id == group[j].course._id) {
-              if (i != j) return false;
-              break;
-            }
-          }
-        }
-        return true;
+        let boolean = true;
+        group.forEach((item: any, index: number) => {
+          const copyOfCourse = group.find((course: any, idx: number) => {
+            return course.course._id == item.course._id && index != idx;
+          });
+          if (copyOfCourse) boolean = false;
+        });
+        return boolean;
       };
     };
-
+    //
+    const innerUnique = (group: any): any => {
+      return (value: unknown) => {
+        let boolean = true;
+        group.forEach((item: any) => {
+          item.sessions.forEach((ses: any, idx: number) => {
+            const copyOfSession = item.sessions.find(
+              (session: any, i: number) => {
+                return session.session._id == ses.session._id && idx != i;
+              }
+            );
+            if (copyOfSession) boolean = false;
+          });
+        });
+        return boolean;
+      };
+    };
+    //
     const rules = computed(() => ({
-      hour: {
+      time: {
         required: helpers.withMessage('لطفا  ساعت آزمون را مشخص کنید', required)
       },
       title: {
@@ -276,33 +418,29 @@ export default defineComponent({
           'لطفا مدت زمان آزمون را مشخص کنید',
           required
         ),
-        minLength: helpers.withMessage(
+        numeric,
+        minValue: helpers.withMessage(
           'زمان آزمون باید حداقل ده دقیقه باشد',
-          minLength(10)
+          minValue(10)
         )
-      },
-      budgeting: {
-        required: helpers.withMessage('لطفا حداقل یک مورد مشخص کنید', required),
+      }
+    }));
+    const itemRules = computed(() => ({
+      items: {
         unique: helpers.withMessage(
-          'لطفا موارد تکراری را حذف کنید',
-          unique(model.budgeting) as any
+          'لطفا درس های  تکراری را حذف کنید',
+          unique(items.value)
         ),
-        $each: {
-          questionCount: {
-            required,
-            minLength: helpers.withMessage(
-              'تعداد سوالات باید بیشتر از 0 باشد',
-              minLength(1)
-            )
-          },
-          course: { required, _id: { required } },
-          sessions: { required, _id: { required } }
-        }
+        innerUnique: helpers.withMessage(
+          'لطفا فصل های تکراری را حذف کنید',
+          innerUnique(items.value)
+        )
       }
     }));
 
+    const tempItems: any = { items };
     const v$ = useVuelidate(rules, model);
-
+    const v$$ = useVuelidate(itemRules, tempItems);
     // cancel //
     const cancel = () => {
       router.push({
@@ -310,16 +448,22 @@ export default defineComponent({
       });
       alertify.notify('cancelled action');
     };
-
+    //
+    watch(items.value, () => console.log(items.value));
+    //
     return {
       model,
       save,
       cancel,
       v$,
+      v$$,
       Courses,
       addCourse,
       deleteCourse,
-      Sessions
+      filteredSessions,
+      items,
+      addSession,
+      deleteSession
     };
   }
 });
@@ -342,5 +486,19 @@ export default defineComponent({
 }
 small {
   color: rgb(151, 144, 144);
+}
+.custom-session-div {
+  display: flex;
+  align-items: center;
+  border: 1px solid rgb(202, 192, 192);
+  margin: 0.5rem;
+  padding: 0.5rem;
+  border-radius: 10px;
+}
+.custom-div {
+  background-color: rgb(245, 245, 245);
+  margin: 1rem 0 1rem 0;
+  padding: 1rem;
+  border-radius: 10px;
 }
 </style>

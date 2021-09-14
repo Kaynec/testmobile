@@ -71,7 +71,7 @@ export default defineComponent({
     // Data
     const columns = reactive([
       {
-        label: 'نام درس',
+        label: 'نام فصل',
         data: 'title',
         responsivePriority: 1,
         searchPanes: {
