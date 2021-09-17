@@ -57,6 +57,13 @@
             لطفا یک گزینه را انتخاب کنید
           </span>
         </div>
+        <div class="label" v-else>
+          <h3>درس مرتبط</h3>
+          <span v-if="currentCourse.title == null">Loading...</span>
+          <span v-else-if="currentCourse.title">
+            {{ currentCourse.title }}
+          </span>
+        </div>
         <!-- Session -->
         <div class="form-group col-md-4 col-sm-12" v-if="!model._id">
           <label> فصل مرتبط </label>
@@ -78,6 +85,13 @@
 
           <span class="form-text text-danger" v-if="v$.session.$error">
             لطفا یک گزینه را انتخاب کنید
+          </span>
+        </div>
+        <div class="label" v-else>
+          <h3>فصل مرتبط</h3>
+          <span v-if="currentSession.title == null">Loading...</span>
+          <span v-else-if="currentSession.title">
+            {{ currentSession.title }}
           </span>
         </div>
       </div>
@@ -105,6 +119,7 @@
           />
         </div>
         <!-- is answer -->
+        <span class="info"> گزینه صحیح ؟ </span>
         <div class="form-group col-md-4 p-5 col-sm-12 answer">
           <input
             class="form-check-input"
@@ -115,6 +130,7 @@
           />
         </div>
       </div>
+      <hr class="mobile" />
       <!--  Second Option Text  -->
       <div class="form-row">
         <div class="form-group col-md-4 col-sm-12">
@@ -138,6 +154,7 @@
           />
         </div>
         <!--  -->
+        <span class="info"> گزینه صحیح ؟ </span>
         <div class="form-group col-md-4 p-5 col-sm-12 answer">
           <input
             class="form-check-input"
@@ -148,6 +165,7 @@
           />
         </div>
       </div>
+      <hr class="mobile" />
       <!--  -->
       <!-- Third Option Text  -->
       <div class="form-row">
@@ -173,6 +191,7 @@
         </div>
         <!--  -->
         <!--  -->
+        <span class="info"> گزینه صحیح ؟ </span>
         <div class="form-group col-md-4 p-5 col-sm-12 answer">
           <input
             class="form-check-input"
@@ -183,6 +202,7 @@
           />
         </div>
       </div>
+      <hr class="mobile" />
       <!--  -->
       <!--  -->
       <div class="form-row">
@@ -208,6 +228,7 @@
           />
         </div>
         <!--  -->
+        <span class="info"> گزینه صحیح ؟ </span>
         <div class="form-group col-md-4 p-5 col-sm-12 answer">
           <input
             class="form-check-input"
@@ -256,6 +277,19 @@ export default defineComponent({
 
   setup(props) {
     let model = reactive(JSON.parse(props.question));
+    // INCASE OF UPDATE SHOW THE ASSOCIATED SESSION AND COURSE
+    let currentCourse = ref({});
+    let currentSession = ref({});
+    if (model._id) {
+      SessionServiceApi.get(model.session).then((res) => {
+        currentSession.value = res.data.data;
+      });
+
+      CourseServiceApi.get(model.course).then((res) => {
+        currentCourse.value = res.data.data;
+      });
+    }
+    // // // // // // // // // // // // // // // // // // // //
 
     model =
       JSON.stringify(model) === '{}'
@@ -311,6 +345,7 @@ export default defineComponent({
     // All The Questions And Courses
     let courses = ref([] as any);
     let sessions = ref([] as any);
+
     // Change The Image to Base64
     const getBase64 = (file: any) => {
       return new Promise((resolve, reject) => {
@@ -410,15 +445,26 @@ export default defineComponent({
       sessions,
       onFileChange,
       v$,
-      filteredSessions
+      filteredSessions,
+      currentCourse,
+      currentSession
     };
   }
 });
 </script>
 <style lang="scss" scoped>
+.info {
+  display: none;
+}
+
+.mobile {
+  display: none;
+}
+
 .span {
   font-weight: 700;
   margin: 1rem;
+  margin-right: 2rem;
   width: 85%;
   color: #010127 207, 236;
   font-family: helvetica, arial;
@@ -432,6 +478,48 @@ textarea {
   resize: none;
 }
 .answer {
-  transform: translateX(-35%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.label {
+  width: 40%;
+  margin: 5rem 0 2rem 0;
+  text-align: center;
+  border-bottom: 2px solid rgb(111, 104, 104);
+  span {
+    font-size: larger;
+    font-weight: 600;
+    display: block;
+    padding: 1rem 0 1rem 0;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .span {
+    display: none;
+  }
+
+  .label {
+    h3 {
+      font-size: 1.5rem;
+    }
+    span {
+      font-size: 1rem !important;
+      padding: 0;
+    }
+  }
+  .info {
+    display: block;
+    transform: translateY(250%);
+    margin-right: 1rem;
+  }
+  .answer {
+    justify-content: space-evenly;
+  }
+  .mobile {
+    display: block;
+    margin: 2rem 0 1rem 0;
+  }
 }
 </style>

@@ -5,12 +5,12 @@
       <div class="container-fluid">
         <div class="row mb-2">
           <div class="col-sm-6">
-            <h1 class="m-0">دروس</h1>
+            <h1 class="m-0">آزمون ها</h1>
           </div>
           <div class="col-sm-6">
             <button
               class="m-0 float-left btn btn-success"
-              @click="createCourse()"
+              @click="createExam()"
             >
               جدید
             </button>
@@ -40,46 +40,53 @@ import { defineComponent, ref, onMounted, reactive } from 'vue';
 import { baseUrl } from '@/api/apiclient';
 import grid from '@/modules/shared/grid.vue';
 import router from '@/router';
+import { ExamServiceApi } from '@/api/services/admin/exam-service';
 const $ = require('jquery');
 const alertify = require('../../../assets/alertifyjs/alertify');
-import { CourseServiceApi } from '@/api/services/admin/course-service';
-import { SessionServiceApi } from '@/api/services/admin/session-service';
-// import { string } from 'yup/lib/locale';
 
 export default defineComponent({
   components: { grid },
+
   setup() {
-    // ref
     const grid = ref();
     // Data
-
     const columns = reactive([
       {
-        label: 'نام درس',
+        label: 'نام ',
         data: 'title',
         responsivePriority: 1,
-        // type: () => {
-        //   return typeof string;
-        // },
         searchPanes: {
           orthogonal: 'sp',
           show: true
         }
       },
-      { label: 'کد', data: 'code', responsivePriority: 3 },
-      { label: 'رشته', data: 'orientation', responsivePriority: 3 },
       {
-        className: 'edit-control',
-        orderable: false,
-        defaultContent: '',
-        label: '',
-        data: '_id',
-        width: 100,
-        action: 'read',
-        render: function (data: any) {
-          return `<button type="button" data-session-id="${data}" class="btn btn-default edit-button">فصل ها</button>`;
-        },
-        responsivePriority: 2
+        label: 'مدت زمان ',
+        data: 'duration',
+        responsivePriority: 3,
+        searchPanes: {
+          orthogonal: 'sp',
+          show: true
+        }
+      },
+
+      {
+        label: 'تاریخ',
+        data: 'date',
+        responsivePriority: 3,
+        searchPanes: {
+          orthogonal: 'sp',
+          show: true
+        }
+      },
+      {
+        label: 'ساعت',
+        data: 'time',
+        responsivePriority: 3,
+        searchPanes: {
+          orthogonal: 'sp',
+          show: true
+        }
       },
       {
         className: 'edit-control',
@@ -92,8 +99,9 @@ export default defineComponent({
         render: function (data: any) {
           return `<button type="button" data-edit-id="${data}" class="btn btn-default edit-button">ویرایش</button>`;
         },
-        responsivePriority: 1
+        responsivePriority: 2
       },
+
       {
         label: '',
         data: '_id',
@@ -107,60 +115,37 @@ export default defineComponent({
     ]);
 
     const options = reactive({
-      gridName: 'course-grid',
-      url: `${baseUrl}course`,
+      gridName: 'exam-grid',
+      url: `${baseUrl}exam`,
       type: 'GET'
-      // data: (d: any) =< {
-      //   d.extra = 111;
-      // }
     });
 
-    const editCourse = (course: any) => {
+    const editExam = (exam: any) => {
       router.push({
-        name: 'course-edit',
-        params: { course: JSON.stringify(course) }
+        name: 'exam-edit',
+        params: { exam: JSON.stringify(exam) }
       });
     };
 
-    const deleteCourse = (course: any) => {
-      const allQuestions = async () => {
-        const Questions = await SessionServiceApi.getAll({
-          course: { _id: course._id }
-        })
-          .then((res) => {
-            return res.data.data.length > 0;
-          })
-          .then((res) => {
-            return res;
-          });
-        return await Questions;
-      };
-      allQuestions().then((res) => {
-        if (res === true) {
-          alertify.defaults.glossary.ok = 'بله';
-          alertify.alert('هشدار', 'لطفا اول فصل های این درس را حذف کنید');
-        } else {
-          alertify.defaults.glossary.ok = 'خیر';
-          alertify.defaults.glossary.cancel = 'بله';
-          alertify.confirm('حذف', 'آیا اطمینان دارید؟', function (e: any) {
-            if (e) {
-              CourseServiceApi.delete(course._id).then((result) => {
-                alertify.success(result.data.message);
-                (grid.value as any).getDatatable().ajax.reload();
-              });
-            }
+    const deleteExam = (exam: any) => {
+      alertify.defaults.glossary.ok = 'خیر';
+      alertify.defaults.glossary.cancel = 'بله';
+      alertify.confirm('حذف', 'آیا اطمینان دارید؟', function (e: any) {
+        if (e) {
+          ExamServiceApi.delete(exam._id).then((result: any) => {
+            alertify.success(result.data.message);
+            (grid.value as any).getDatatable().ajax.reload();
           });
         }
       });
     };
 
-    const createCourse = () => {
+    const createExam = () => {
       router.push({
-        path: 'course-create',
-        params: { course: JSON.stringify({}) }
+        name: 'exam-create',
+        params: { exam: JSON.stringify({}) }
       });
     };
-
     onMounted(() => {
       if (grid.value.getDatatable()) {
         grid.value
@@ -173,24 +158,7 @@ export default defineComponent({
               .filter(function (value: any) {
                 return value._id == id;
               });
-            if (filteredData.length > 0) editCourse(filteredData[0]);
-          });
-        grid.value
-          .getDatatableBody()
-          .on('click', '[data-session-id]', (e: any) => {
-            let id = $(e.currentTarget).data().sessionId;
-            let filteredData = grid.value
-              .getDatatable()
-              .data()
-              .filter(function (value: any) {
-                return value._id == id;
-              });
-            if (filteredData.length >= 0) {
-              router.push({
-                name: 'session',
-                params: { course: JSON.stringify(filteredData[0]) }
-              });
-            }
+            if (filteredData.length > 0) editExam(filteredData[0]);
           });
         grid.value
           .getDatatableBody()
@@ -202,12 +170,17 @@ export default defineComponent({
               .filter(function (value: any) {
                 return value._id == id;
               });
-            if (filteredData.length > 0) deleteCourse(filteredData[0]);
+            if (filteredData.length > 0) deleteExam(filteredData[0]);
           });
       }
     });
 
-    return { options, columns, createCourse, deleteCourse, editCourse, grid };
+    return {
+      options,
+      columns,
+      createExam,
+      grid
+    };
   }
 });
 </script>

@@ -20,6 +20,18 @@ import SessionEdit from '@/pages/admin/session/session-edit.vue';
 import Question from '@/pages/admin/question/question.vue';
 import QuestionEdit from '@/pages/admin/question/question-edit.vue';
 
+import Store from '@/pages/admin/store/store.vue';
+import StoreEdit from '@/pages/admin/store/store-edit.vue';
+
+import Announcement from '@/pages/admin/announcement/announcement.vue';
+import AnnouncementEdit from '@/pages/admin/announcement/announcement-edit.vue';
+
+import Notification from '@/pages/admin/notification/notification.vue';
+import NotificationEdit from '@/pages/admin/notification/notification-edit.vue';
+
+import Exam from '@/pages/admin/exam/exam.vue';
+import ExamEdit from '@/pages/admin/exam/exam-edit.vue';
+
 import { useStore } from '@/store';
 const ifNotAuthenticated = (to: any, from: any, next: any) => {
   if (!useStore().getters.getUserToken) {
@@ -143,6 +155,81 @@ const routes: Array<RouteRecordRaw> = [
         name: 'question-edit',
         props: true,
         component: QuestionEdit
+      },
+
+      {
+        path: 'store',
+        name: 'store',
+        component: Store
+      },
+      {
+        path: 'store-create',
+        name: 'store-create',
+        props: true,
+        component: StoreEdit
+      },
+      {
+        path: 'store-edit',
+        name: 'store-edit',
+        props: true,
+        component: StoreEdit
+      },
+
+      {
+        path: 'announcement',
+        name: 'announcement',
+        props: true,
+        component: Announcement
+      },
+      {
+        path: 'announcement-create',
+        name: 'announcement-create',
+        props: true,
+        component: AnnouncementEdit
+      },
+      {
+        path: 'announcement-edit',
+        name: 'announcement-edit',
+        props: true,
+        component: AnnouncementEdit
+      },
+
+      {
+        path: 'notification',
+        name: 'notification',
+        props: true,
+        component: Notification
+      },
+      {
+        path: 'notification-create',
+        name: 'notification-create',
+        props: true,
+        component: NotificationEdit
+      },
+      {
+        path: 'notification-edit',
+        name: 'notification-edit',
+        props: true,
+        component: NotificationEdit
+      },
+
+      {
+        path: 'exam',
+        name: 'exam',
+        props: true,
+        component: Exam
+      },
+      {
+        path: 'exam-create',
+        name: 'exam-create',
+        props: true,
+        component: ExamEdit
+      },
+      {
+        path: 'exam-edit',
+        name: 'exam-edit',
+        props: true,
+        component: ExamEdit
       },
       // {
       //   path: 'admin',

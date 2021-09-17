@@ -78,6 +78,22 @@ export default class MenuSidebar extends Vue {
         {
           name: 'سوالات',
           url: '/admin/question'
+        },
+        {
+          name: 'فروشگاه',
+          url: '/admin/store'
+        },
+        {
+          name: 'اطلاعیه ها',
+          url: '/admin/announcement'
+        },
+        {
+          name: 'نوتیفیکیشن ها',
+          url: '/admin/notification'
+        },
+        {
+          name: 'آزمون ها',
+          url: '/admin/exam'
         }
         // {
         //   name: 'ادمین ها',
