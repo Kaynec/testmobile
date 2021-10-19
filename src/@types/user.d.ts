@@ -1,4 +1,4 @@
-export type UserProfileName = 'client' | 'admin';
+export type UserProfileName = 'student' | 'teacher' | 'admin';
 
 export type UserRoles = string[];
 

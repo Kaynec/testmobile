@@ -3,14 +3,12 @@
     <!-- /.login-logo -->
     <div class="card card-outline card-primary">
       <div class="card-header text-center">
-        <a href="../../index2.html" class="h1"
-          ><img src="../../assets/img/logo.png"
-        /></a>
+        <a class="h1"><img src="../../../assets/img/logo.png" /></a>
       </div>
       <div class="card-body">
         <p class="login-box-msg">ورود به پنل ماهان</p>
 
-        <form action="../../index3.html" method="post">
+        <form>
           <div class="input-group mb-3">
             <input
               type="email"

@@ -60,7 +60,7 @@
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
 import { useStore } from '@/store';
-import { DocumentsActionTypes } from '@/store/modules/user/action-types';
+import { AdminActionTypes } from '@/store/modules/admin/action-types';
 import { UserDocuments } from '@/@types';
 
 @Options({})
@@ -88,7 +88,7 @@ export default class User extends Vue {
   }
 
   private async logout() {
-    await useStore().dispatch(DocumentsActionTypes.LOG_OUT, undefined);
+    await useStore().dispatch(AdminActionTypes.LOG_OUT, undefined);
     this.$router.push('/login');
   }
 

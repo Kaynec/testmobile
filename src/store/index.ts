@@ -4,7 +4,7 @@ import {
   store as users,
   DocumentsStore,
   State as UserState
-} from '@/store/modules/user';
+} from '@/store/modules/admin';
 
 export type RootState = {
   users: UserState;

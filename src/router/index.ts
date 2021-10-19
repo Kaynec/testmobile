@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 
 import Main from '@/modules/main/main.vue';
+import StudentMain from '@/modules/student-main/student-main.vue';
 import Login from '@/modules/login/login.vue';
 import Register from '@/modules/register/register.vue';
 
@@ -31,6 +32,10 @@ import NotificationEdit from '@/pages/admin/notification/notification-edit.vue';
 
 import Exam from '@/pages/admin/exam/exam.vue';
 import ExamEdit from '@/pages/admin/exam/exam-edit.vue';
+
+// student page import
+
+import StudentLoginMobile from '@/pages/student/login/login-mobile.vue';
 
 import { useStore } from '@/store';
 const ifNotAuthenticated = (to: any, from: any, next: any) => {
@@ -255,6 +260,19 @@ const routes: Array<RouteRecordRaw> = [
       }
     ],
     beforeEnter: ifAuthenticated
+  },
+  {
+    path: '/student',
+    name: 'Student',
+    component: StudentMain,
+    children: [
+      {
+        path: '/login',
+        name: 'StudentLogin',
+        component: StudentLoginMobile,
+        beforeEnter: ifNotAuthenticated
+      }
+    ]
   },
   {
     path: '/login',
