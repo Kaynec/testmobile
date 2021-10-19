@@ -13,6 +13,20 @@
 @import '~datatables.net-datetime/css/dataTables.dateTime.scss';
 @import 'assets/css/adminlte.css';
 
+@font-face {
+  font-family: 'IRANSans';
+  src: url('./assets/fonts/IRANSans.eot');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'IRANSans';
+  src: url('./assets/fonts/IRANSans.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
 #app {
   width: 100vw;
   height: 100vh;

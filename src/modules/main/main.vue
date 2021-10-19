@@ -28,6 +28,7 @@ export default class Main extends Vue {
     this.appElement = document.getElementById('app') as HTMLElement;
     this.appElement.classList.add('sidebar-mini');
     this.appElement.classList.add('layout-fixed');
+    console.log((this as any).isMobile());
   }
 
   public unmounted(): void {

@@ -139,7 +139,7 @@
 <script lang="ts">
 import '@majidh1/jalalidatepicker/dist/jalaliDatepicker.css';
 import '@majidh1/jalalidatepicker/dist/jalaliDatepicker.js';
-import { useStore } from '@/store';
+import { useAdminStore } from '@/store';
 import { Form, Field, ErrorMessage } from 'vee-validate';
 import * as yup from 'yup';
 import { defineComponent, computed } from 'vue';
@@ -154,7 +154,7 @@ export default defineComponent({
   setup() {
     (window as any).jalaliDatepicker.startWatch();
     const currentUser = computed(() => {
-      return { ...useStore().getters.getCurrentUser };
+      return { ...useAdminStore().getters.getCurrentUser };
     });
 
     const validateSchema = computed(() => {

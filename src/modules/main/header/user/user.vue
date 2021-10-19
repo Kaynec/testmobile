@@ -59,7 +59,7 @@
 </template>
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
-import { useStore } from '@/store';
+import { useAdminStore } from '@/store';
 import { AdminActionTypes } from '@/store/modules/admin/action-types';
 import { UserDocuments } from '@/@types';
 
@@ -88,12 +88,12 @@ export default class User extends Vue {
   }
 
   private async logout() {
-    await useStore().dispatch(AdminActionTypes.LOG_OUT, undefined);
-    this.$router.push('/login');
+    await useAdminStore().dispatch(AdminActionTypes.LOG_OUT, undefined);
+    this.$router.push('/admin/login');
   }
 
   get currentUser(): UserDocuments | null {
-    return useStore().getters.getCurrentUser;
+    return useAdminStore().getters.getCurrentUser;
   }
 }
 </script>

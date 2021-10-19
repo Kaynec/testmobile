@@ -5,12 +5,19 @@ import {
   DocumentsStore,
   State as UserState
 } from '@/store/modules/admin';
+import {
+  store as students,
+  StudentsStore,
+  State as StudentState
+} from '@/store/modules/student';
 
 export type RootState = {
   users: UserState;
+  students: StudentState;
 };
 
-export type Store = DocumentsStore<Pick<RootState, 'users'>>;
+export type AdminStore = DocumentsStore<Pick<RootState, 'users'>>;
+export type StudentStore = StudentsStore<Pick<RootState, 'students'>>;
 
 // Plug in logger when in development environment
 const debug = process.env.NODE_ENV !== 'production';
@@ -22,10 +29,15 @@ plugins.push(createPersistedState({ storage: window.sessionStorage }));
 export const store = createStore({
   plugins,
   modules: {
-    users
+    users,
+    students
   }
 });
 
-export function useStore(): Store {
-  return store as Store;
+export function useAdminStore(): AdminStore {
+  return store as AdminStore;
+}
+
+export function useStudentStore(): StudentStore {
+  return store as StudentStore;
 }

@@ -11,7 +11,7 @@ import { mutations, Mutations } from './mutations';
 import { actions, Actions } from './actions';
 import type { State } from './state';
 export { State };
-export type DocumentsStore<S = State> = Omit<
+export type StudentsStore<S = State> = Omit<
   VuexStore<S>,
   'getters' | 'commit' | 'dispatch'
 > & {

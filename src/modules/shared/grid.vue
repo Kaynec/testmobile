@@ -11,7 +11,7 @@
 </template>
 <script lang="ts">
 import { defineComponent } from 'vue';
-import { useStore } from '@/store';
+import { useAdminStore } from '@/store';
 import 'jquery/dist/jquery.min.js';
 import 'datatables.net-dt/js/dataTables.dataTables';
 
@@ -79,7 +79,7 @@ export default defineComponent({
         type: this.options.type,
         data: this.options.data,
         beforeSend: function (request: any) {
-          const token = useStore().getters.getUserToken;
+          const token = useAdminStore().getters.getUserToken;
           request.setRequestHeader('token', token);
         }
       },

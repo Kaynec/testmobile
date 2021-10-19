@@ -35,22 +35,37 @@ import ExamEdit from '@/pages/admin/exam/exam-edit.vue';
 
 // student page import
 
-import StudentLoginMobile from '@/pages/student/login/login-mobile.vue';
+import StudentLogin from '@/pages/student/login/login.vue';
+import Home from '@/pages/student/home/home.vue';
 
-import { useStore } from '@/store';
+import { useAdminStore, useStudentStore } from '@/store';
 const ifNotAuthenticated = (to: any, from: any, next: any) => {
-  if (!useStore().getters.getUserToken) {
+  if (!useAdminStore().getters.getUserToken) {
     next();
     return;
   }
   next('/');
 };
 const ifAuthenticated = (to: any, from: any, next: any) => {
-  if (useStore().getters.getUserToken) {
+  if (useAdminStore().getters.getUserToken) {
     next();
     return;
   }
-  next('/login');
+  next('/admin/login');
+};
+const ifStudentNotAuthenticated = (to: any, from: any, next: any) => {
+  if (!useStudentStore().getters.getStudentToken) {
+    next();
+    return;
+  }
+  next('/student/home');
+};
+const ifStudentAuthenticated = (to: any, from: any, next: any) => {
+  if (useStudentStore().getters.getStudentToken) {
+    next();
+    return;
+  }
+  next('/student/login');
 };
 const routes: Array<RouteRecordRaw> = [
   {
@@ -267,15 +282,21 @@ const routes: Array<RouteRecordRaw> = [
     component: StudentMain,
     children: [
       {
-        path: '/login',
+        path: 'login',
         name: 'StudentLogin',
-        component: StudentLoginMobile,
-        beforeEnter: ifNotAuthenticated
+        component: StudentLogin,
+        beforeEnter: ifStudentNotAuthenticated
+      },
+      {
+        path: 'home',
+        name: 'Home',
+        component: Home,
+        beforeEnter: ifStudentAuthenticated
       }
     ]
   },
   {
-    path: '/login',
+    path: '/admin/login',
     name: 'Login',
     component: Login,
     beforeEnter: ifNotAuthenticated

@@ -74,7 +74,7 @@
 </template>
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
-import { useStore } from '@/store';
+import { useAdminStore } from '@/store';
 import { AdminActionTypes } from '@/store/modules/admin/action-types';
 
 @Options({})
@@ -99,12 +99,15 @@ export default class Login extends Vue {
 
   public async login(): Promise<any> {
     const data: any = this.$data;
-    const res = await useStore().dispatch(AdminActionTypes.AUTH_REQUEST_ADMIN, {
-      username: data.email,
-      password: data.password
-    });
+    const res = await useAdminStore().dispatch(
+      AdminActionTypes.AUTH_REQUEST_ADMIN,
+      {
+        username: data.email,
+        password: data.password
+      }
+    );
     if (res) {
-      await useStore().dispatch(AdminActionTypes.CURRENT_USER, undefined);
+      await useAdminStore().dispatch(AdminActionTypes.CURRENT_USER, undefined);
       this.$router.push('/');
     }
   }

@@ -1,23 +1,22 @@
 import axios from 'axios';
-import { useAdminStore } from '@/store';
-const alertify = require('../assets/alertifyjs/alertify');
+import { useStudentStore } from '@/store';
+import { baseUrl } from '@/api/apiclient';
+const alertify = require('../../../assets/alertifyjs/alertify');
 
-export const baseUrl = 'http://localhost:3000/api/';
-
-export const instance = axios.create({
+export const studentInstance = axios.create({
   baseURL: baseUrl,
   // 5 minutes
   timeout: 300000,
   headers: {}
 });
-instance.interceptors.request.use((config) => {
-  const token = useAdminStore().getters.getUserToken;
+studentInstance.interceptors.request.use((config) => {
+  const token = useStudentStore().getters.getStudentToken;
   if (token) {
     config.headers.token = `${token}`;
   }
   return config;
 });
-instance.interceptors.response.use(
+studentInstance.interceptors.response.use(
   (response) => {
     return response;
   },

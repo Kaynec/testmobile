@@ -4,7 +4,7 @@ import { State } from './state';
 import { Mutations } from './mutations';
 import { StudentActionTypes } from './action-types';
 import { StudentMutationTypes } from './mutation-types';
-import { AuthServiceApi } from '@/api/services/auth/auth-service';
+import { StudentAuthServiceApi } from '@/api/services/student/student-auth-service';
 
 type AugmentedActionContext = {
   commit<K extends keyof Mutations>(
@@ -28,7 +28,7 @@ export interface Actions {
 
 export const actions: ActionTree<State, RootState> & Actions = {
   async [StudentActionTypes.AUTH_REQUEST_STUDENT]({ commit }, payload: any) {
-    const result = await AuthServiceApi.login(payload);
+    const result = await StudentAuthServiceApi.login(payload);
     if (result.data && result.data.token) {
       commit(StudentMutationTypes.SET_TOKEN, result.data.token);
       return true;
@@ -43,7 +43,7 @@ export const actions: ActionTree<State, RootState> & Actions = {
     return true;
   },
   async [StudentActionTypes.CURRENT_STUDENT]({ commit }) {
-    const result = await AuthServiceApi.currentUser();
+    const result = await StudentAuthServiceApi.currentUser();
     if (result.data) {
       commit(StudentMutationTypes.SET_USER, result.data);
       return true;
