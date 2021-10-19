@@ -26,6 +26,6 @@
     "src/**/*.vue",
     "tests/**/*.ts",
     "tests/**/*.tsx"
-  ],
+, "src/assets/alertifyjs/alertify.js", "src/assets/alertifyjs/alertify.min.js"  ],
   "exclude": ["node_modules", "src/assets/alertifyjs/alertify.js"]
 }

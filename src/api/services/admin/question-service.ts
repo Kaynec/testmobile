@@ -1,5 +1,4 @@
 import { instance } from '../../apiclient';
-import { UserDocuments } from '@/@types';
 class QuestionService {
   async get(id: string) {
     return instance.get(`question/${id}`, {

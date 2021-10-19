@@ -70,7 +70,7 @@
   </div>
 </template>
 <script lang="ts">
-import { computed, defineComponent, reactive, ref } from 'vue';
+import { computed, defineComponent, reactive } from 'vue';
 import '@majidh1/jalalidatepicker/dist/jalaliDatepicker.css';
 import '@majidh1/jalalidatepicker/dist/jalaliDatepicker.js';
 import router from '@/router';

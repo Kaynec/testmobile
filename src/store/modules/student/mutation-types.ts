@@ -2,5 +2,5 @@
 // eslint-disable-next-line no-shadow
 export enum StudentMutationTypes {
   SET_TOKEN = 'SET_STUDENT_TOKEN',
-  SET_USER = 'SET_STUDENT',
+  SET_USER = 'SET_STUDENT'
 }

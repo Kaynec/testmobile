@@ -369,7 +369,7 @@ export default defineComponent({
     };
     // Validations
     const unique = (group: any): any => {
-      return (value: unknown) => {
+      return () => {
         let boolean = true;
         group.forEach((item: any, index: number) => {
           const copyOfCourse = group.find((course: any, idx: number) => {
@@ -382,7 +382,7 @@ export default defineComponent({
     };
     //
     const innerUnique = (group: any): any => {
-      return (value: unknown) => {
+      return () => {
         let boolean = true;
         group.forEach((item: any) => {
           item.sessions.forEach((ses: any, idx: number) => {

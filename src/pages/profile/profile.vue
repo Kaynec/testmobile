@@ -143,9 +143,6 @@ import { useStore } from '@/store';
 import { Form, Field, ErrorMessage } from 'vee-validate';
 import * as yup from 'yup';
 import { defineComponent, computed } from 'vue';
-import { useRouter } from 'vue-router';
-import { AdminServiceApi } from '@/api/services/admin/admin-service';
-const alertify = require('@/assets/alertifyjs/alertify');
 
 export default defineComponent({
   components: {
