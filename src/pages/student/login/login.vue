@@ -40,9 +40,11 @@
           class="inputs password"
         />
         <button @click="login" class="login-btn"><span> ورود </span></button>
-        <span class="reset-password"> بازیابی رمز عبور </span>
+        <span class="reset-password" @click="moveToPasswordRecover()">
+          بازیابی رمز عبور
+        </span>
       </div>
-      <span class="register"> ثبت نام در ماهان </span>
+      <span class="register" @click="moveToSignUp"> ثبت نام در ماهان </span>
     </div>
   </div>
 </template>
@@ -50,18 +52,15 @@
 import { Options, Vue } from 'vue-class-component';
 import { useStudentStore } from '@/store';
 import { StudentActionTypes } from '@/store/modules/student/action-types';
+import router from '@/router';
 
 @Options({})
 export default class Login extends Vue {
   private appElement: HTMLElement | null = null;
 
-  public data(): any {
-    return {
-      email: '',
-      password: '',
-      windowHeight: window.innerHeight
-    };
-  }
+  public email = '';
+  public password = '';
+  public windowHeight = window.innerHeight;
 
   public mounted(): void {
     this.$nextTick(() => {
@@ -86,7 +85,12 @@ export default class Login extends Vue {
       this.$router.push('/student');
     }
   }
-
+  moveToSignUp() {
+    router.push({ name: 'StudentSignup' });
+  }
+  moveToPasswordRecover() {
+    router.push({ name: 'StudentPasswordRecover' });
+  }
   onResize(): void {
     (this as any).windowHeight = window.innerHeight;
   }
@@ -113,7 +117,7 @@ export default class Login extends Vue {
     }
     .Rectangle {
       width: 311px;
-      height: 333px;
+      height: 100%;
       margin: 32px auto;
       padding: 25px 20px 23px 21px;
       border-radius: 10px;

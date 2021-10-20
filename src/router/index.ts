@@ -37,6 +37,9 @@ import ExamEdit from '@/pages/admin/exam/exam-edit.vue';
 
 import StudentLogin from '@/pages/student/login/login.vue';
 import Home from '@/pages/student/home/home.vue';
+import StudentSignup from '@/pages/student/signup/signup.vue';
+import StudentPasswordRecover from '@/pages/student/password-recover/password-recover.vue';
+import StudentAuthentication from '@/pages/student/authentication/StudentAuthentication.vue';
 
 import { useAdminStore, useStudentStore } from '@/store';
 const ifNotAuthenticated = (to: any, from: any, next: any) => {
@@ -251,23 +254,6 @@ const routes: Array<RouteRecordRaw> = [
         props: true,
         component: ExamEdit
       },
-      // {
-      //   path: 'admin',
-      //   name: 'admin',
-      //   component: Admin
-      // },
-      // {
-      //   path: 'admin-create',
-      //   name: 'admin-create',
-      //   props: true,
-      //   component: AdminEdit
-      // },
-      // {
-      //   path: 'admin/updateProfile',
-      //   name: 'admin/updateProfile',
-      //   props: true,
-      //   component: AdminEdit
-      // },
       {
         path: 'profile',
         name: 'Profile',
@@ -285,6 +271,27 @@ const routes: Array<RouteRecordRaw> = [
         path: 'login',
         name: 'StudentLogin',
         component: StudentLogin,
+        beforeEnter: ifStudentNotAuthenticated
+      },
+
+      {
+        path: 'password-recover',
+        name: 'StudentPasswordRecover',
+        component: StudentPasswordRecover,
+        beforeEnter: ifStudentNotAuthenticated
+      },
+      {
+        path: 'Authentication',
+        name: 'StudentAuthentication',
+        component: StudentAuthentication,
+        props: true,
+        beforeEnter: ifStudentNotAuthenticated
+      },
+
+      {
+        path: 'signup',
+        name: 'StudentSignup',
+        component: StudentSignup,
         beforeEnter: ifStudentNotAuthenticated
       },
       {
