@@ -69,12 +69,12 @@ export default class Login extends Vue {
   }
 
   public async login(): Promise<any> {
-    const data: any = this.$data;
+    console.log(this.email, this.password);
     const res = await useStudentStore().dispatch(
       StudentActionTypes.AUTH_REQUEST_STUDENT,
       {
-        username: data.email,
-        password: data.password
+        username: this.email,
+        password: this.password
       }
     );
     if (res) {
@@ -82,7 +82,7 @@ export default class Login extends Vue {
         StudentActionTypes.CURRENT_STUDENT,
         undefined
       );
-      this.$router.push('/student');
+      router.push('/student');
     }
   }
   moveToSignUp() {
@@ -100,7 +100,16 @@ export default class Login extends Vue {
   }
 }
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
+body {
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+#app {
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
 .desktop {
   height: 100%;
   .Login {
@@ -109,6 +118,10 @@ export default class Login extends Vue {
     padding: 37px 24.6px 36px 24px;
     background-color: #f6f8fa;
     text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
     img.logo-mahan {
       margin-top: 38px;
       width: 190px;

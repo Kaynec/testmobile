@@ -12,7 +12,7 @@
         پیامکی حاوی یک کد 4 رقمی برای شما ارسال شد
       </span>
       <br />
-      <div class="phone-display">
+      <div class="phone-display" @click="sendToPasswordRecover()">
         <span> {{ phone }} </span>
         <i class="fas fa-angle-left"></i>
       </div>
@@ -46,7 +46,7 @@
 import router from '@/router';
 import { computed, defineComponent, reactive } from 'vue';
 import useVuelidate from '@vuelidate/core';
-import { minLength, maxLength, required, helpers } from '@vuelidate/validators';
+import { required, helpers } from '@vuelidate/validators';
 
 export default defineComponent({
   props: {
@@ -63,6 +63,11 @@ export default defineComponent({
     const sendToHome = async () => {
       console.log('SOMETHING');
     };
+    const sendToPasswordRecover = () =>
+      router.push({
+        name: 'StudentPasswordRecover',
+        params: { phone: props.phone }
+      });
     const cancel = () => {
       router.push({ name: 'StudentLogin' });
     };
@@ -76,16 +81,29 @@ export default defineComponent({
       }
     }));
     const v$ = useVuelidate(rules, model);
-    return { cancel, model, v$ };
+    return { cancel, model, v$, sendToHome, sendToPasswordRecover };
   }
 });
 </script>
 <style lang="scss" scoped>
+body {
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+#app {
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
 .Forget-the-password {
   width: 100vw;
   height: 100vh;
   padding: 37px 24.6px 156px 24px;
   background-color: #f6f8fa;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
 .Rectangle {

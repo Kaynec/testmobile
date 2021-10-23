@@ -43,10 +43,15 @@ import useVuelidate from '@vuelidate/core';
 import { minLength, maxLength, required, helpers } from '@vuelidate/validators';
 
 export default defineComponent({
-  setup() {
-    const model = reactive({
+  props: {
+    phone: String
+  },
+  setup(props) {
+    let model = reactive({
       phone: ''
     });
+
+    if (props.phone) model = reactive({ phone: props.phone });
 
     const sendToStudentAuthentication = async () => {
       v$.value.$touch();
@@ -84,17 +89,32 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
+body {
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+#app {
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
 .Forget-the-password {
-  width: 100vw;
-  height: 100vh;
   padding: 37px 24.6px 156px 24px;
+  width: 100%;
+  height: 100%;
   background-color: #f6f8fa;
+  overflow-y: scroll;
+  overflow-x: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
 .Rectangle {
   width: 311px;
   height: 315px;
   padding: 26px 20px 14px 21px;
+
   border-radius: 10px;
   text-align: center;
   background-color: rgba(255, 255, 255, 0.97);

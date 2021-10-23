@@ -267,10 +267,22 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
+body {
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+#app {
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
 .mobile {
   width: 100%;
   height: 100%;
   margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 
   .Sign-up {
     width: 100%;
@@ -279,6 +291,10 @@ export default defineComponent({
     padding: 10px;
     background-color: #f6f8fa;
     text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 
     .text-header {
       width: 192px;
@@ -298,7 +314,7 @@ export default defineComponent({
       margin: 0 auto;
       width: 311px;
       max-width: 450px;
-      height: 100%;
+      // height: 100%;
       padding: 19px 20px 16px 21px;
       border-radius: 10px;
       background-color: rgba(255, 255, 255, 0.97);
@@ -315,11 +331,8 @@ export default defineComponent({
       .estate {
         background-image: url('https://s4.uupload.ir/files/arrow-down-filled-triangle-svgrepo-com_cfk0.png');
         background-repeat: no-repeat;
-        // /* arrow icon position (1em from the right, 50% vertical) , then gradient position*/
         background-position: left 1.5em top 50%, 0 0;
-        // /* icon size, then gradient */
         background-size: 0.85em auto, 100%;
-        // position: relative;
       }
 
       .inputs {

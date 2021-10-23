@@ -278,6 +278,7 @@ const routes: Array<RouteRecordRaw> = [
         path: 'password-recover',
         name: 'StudentPasswordRecover',
         component: StudentPasswordRecover,
+        props: true,
         beforeEnter: ifStudentNotAuthenticated
       },
       {
