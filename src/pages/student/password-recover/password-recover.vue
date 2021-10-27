@@ -102,8 +102,6 @@ body {
   width: 100%;
   height: 100%;
   background-color: #f6f8fa;
-  overflow-y: scroll;
-  overflow-x: hidden;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -114,17 +112,16 @@ body {
   width: 311px;
   height: 315px;
   padding: 26px 20px 14px 21px;
-
   border-radius: 10px;
   text-align: center;
   background-color: rgba(255, 255, 255, 0.97);
 
   .btn-recover {
-    width: 270px;
-    height: 52px;
-    margin: 20px 0 18px;
-    padding: 0 1px 1px 0;
-
+    width: 269px;
+    height: 51px;
+    border-radius: 15px;
+    background: rgb(241, 24, 24);
+    border: none;
     span {
       width: 85px;
       height: 24px;

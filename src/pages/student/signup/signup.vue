@@ -185,6 +185,8 @@ import router from '@/router';
 import { computed, defineComponent, reactive } from 'vue';
 import useVuelidate from '@vuelidate/core';
 import { minLength, maxLength, helpers, required } from '@vuelidate/validators';
+import { store } from '@/store';
+import { StudentMutationTypes } from '@/store/modules/student/mutation-types';
 export default defineComponent({
   setup() {
     const model = reactive({
@@ -198,7 +200,17 @@ export default defineComponent({
       grade: ''
     } as any);
     const register = async () => {
-      console.log(model);
+      v$.value.$touch();
+
+      if (!v$.value.$invalid) {
+        console.log(model);
+        router.push({
+          name: 'StudentAuthentication',
+          params: { phone: model.phone }
+        });
+
+        store.commit(StudentMutationTypes.SET_USER, model);
+      }
     };
     const cancel = () => {
       router.push({
@@ -347,29 +359,6 @@ body {
         font-weight: 500;
       }
 
-      .register-btn {
-        width: 269px;
-        height: 51px;
-        margin-top: 1rem;
-        border-radius: 15px;
-        background-color: #d21921;
-        border: none;
-
-        span {
-          width: 79px;
-          height: 24px;
-          font-family: IRANSans;
-          font-size: 15.3px;
-          font-weight: bold;
-          font-stretch: normal;
-          font-style: normal;
-          line-height: normal;
-          letter-spacing: normal;
-          text-align: center;
-          color: #fff;
-        }
-      }
-
       .cancel {
         width: 109px;
         height: 21px;
@@ -385,6 +374,28 @@ body {
         color: #ed1b24;
       }
     }
+  }
+}
+
+.register-btn {
+  width: 269px;
+  height: 51px;
+  border-radius: 15px;
+  background: rgb(241, 24, 24);
+  border: none;
+  margin-top: 1rem;
+  span {
+    width: 85px;
+    height: 24px;
+    font-family: IRANSans;
+    font-size: 15.3px;
+    font-weight: bold;
+    font-stretch: normal;
+    font-style: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    text-align: center;
+    color: #fff;
   }
 }
 </style>

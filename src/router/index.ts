@@ -298,8 +298,8 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'home',
         name: 'Home',
-        component: Home,
-        beforeEnter: ifStudentAuthenticated
+        component: Home
+        // beforeEnter: ifStudentAuthenticated
       }
     ]
   },

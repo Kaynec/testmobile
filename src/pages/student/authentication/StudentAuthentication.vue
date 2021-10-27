@@ -61,7 +61,14 @@ export default defineComponent({
     });
 
     const sendToHome = async () => {
-      console.log('SOMETHING');
+      v$.value.$touch();
+
+      if (!v$.value.$invalid) {
+        console.log(model);
+        router.push({
+          name: 'Home'
+        });
+      }
     };
     const sendToPasswordRecover = () =>
       router.push({
@@ -115,10 +122,11 @@ body {
   background-color: rgba(255, 255, 255, 0.97);
 
   .btn-confirm {
-    width: 270px;
-    height: 52px;
-    margin: 20px 0 18px;
-    padding: 0 1px 1px 0;
+    width: 269px;
+    height: 51px;
+    padding: 14px 120px 15px 121px;
+    border-radius: 15px;
+    background-image: linear-gradient(268deg, #ff545b 126%, #a50d14 -24%);
 
     span {
       width: 85px;
@@ -199,11 +207,9 @@ img.logo-mahan {
 .btn-confirm {
   width: 269px;
   height: 51px;
-  padding: 13px 91px 14px 93px;
   border-radius: 15px;
-  background-color: #d21921;
+  background: rgb(241, 24, 24);
   border: none;
-
   span {
     width: 85px;
     height: 24px;

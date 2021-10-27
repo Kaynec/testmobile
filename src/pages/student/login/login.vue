@@ -69,20 +69,23 @@ export default class Login extends Vue {
   }
 
   public async login(): Promise<any> {
-    console.log(this.email, this.password);
-    const res = await useStudentStore().dispatch(
-      StudentActionTypes.AUTH_REQUEST_STUDENT,
-      {
-        username: this.email,
-        password: this.password
-      }
-    );
-    if (res) {
-      await useStudentStore().dispatch(
-        StudentActionTypes.CURRENT_STUDENT,
-        undefined
-      );
-      router.push('/student');
+    // console.log(this.email, this.password);
+    // const res = await useStudentStore().dispatch(
+    //   StudentActionTypes.AUTH_REQUEST_STUDENT,
+    //   {
+    //     username: this.email,
+    //     password: this.password
+    //   }
+    // );
+    // if (res) {
+    //   await useStudentStore().dispatch(
+    //     StudentActionTypes.CURRENT_STUDENT,
+    //     undefined
+    //   );
+    //   router.push('/student');
+    // }
+    if (this.email && this.password) {
+      router.push({ name: 'Home' });
     }
   }
   moveToSignUp() {
@@ -184,17 +187,22 @@ body {
       width: 269px;
       height: 51px;
       border-radius: 15px;
-      background-color: #d21921;
-      margin-top: 20px;
+      background: rgb(241, 24, 24);
+      border: none;
       span {
-        font-family: 'IRANSans';
+        width: 85px;
+        height: 24px;
+        font-family: IRANSans;
         font-size: 15.3px;
         font-weight: bold;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: normal;
+        letter-spacing: normal;
         text-align: center;
         color: #fff;
       }
     }
-
     .reset-password {
       margin-top: 16px;
       font-family: 'IRANSans';
@@ -274,17 +282,23 @@ body {
       width: 269px;
       height: 51px;
       border-radius: 15px;
-      background-color: #d21921;
-      margin-top: 20px;
+      background: rgb(241, 24, 24);
+      border: none;
+      margin-top: 2rem;
       span {
-        font-family: 'IRANSans';
+        width: 85px;
+        height: 24px;
+        font-family: IRANSans;
         font-size: 15.3px;
         font-weight: bold;
+        font-stretch: normal;
+        font-style: normal;
+        line-height: normal;
+        letter-spacing: normal;
         text-align: center;
         color: #fff;
       }
     }
-
     .reset-password {
       margin-top: 16px;
       font-family: 'IRANSans';
