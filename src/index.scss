@@ -26,10 +26,16 @@
   font-style: normal;
   font-display: swap;
 }
-
+@font-face {
+  font-family: 'DimaArsalan';
+  src: url('./assets/fonts//\(A\)\ Arslan\ Wessam\ A\ \(A\)\ Arslan\ Wessam\ A.ttf');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
 #app {
-  // width: 100vw;
-  // height: 100vh;
+  width: 100vw;
+  height: 100vh;
   direction: rtl;
 }
 
