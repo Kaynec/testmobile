@@ -3,7 +3,7 @@
   <div class="mobile" v-else>
     <div class="user-home">
       <div class="header">
-        <img src="../../../assets/img/logo-minimal.png" class="logo-mahan" />
+        <img src="../../../assets/img/logo-copy.png" class="logo-mahan" />
         <div class="user-part">
           <span class="points"> امتیاز شما: ۲۰۱۸۵ </span>
           <div class="profile-image"></div>
@@ -22,12 +22,12 @@
           <div class="hero-header">
             <p class="text-style-1">نقشه راه</p>
             <p class="text-style-2">آزمون های جامع</p>
+            <p class="chevron">
+              مشاهده
+              <i class="fas fa-chevron-left"></i>
+            </p>
           </div>
         </div>
-        <span class="chevron">
-          مشاهده
-          <i class="fas fa-chevron-left"></i>
-        </span>
       </div>
       <!--  User Home -->
       <div class="User---Home">
@@ -40,16 +40,10 @@
       </div>
       <!--  -->
       <div class="footer">
-        <!-- <div class="footer-menu"><i class="fa fa-home"></i></div> -->
         <img src="../../../assets/img/home.png" class="footer-icon" />
         <img src="../../../assets/img/group.png" class="footer-icon" />
         <img src="../../../assets/img/shop.png" class="footer-icon" />
         <img src="../../../assets/img/setting.png" class="footer-icon" />
-        <!-- <div class="footer-menu"><i class="fa fa-home"></i></div>
-        <div class="footer-menu"><i class="fa fa-home"></i></div> -->
-        <!-- <div class="footer-menu" @click="logout()">
-          <i class="fa fa-arrow-left"></i>
-        </div> -->
       </div>
     </div>
   </div>
@@ -109,9 +103,10 @@ export default class Login extends Vue {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      // padding: 0px;
       box-shadow: 0 -2px 5px 0 rgba(0, 0, 0, 0.09);
-      background-color: #a61117;
+      background-color: black;
+      z-index: 2;
+
       flex-basis: 10%;
       img.logo-mahan {
         width: 116px;
@@ -126,9 +121,9 @@ export default class Login extends Vue {
         margin-top: 11px;
         justify-content: flex-end;
         align-items: center;
-        gap: 1rem;
-        margin-left: 17px;
-        z-index: 20;
+        gap: 0.5rem;
+        margin-left: 0.5rem;
+        z-index: 2;
 
         .points {
           font-family: IRANSans;
@@ -137,8 +132,8 @@ export default class Login extends Vue {
           color: #fff;
         }
         .profile-image {
-          width: 33px;
-          height: 33px;
+          width: 2rem;
+          height: 2rem;
           border-radius: 8px;
           border: solid 2px #ddd;
           margin-right: 10px;
@@ -150,17 +145,17 @@ export default class Login extends Vue {
       width: 100%;
       margin: 0;
       background-image: linear-gradient(to top right, #ec3538 -5%, #880e13);
-      flex-basis: clamp(15%, 25%, 30%);
+      flex-basis: clamp(17%, 27%, 31%);
 
       .overlay {
         position: absolute;
         left: 0;
         bottom: 0;
         top: 0;
-        background-color: #9a161a;
+        background-color: #960c10;
         opacity: 0.6;
         height: 100%;
-        width: 55%;
+        width: 62.5%;
         overflow: hidden;
         -webkit-clip-path: polygon(0 0, 100% 0, 0% 166%, 0 100%);
         clip-path: polygon(0 0, 100% 0, 0% 166%, 0 100%);
@@ -187,36 +182,33 @@ export default class Login extends Vue {
         z-index: 1;
       }
       .heroDiv {
-        z-index: 25;
-
-        .hero-header {
-          margin: 25px 15px 5px 0;
+        line-height: 1;
+        // padding: 1rem;
+        position: absolute;
+        right: 5%;
+        top: 15%;
+        .text-style-1 {
           z-index: 25;
-          .text-style-1 {
-            z-index: 25;
-            font-family: DimaArsalan;
-            font-size: clamp(2rem, 3rem, 3.5rem);
-            margin: 0;
-            line-height: 0.9;
-            color: #fff;
-          }
-          .text-style-2 {
-            z-index: 25;
-            text-shadow: 0 3px 4px rgba(0, 0, 0, 0.33);
-            font-family: IRANSans;
-            font-size: clamp(0.9rem, 1.25rem, 1.4rem);
-            color: #fff;
-          }
+          font-family: DimaArsalan;
+          font-size: clamp(2rem, 2.5rem, 3rem);
+          margin: 0;
+          color: #fff;
+        }
+        .text-style-2 {
+          z-index: 25;
+          text-shadow: 0 3px 4px rgba(0, 0, 0, 0.33);
+          font-family: IRANSans;
+          font-size: clamp(0.9rem, 1.25rem, 1.4rem);
+          color: #fff;
         }
       }
 
       .chevron {
         display: block;
         margin-top: 2.25rem;
-        margin-inline: 1rem;
         font-family: IRANSans;
         font-size: 14px;
-        font-weight: bold;
+        font-weight: normal;
         color: #fff;
 
         i {

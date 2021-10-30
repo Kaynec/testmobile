@@ -29,7 +29,7 @@
   <div class="mobile" v-else>
     <div class="imgs">
       <img src="../../../assets/img/bitmap.png" class="bitmap" />
-      <img src="../../../assets/img/logo-mahan.webp" />
+      <img src="../../../assets/img/logo-mahan.png" />
       <img src="../../../assets/img/mahan.png" />
     </div>
     <div class="Login">
@@ -112,7 +112,7 @@ export default class Login extends Vue {
   }
 }
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 body {
   overflow-y: scroll;
   overflow-x: hidden;
@@ -225,8 +225,9 @@ body {
     flex-direction: column;
     justify-content: space-around;
     align-items: center;
-    flex-basis: clamp(40%, 45%, 50%);
+    flex-basis: clamp(40%, 52.5%, 60%);
     position: relative;
+    margin: 0;
 
     .bitmap {
       position: absolute;
@@ -239,15 +240,12 @@ body {
     }
 
     img {
-      // margin: 1.9rem;
       z-index: 2;
-
       &:nth-of-type(2) {
         position: absolute;
         margin: 1.5rem auto 1.5rem auto;
         top: 0;
       }
-
       &:nth-of-type(3) {
         position: absolute;
         margin: 1.5rem auto 1.5rem auto;
@@ -257,10 +255,11 @@ body {
   }
   .Login {
     width: 100%;
-    flex-basis: clamp(40%, 45%, 50%);
+    flex-basis: clamp(35%, 40%, 45%);
     height: clamp(40%, 45%, 50%);
     background-color: #f6f8fa;
     text-align: center;
+    margin: 0;
     .register {
       display: block;
       width: 100%;
@@ -268,10 +267,7 @@ body {
       font-size: 14px;
       font-weight: bold;
       color: #171717;
-      // margin-top: 1.5rem;
       text-align: center;
-      margin: 0;
-      padding: 0;
     }
     .inputs {
       width: 70%;
@@ -283,21 +279,20 @@ body {
       font-size: 14px;
       text-align: center;
       color: #888;
-    }
-    .password {
-      margin-top: 10px;
+      margin: 0;
     }
     .username {
-      margin-top: 39px;
+      margin-top: 10px;
+      margin-bottom: 5px;
     }
     .login-btn {
       width: 70%;
       height: 3.5rem;
       border-radius: 15px;
-      background: rgb(241, 24, 24);
+      background-image: linear-gradient(268deg, #ff545b 6%, #a50d14);
       border: none;
-      margin-top: 10px;
-      margin-bottom: 10px;
+      margin-top: 1rem;
+      margin-bottom: 1rem;
       text-align: center;
       span {
         width: 250px;
@@ -317,7 +312,20 @@ body {
       text-align: center;
       letter-spacing: -1.15px;
       text-align: center;
+      margin: 0;
     }
+  }
+}
+
+@media (max-width: 400px) {
+  .login-btn {
+    margin: 0;
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  .username {
+    margin-top: 0;
+    margin-bottom: 0;
   }
 }
 </style>
