@@ -225,8 +225,8 @@ export default class Login extends Vue {
       flex-wrap: wrap;
       justify-content: center;
       align-items: center;
-      padding: 30px;
-      // gap: 1rem;
+      padding: 5px;
+      padding-bottom: 35px;
       .Cart {
         width: 36%;
 
@@ -259,8 +259,12 @@ export default class Login extends Vue {
       .footer-icon {
         object-fit: contain;
         width: 5rem;
+        min-width: 2rem;
       }
     }
   }
+}
+// Make The Picture disapper on small phones
+@media screen and (max-width: 320px) {
 }
 </style>

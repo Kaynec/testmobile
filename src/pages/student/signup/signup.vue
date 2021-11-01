@@ -5,151 +5,176 @@
     <div class="Sign-up">
       <form @submit.prevent="register()" class="Rectangle">
         <span class="text-header"> اطلاعات خود را وارد کنید </span>
-        <input
-          type="text"
-          placeholder="نام"
-          class="inputs name"
-          v-model="model.name"
-          @blur="v$.name.$touch()"
-        />
-        <span
+        <label class="floating-label">
+          <input
+            placeholder="نام"
+            type="text"
+            v-model="model.name"
+            @blur="v$.name.$touch()"
+          />
+          <span> نام </span>
+        </label>
+        <p
           v-for="error in v$.name.$errors"
-          class="text-danger small"
+          class="text-danger text-bold small m-2"
           :key="error.$uid"
+          style="font-family: IRANSans"
         >
           {{ error.$message }}
-        </span>
-        <input
-          type="text"
-          placeholder="نام خانوادگی"
-          class="inputs lastname"
-          v-model="model.lastname"
-          @blur="v$.lastname.$touch()"
-        />
-        <span
+        </p>
+
+        <label class="floating-label">
+          <input
+            type="text"
+            placeholder="نام خانوادگی"
+            v-model="model.lastname"
+            @blur="v$.lastname.$touch()"
+          />
+          <span> نام خانوادگی </span>
+        </label>
+
+        <p
           v-for="error in v$.lastname.$errors"
-          class="text-danger small"
+          class="text-danger text-bold small m-2"
           :key="error.$uid"
+          style="font-family: IRANSans"
         >
           {{ error.$message }}
-        </span>
+        </p>
 
-        <input
-          type="number"
-          placeholder="شماره همراه"
-          class="inputs phone"
-          v-model="model.phone"
-          @blur="v$.phone.$touch()"
-        />
-        <span
+        <label class="floating-label">
+          <input
+            type="number"
+            placeholder="شماره همراه"
+            v-model="model.phone"
+            @blur="v$.phone.$touch()"
+          />
+          <span> شماره همراه </span>
+        </label>
+
+        <p
           v-for="error in v$.phone.$errors"
-          class="text-danger small"
+          class="text-danger text-bold small m-2"
           :key="error.$uid"
+          style="font-family: IRANSans"
         >
           {{ error.$message }}
-        </span>
+        </p>
 
-        <select
-          v-model="model.estate"
-          class="inputs select estate"
-          @blur="v$.estate.$touch()"
-        >
-          <option value="" hidden selected>استان</option>
-          <option
-            v-for="estate in estates"
-            :value="estate.name"
-            :key="estate.name"
+        <label class="floating-label">
+          <select
+            v-model="model.estate"
+            class="select estate"
+            @blur="v$.estate.$touch()"
           >
-            {{ estate.name }}
-          </option>
-        </select>
+            <option
+              v-for="estate in estates"
+              :value="estate.name"
+              :key="estate.name"
+            >
+              {{ estate.name }}
+            </option>
+          </select>
+          <span> استان </span>
+        </label>
 
-        <span
+        <p
           v-for="error in v$.estate.$errors"
-          class="text-danger small"
+          class="text-danger text-bold small m-2"
           :key="error.$uid"
+          style="font-family: IRANSans"
         >
           {{ error.$message }}
-        </span>
+        </p>
 
         <!--  -->
-        <select
-          v-model="model.city"
-          class="inputs select"
-          @blur="v$.city.$touch()"
-        >
-          <option value="" hidden selected>شهر</option>
-          <option
-            v-for="city in citiesOfCurrentEstate"
-            :value="city.name"
-            :key="city.name"
-          >
-            {{ city.name }}
-          </option>
-        </select>
+        <label class="floating-label">
+          <select v-model="model.city" class="select" @blur="v$.city.$touch()">
+            <option
+              v-for="city in citiesOfCurrentEstate"
+              :value="city.name"
+              :key="city.name"
+            >
+              {{ city.name }}
+            </option>
+          </select>
+          <span> شهر </span>
+        </label>
 
-        <span
+        <p
           v-for="error in v$.city.$errors"
-          class="text-danger small"
+          class="text-danger text-bold small m-2"
           :key="error.$uid"
+          style="font-family: IRANSans"
         >
           {{ error.$message }}
-        </span>
+        </p>
 
         <!--  -->
-        <input
-          type="text"
-          v-model="model.nationalCode"
-          class="inputs nationalCode"
-          placeholder="کد ملی"
-          @blur="v$.nationalCode.$touch()"
-        />
+        <label class="floating-label">
+          <input
+            type="text"
+            v-model="model.nationalCode"
+            placeholder="کد ملی"
+            @blur="v$.nationalCode.$touch()"
+          />
+          <span> کد ملی </span>
+        </label>
 
-        <span
+        <p
           v-for="error in v$.nationalCode.$errors"
-          class="text-danger small"
+          class="text-danger text-bold small m-2"
           :key="error.$uid"
+          style="font-family: IRANSans"
         >
           {{ error.$message }}
-        </span>
+        </p>
 
-        <input
-          type="text"
-          v-model="model.grade"
-          class="inputs grade"
-          placeholder="مقطع تحصیلی"
-          @blur="v$.grade.$touch()"
-        />
+        <label class="floating-label">
+          <input
+            type="text"
+            v-model="model.grade"
+            placeholder=" مقطع تحصیلی"
+            @blur="v$.grade.$touch()"
+          />
+          <span> مقطع تحصیلی </span>
+        </label>
 
-        <span
+        <p
           v-for="error in v$.grade.$errors"
-          class="text-danger small"
+          class="text-danger text-bold small m-2"
           :key="error.$uid"
+          style="font-family: IRANSans"
         >
           {{ error.$message }}
-        </span>
+        </p>
 
-        <input
-          type="text"
-          v-model="model.orientation"
-          class="inputs orientation"
-          placeholder="رشته تحصیلی"
-          @blur="v$.orientation.$touch()"
-        />
+        <label class="floating-label">
+          <input
+            type="text"
+            v-model="model.orientation"
+            placeholder="رشته تحصیلی"
+            @blur="v$.grade.$touch()"
+          />
+          <span> رشته تحصیلی </span>
+        </label>
 
-        <span
+        <p
           v-for="error in v$.orientation.$errors"
-          class="text-danger small"
+          class="text-danger text-bold small m-2"
           :key="error.$uid"
+          style="font-family: IRANSans"
         >
           {{ error.$message }}
-        </span>
+        </p>
 
-        <button type="submit" class="register-btn">
+        <button type="submit" class="button-linear">
           <span> ثبت اطلاعات </span>
         </button>
 
-        <span @click="cancel()" class="cancel"> برگشت به صفحه ورود </span>
+        <span @click="cancel()" class="text-bold cancel">
+          برگشت به صفحه ورود
+        </span>
       </form>
     </div>
   </div>
@@ -279,29 +304,17 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
-body {
-  overflow-y: scroll;
-  overflow-x: hidden;
-}
-#app {
-  overflow-y: scroll;
-  overflow-x: hidden;
-}
 .mobile {
   width: 100%;
-  height: 100%;
-  margin: 0;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
+  background-color: #f6f8fa;
 
   .Sign-up {
     width: 100%;
     height: 100%;
-    margin: 0;
-    padding: 10px;
-    background-color: #f6f8fa;
     text-align: center;
     display: flex;
     justify-content: center;
@@ -326,14 +339,11 @@ body {
       margin: 0 auto;
       width: 311px;
       max-width: 450px;
-      // height: 100%;
       padding: 19px 20px 16px 21px;
       border-radius: 10px;
       background-color: rgba(255, 255, 255, 0.97);
-
       .select {
         width: 100%;
-        color: #7d8892;
         padding: 10px;
         -moz-appearance: none;
         -webkit-appearance: none;
@@ -346,19 +356,6 @@ body {
         background-position: left 1.5em top 50%, 0 0;
         background-size: 0.85em auto, 100%;
       }
-
-      .inputs {
-        width: 270px;
-        height: 40px;
-        margin: 10px 0;
-        padding: 5px;
-        border-radius: 10px;
-        border: solid 1px #dedede;
-        background-color: #fff;
-        font-size: smaller;
-        font-weight: 500;
-      }
-
       .cancel {
         width: 109px;
         height: 21px;
@@ -374,28 +371,6 @@ body {
         color: #ed1b24;
       }
     }
-  }
-}
-
-.register-btn {
-  width: 269px;
-  height: 51px;
-  border-radius: 15px;
-  background: rgb(241, 24, 24);
-  border: none;
-  margin-top: 1rem;
-  span {
-    width: 85px;
-    height: 24px;
-    font-family: IRANSans;
-    font-size: 15.3px;
-    font-weight: bold;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: normal;
-    letter-spacing: normal;
-    text-align: center;
-    color: #fff;
   }
 }
 </style>

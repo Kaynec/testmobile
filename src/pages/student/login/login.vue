@@ -4,13 +4,15 @@
       <img src="../../../assets/img/logo-mahan.png" class="logo-mahan" />
       <div class="Rectangle">
         <span class="title"> ورود به حساب کاربری </span> <br />
+
         <input
           v-model="email"
-          type="text"
+          type="email"
           placeholder="نام کاربری"
-          class="inputs username"
+          class="inputs email"
         />
         <br />
+
         <input
           v-model="password"
           type="password"
@@ -18,11 +20,11 @@
           class="inputs password"
         />
         <br />
-        <button class="login-btn" @click="login"><span> ورود </span></button>
-        <br />
-        <span class="reset-password"> بازیابی رمز عبور </span> <br />
+        <button class="login-btn" @click="login"><span> ورود </span></button
+        ><br />
+        <span class="reset-password"> بازیابی رمز عبور </span><br />
+        <span class="register"> ثبت نام در ماهان </span><br />
       </div>
-      <span class="register"> ثبت نام در ماهان </span> <br />
     </div>
   </div>
 
@@ -33,27 +35,33 @@
       <img src="../../../assets/img/mahan.png" />
     </div>
     <div class="Login">
-      <input
-        v-model="email"
-        type="text"
-        placeholder="نام کاربری"
-        class="inputs username"
-      />
-      <br />
-      <input
-        v-model="password"
-        type="password"
-        placeholder="رمز عبور"
-        class="inputs password"
-      />
-      <br />
-      <button @click="login" class="login-btn"><span> ورود </span></button
-      ><br />
-      <span class="register" @click="moveToSignUp"> ثبت نام در ماهان </span
-      ><br />
-      <span class="reset-password" @click="moveToPasswordRecover()">
-        بازیابی رمز عبور
-      </span>
+      <div>
+        <label class="floating-label">
+          <input type="text" v-model="email" placeholder="ایمیل" />
+          <span style="background-color: #f6f8fa"> نام کاربری </span>
+        </label>
+        <!--  -->
+        <label class="floating-label">
+          <input type="text" v-model="password" placeholder="رمز عبور" />
+          <span style="background-color: #f6f8fa"> رمز عبور</span>
+        </label>
+        <!--  -->
+
+        <button @click="login" class="button-linear"><span> ورود </span></button
+        ><br />
+        <p
+          v-if="error"
+          class="text-center text-bold text-danger"
+          style="font-family: IRANSans"
+        >
+          {{ error }}
+        </p>
+        <span class="register" @click="moveToSignUp"> ثبت نام در ماهان </span
+        ><br />
+        <span class="reset-password" @click="moveToPasswordRecover()">
+          بازیابی رمز عبور
+        </span>
+      </div>
     </div>
   </div>
 </template>
@@ -69,6 +77,7 @@ export default class Login extends Vue {
 
   public email = '';
   public password = '';
+  public error = '';
   public windowHeight = window.innerHeight;
 
   public mounted(): void {
@@ -78,6 +87,7 @@ export default class Login extends Vue {
   }
 
   public async login(): Promise<any> {
+    this.error = ' ';
     // console.log(this.email, this.password);
     // const res = await useStudentStore().dispatch(
     //   StudentActionTypes.AUTH_REQUEST_STUDENT,
@@ -94,7 +104,13 @@ export default class Login extends Vue {
     //   router.push('/student');
     // }
     if (this.email && this.password) {
-      router.push({ name: 'Home' });
+      router.push({
+        name: 'StudentAuthentication',
+        // Change This To The Model Phone Later
+        params: { phone: '09102361154' }
+      });
+    } else {
+      this.error = 'لطفا اطلاعات صحیح را وارد کنید';
     }
   }
   moveToSignUp() {
@@ -112,16 +128,7 @@ export default class Login extends Vue {
   }
 }
 </script>
-<style lang="scss">
-body {
-  overflow-y: scroll;
-  overflow-x: hidden;
-}
-#app {
-  overflow-y: scroll;
-  overflow-x: hidden;
-}
-
+<style lang="scss" scoped>
 .desktop {
   height: 100%;
   .Login {
@@ -142,8 +149,7 @@ body {
       height: 24px;
       margin-top: 87px;
       margin-bottom: 36px;
-
-      font-family: 'IRANSans';
+      font-family: IRANSans;
       font-size: 15px;
       font-weight: normal;
       font-stretch: normal;
@@ -158,7 +164,7 @@ body {
       width: 175px;
       height: 28px;
       margin-top: 25px;
-      font-family: 'IRANSans';
+      font-family: IRANSans;
       font-size: 19px;
       font-weight: 500;
       font-stretch: normal;
@@ -168,19 +174,18 @@ body {
       text-align: center;
       color: #171717;
     }
-    .inputs {
-      width: 270px;
-      height: 50px;
-      padding: 11px 101px 12px 102px;
-      border-radius: 10px;
-      border: solid 1px #c8c8c8;
-      background-color: #fff;
-    }
     .password {
       margin-top: 10px;
     }
     .username {
       margin-top: 39px;
+    }
+    .inputs {
+      width: 269px;
+      height: 51px;
+      border-radius: 15px;
+      background: #f6f8fa;
+      border: 2px solid #ddd;
     }
     .login-btn {
       width: 269px;
@@ -211,12 +216,15 @@ body {
     }
   }
 }
+// Mobile
 .mobile {
   width: 100%;
   height: 100%;
   display: flex;
   flex-direction: column;
   background-color: #f6f8fa;
+  background-color: white;
+
   overflow-y: scroll;
   overflow-x: hidden;
   .imgs {
@@ -255,77 +263,35 @@ body {
   }
   .Login {
     width: 100%;
-    flex-basis: clamp(35%, 40%, 45%);
-    height: clamp(40%, 45%, 50%);
-    background-color: #f6f8fa;
+    display: inline-block;
     text-align: center;
     margin: 0;
+    display: flex;
+    justify-content: center;
+
+    div {
+      width: 80%;
+      margin: 1rem 0;
+    }
     .register {
       display: block;
-      width: 100%;
       font-family: IRANSans;
       font-size: 14px;
       font-weight: bold;
       color: #171717;
       text-align: center;
-    }
-    .inputs {
-      width: 70%;
-      height: 3.5rem;
-      border-radius: 11px;
-      border: solid 1px #e1bdba;
-      background-color: #fff;
-      font-family: IRANSans;
-      font-size: 14px;
-      text-align: center;
-      color: #888;
       margin: 0;
-    }
-    .username {
-      margin-top: 10px;
-      margin-bottom: 5px;
-    }
-    .login-btn {
-      width: 70%;
-      height: 3.5rem;
-      border-radius: 15px;
-      background-image: linear-gradient(268deg, #ff545b 6%, #a50d14);
-      border: none;
-      margin-top: 1rem;
-      margin-bottom: 1rem;
-      text-align: center;
-      span {
-        width: 250px;
-        height: 24px;
-        font-family: 'IRANSans';
-        font-size: 15.3px;
-        font-weight: bold;
-        text-align: center;
-        color: #fff;
-      }
+      padding: 0;
     }
     .reset-password {
       color: #ed1b24;
       display: block;
       font-family: IRANSans;
-      font-size: 14px;
       text-align: center;
       letter-spacing: -1.15px;
       text-align: center;
       margin: 0;
     }
-  }
-}
-
-@media (max-width: 400px) {
-  .login-btn {
-    margin: 0;
-    margin-top: 0;
-    margin-bottom: 0;
-  }
-  .username {
-    margin-top: 0;
-    margin-bottom: 0;
   }
 }
 </style>

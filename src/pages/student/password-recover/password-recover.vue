@@ -2,31 +2,33 @@
   <div class="desktop" v-if="!isMobile()"></div>
 
   <div class="Forget-the-password" v-else>
-    <img src="../../../assets/img/logo-mahan.png" class="logo-mahan" />
-
+    <img src="../../../assets/img/logo-mahan@2x.png" class="logo-mahan" />
     <!-- Main Part -->
     <form @submit.prevent="sendToStudentAuthentication()" class="Rectangle">
       <span class="Rectangle-header"> بازیابی رمز عبور </span>
 
-      <span class="Rectangle-label"> لطفا شماره موبایل خود را وارد کنید </span>
+      <span class="Rectangle-label"> لطفا شماره همراه خود را وارد کنید </span>
 
-      <input
-        type="text"
-        class="inputs"
-        v-model="model.phone"
-        placeholder="*********۰۹"
-        @blur="v$.phone.$touch()"
-      />
-
+      <label class="floating-label">
+        <input
+          v-model="model.phone"
+          placeholder="*********۰۹"
+          @blur="v$.phone.$touch()"
+          type="text"
+          id="name"
+        />
+        <span> شماره تلفن</span>
+      </label>
       <span
         v-for="(error, index) in v$.phone.$errors"
         :key="index"
-        class="text-info"
+        class="text-danger text-bold"
+        style="font-family: IRANSans"
       >
         {{ error.$message }}
       </span>
 
-      <button class="btn-recover">
+      <button class="button-linear">
         <span> ارسال رمز عبور </span>
       </button>
 
@@ -43,15 +45,10 @@ import useVuelidate from '@vuelidate/core';
 import { minLength, maxLength, required, helpers } from '@vuelidate/validators';
 
 export default defineComponent({
-  props: {
-    phone: String
-  },
-  setup(props) {
-    let model = reactive({
+  setup() {
+    const model = reactive({
       phone: ''
     });
-
-    if (props.phone) model = reactive({ phone: props.phone });
 
     const sendToStudentAuthentication = async () => {
       v$.value.$touch();
@@ -89,23 +86,15 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
-body {
-  overflow-y: scroll;
-  overflow-x: hidden;
-}
-#app {
-  overflow-y: scroll;
-  overflow-x: hidden;
-}
 .Forget-the-password {
+  width: 100vw;
+  height: 100vh;
   padding: 37px 24.6px 156px 24px;
-  width: 100%;
-  height: 100%;
   background-color: #f6f8fa;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  flex-direction: column;
 }
 
 .Rectangle {
@@ -115,110 +104,52 @@ body {
   border-radius: 10px;
   text-align: center;
   background-color: rgba(255, 255, 255, 0.97);
-
-  .btn-recover {
-    width: 269px;
-    height: 51px;
-    border-radius: 15px;
-    background: rgb(241, 24, 24);
-    border: none;
-    span {
-      width: 85px;
-      height: 24px;
-      font-family: IRANSans;
-      font-size: 15.3px;
-      font-weight: bold;
-      font-stretch: normal;
-      font-style: normal;
-      line-height: normal;
-      letter-spacing: normal;
-      text-align: center;
-      color: #fff;
-    }
-  }
-
-  .Rectangle-header {
-    width: 175px;
-    height: 28px;
-    margin: 0 47px 23px 48px;
-    font-family: IRANSans;
-    font-size: 19px;
-    font-weight: 500;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: normal;
-    letter-spacing: -2.09px;
-    text-align: center;
-    color: #171717;
-  }
-
-  .Rectangle-label {
-    width: 163px;
-    height: 19px;
-    margin: 23px 57px 44px 50px;
-    font-family: IRANSans;
-    font-size: 12px;
-    font-weight: normal;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: normal;
-    letter-spacing: -0.2px;
-    text-align: center;
-    color: #000;
-  }
-
-  .inputs {
-    width: 270px;
-    height: 50px;
-    margin: 44px 0 20px;
-    padding: 11px 90px 12px 50px;
-    border-radius: 10px;
-    border: solid 1px #c8c8c8;
-    background-color: #fff;
-  }
-
-  .cancel {
-    width: 109px;
-    height: 21px;
-    margin: 18px 80px 0 81px;
-    font-family: IRANSans;
-    font-size: 13px;
-    font-weight: normal;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: normal;
-    letter-spacing: -2px;
-    text-align: center;
-    color: #ed1b24;
-  }
+  margin: 2rem;
+  text-align: center;
 }
+.Rectangle-header {
+  width: 175px;
+  height: 28px;
+  margin: 0 47px 23px 48px;
+  font-family: IRANSans;
+  font-size: 16px;
+  font-weight: 600;
+  text-align: center;
+  color: #171717;
+}
+
+.Rectangle-label {
+  margin: 5px auto;
+  display: block;
+  font-family: IRANSans;
+  font-size: 12px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: -0.2px;
+  text-align: center;
+  color: #000;
+}
+.cancel {
+  width: 109px;
+  height: 21px;
+  margin: 18px 80px 0 81px;
+  font-family: IRANSans;
+  font-size: 13px;
+  font-weight: normal;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: -2px;
+  text-align: center;
+  color: #ed1b24;
+}
+
 img.logo-mahan {
   margin: 60px;
   width: 190px;
   height: 90px;
   object-fit: contain;
-}
-
-.btn-recover {
-  width: 269px;
-  height: 51px;
-  padding: 13px 91px 14px 93px;
-  border-radius: 15px;
-  background-color: #d21921;
-  border: none;
-
-  span {
-    width: 85px;
-    height: 24px;
-    font-family: IRANSans;
-    font-size: 15.3px;
-    font-weight: bold;
-    font-stretch: normal;
-    font-style: normal;
-    line-height: normal;
-    letter-spacing: normal;
-    text-align: center;
-    color: #fff;
-  }
 }
 </style>

@@ -2,41 +2,59 @@
   <div class="desktop" v-if="!isMobile()"></div>
 
   <div class="Forget-the-password" v-else>
-    <img src="../../../assets/img/logo-mahan.png" class="logo-mahan" />
+    <img src="../../../assets/img/logo-mahan@2x.png" class="logo-mahan" />
 
     <!-- Main Part -->
     <form @submit.prevent="sendToHome()" class="Rectangle">
-      <span class="Rectangle-header"> ورود به حساب کاربری </span>
+      <h6
+        style="font-family: IRANSans; margin-bottom: 1rem"
+        class="text-nowrap text-center"
+      >
+        ورود به حساب کاربری
+      </h6>
 
-      <span class="Rectangle-label">
+      <p
+        class="text-muted text-custom text-nowrap"
+        style="font-family: IRANSans"
+      >
         پیامکی حاوی یک کد 4 رقمی برای شما ارسال شد
-      </span>
-      <br />
-      <div class="phone-display" @click="sendToPasswordRecover()">
+      </p>
+
+      <!-- Fix This When Api Becomes Available -->
+      <!-- <div class="phone-display" @click="sendToPasswordRecover()">
         <span> {{ phone }} </span>
         <i class="fas fa-angle-left"></i>
-      </div>
-      <input
-        type="text"
-        class="inputs"
-        v-model="model.code"
-        placeholder="_ _ _ _"
-        @blur="v$.code.$touch()"
-      />
+      </div> -->
+      <label class="floating-label custom-label">
+        <input
+          type="text"
+          v-model="model.code"
+          placeholder="_ _ _ _"
+          @blur="v$.code.$touch()"
+        />
+        <span> احراز شماره همراه </span>
+      </label>
 
-      <span
+      <p
         v-for="(error, index) in v$.code.$errors"
         :key="index"
-        class="text-info"
+        class="text-danger text-bold"
+        style="font-family: IRANSans"
       >
         {{ error.$message }}
-      </span>
+      </p>
 
-      <button class="btn-confirm">
+      <button class="button-linear">
         <span> تایید </span>
       </button>
 
-      <span @click="cancel()" class="cancel"> برگشت به صفحه ورود </span>
+      <p
+        @click="cancel()"
+        class="text-custom text text-nowrap text-center"
+        style="font-family: IRANSans; font-size: 0.75rem"
+      >
+        برگشت به صفحه ورود
+      </p>
     </form>
     <!--  -->
   </div>
@@ -93,15 +111,6 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
-body {
-  overflow-y: scroll;
-  overflow-x: hidden;
-}
-#app {
-  overflow-y: scroll;
-  overflow-x: hidden;
-}
-
 .Forget-the-password {
   width: 100vw;
   height: 100vh;
@@ -112,9 +121,12 @@ body {
   align-items: center;
   flex-direction: column;
 }
-
+.text-custom {
+  font-size: 0.55rem;
+  font-weight: bold;
+}
 .Rectangle {
-  width: 311px;
+  width: 80vw;
   height: 315px;
   padding: 26px 20px 14px 21px;
   border-radius: 10px;
@@ -144,8 +156,8 @@ body {
   }
 
   .Rectangle-header {
-    width: 175px;
-    height: 28px;
+    // width: 175px;
+    // height: 28px;
     margin: 0 47px 23px 48px;
     font-family: IRANSans;
     font-size: 19px;
@@ -159,11 +171,8 @@ body {
   }
 
   .Rectangle-label {
-    width: 253px;
-    height: 50px;
     opacity: 0.8;
     font-family: IRANSans;
-    font-size: 12px;
     text-align: center;
     color: rgba(28, 25, 57, 0.8);
   }
@@ -203,7 +212,6 @@ img.logo-mahan {
   height: 90px;
   object-fit: contain;
 }
-
 .btn-confirm {
   width: 269px;
   height: 51px;
@@ -226,7 +234,6 @@ img.logo-mahan {
 }
 .phone-display {
   margin-top: 10px;
-
   display: flex;
   justify-content: center;
   align-items: center;
@@ -238,6 +245,12 @@ img.logo-mahan {
   i {
     font-size: 12.5px;
     color: #009205;
+  }
+}
+
+.custom-label {
+  input::placeholder {
+    opacity: 1;
   }
 }
 </style>
