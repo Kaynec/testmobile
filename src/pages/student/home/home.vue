@@ -2,13 +2,8 @@
   <div class="desktop" v-if="!isMobile()"></div>
   <div class="mobile" v-else>
     <div class="user-home">
-      <div class="header">
-        <img src="../../../assets/img/logo-copy.png" class="logo-mahan" />
-        <div class="user-part">
-          <span class="points"> امتیاز شما: ۲۰۱۸۵ </span>
-          <div class="profile-image"></div>
-        </div>
-      </div>
+      <!-- Header -->
+      <Header />
       <!-- Hero Section -->
       <div class="hero-section">
         <div class="overlay"></div>
@@ -38,13 +33,9 @@
         <img src="../../../assets/img/exam.png" class="Cart" />
         <img src="../../../assets/img/calendar.png" class="Cart" />
       </div>
+      <!-- Footer  -->
+      <Footer />
       <!--  -->
-      <div class="footer">
-        <img src="../../../assets/img/home.png" class="footer-icon" />
-        <img src="../../../assets/img/group.png" class="footer-icon" />
-        <img src="../../../assets/img/shop.png" class="footer-icon" />
-        <img src="../../../assets/img/setting.png" class="footer-icon" />
-      </div>
     </div>
   </div>
 </template>
@@ -52,8 +43,15 @@
 import { Options, Vue } from 'vue-class-component';
 import { useStudentStore } from '@/store';
 import { StudentActionTypes } from '@/store/modules/student/action-types';
+import Footer from '@/modules/student-modules/footer/footer.vue';
+import Header from '@/modules/student-modules/header/header.vue';
 
-@Options({})
+@Options({
+  components: {
+    Footer: Footer,
+    Header: Header
+  }
+})
 export default class Login extends Vue {
   public data(): any {
     return {
@@ -98,48 +96,7 @@ export default class Login extends Vue {
     background-color: #f4f4f4;
     display: flex;
     flex-direction: column;
-    .header {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 -2px 5px 0 rgba(0, 0, 0, 0.09);
-      background-color: black;
-      z-index: 2;
 
-      flex-basis: 10%;
-      img.logo-mahan {
-        width: 116px;
-        height: 32px;
-        margin-top: 13px;
-        margin-right: 15px;
-        object-fit: contain;
-      }
-      .user-part {
-        display: flex;
-        width: 100%;
-        margin-top: 11px;
-        justify-content: flex-end;
-        align-items: center;
-        gap: 0.5rem;
-        margin-left: 0.5rem;
-        z-index: 2;
-
-        .points {
-          font-family: IRANSans;
-          font-size: 12px;
-          font-weight: bold;
-          color: #fff;
-        }
-        .profile-image {
-          width: 2rem;
-          height: 2rem;
-          border-radius: 8px;
-          border: solid 2px #ddd;
-          margin-right: 10px;
-        }
-      }
-    }
     .hero-section {
       position: relative;
       width: 100%;
@@ -177,28 +134,32 @@ export default class Login extends Vue {
         left: 0;
         bottom: 0;
         width: auto;
-        max-width: 50%;
-        height: 95%;
+        height: auto;
+        max-width: 45%;
+        max-height: 95%;
         z-index: 1;
       }
       .heroDiv {
+        max-width: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         line-height: 1;
-        // padding: 1rem;
-        position: absolute;
-        right: 5%;
-        top: 15%;
+        height: 100%;
         .text-style-1 {
           z-index: 25;
           font-family: DimaArsalan;
           font-size: clamp(2rem, 2.5rem, 3rem);
-          margin: 0;
           color: #fff;
+          margin: 0;
+          font-weight: 500;
         }
         .text-style-2 {
           z-index: 25;
+          font-weight: 300;
           text-shadow: 0 3px 4px rgba(0, 0, 0, 0.33);
           font-family: IRANSans;
-          font-size: clamp(0.9rem, 1.25rem, 1.4rem);
+          font-size: clamp(1.2rem, 1.55rem, 1.8rem);
           color: #fff;
         }
       }
@@ -207,9 +168,10 @@ export default class Login extends Vue {
         display: block;
         margin-top: 2.25rem;
         font-family: IRANSans;
-        font-size: 14px;
-        font-weight: normal;
+        font-size: 0.79rem;
+        font-weight: light;
         color: #fff;
+        transform: translateY(-80%);
 
         i {
           color: white;
@@ -241,25 +203,6 @@ export default class Login extends Vue {
         &:nth-of-type(5) {
           margin-left: 15%;
         }
-      }
-    }
-    .footer {
-      width: 100%;
-      height: clamp(3rem, 3.5rem, 4rem);
-      flex-basis: clamp(10%, 12.5%, 17.5%);
-      position: fixed;
-      bottom: 0;
-      margin: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      border-top-left-radius: 30px;
-      border-top-right-radius: 30px;
-      background-image: linear-gradient(to right, #880e13 20%, #ec3538);
-      .footer-icon {
-        object-fit: contain;
-        width: 5rem;
-        min-width: 2rem;
       }
     }
   }

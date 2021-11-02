@@ -40,6 +40,7 @@ import Home from '@/pages/student/home/home.vue';
 import StudentSignup from '@/pages/student/signup/signup.vue';
 import StudentPasswordRecover from '@/pages/student/password-recover/password-recover.vue';
 import StudentAuthentication from '@/pages/student/authentication/StudentAuthentication.vue';
+import StudentSetting from '@/pages/student/setting/setting.vue';
 
 import { useAdminStore, useStudentStore } from '@/store';
 const ifNotAuthenticated = (to: any, from: any, next: any) => {
@@ -300,6 +301,11 @@ const routes: Array<RouteRecordRaw> = [
         name: 'Home',
         component: Home
         // beforeEnter: ifStudentAuthenticated
+      },
+      {
+        path: 'setting',
+        name: 'StudentSetting',
+        component: StudentSetting
       }
     ]
   },

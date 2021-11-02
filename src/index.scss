@@ -23,6 +23,13 @@
 
 @font-face {
   font-family: 'IRANSans';
+  src: url('./assets/fonts/IRANSans.eot');
+  font-weight: 300;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'IRANSans';
   src: url('./assets/fonts/IRANSans.ttf') format('truetype');
   font-weight: normal;
   font-style: normal;
@@ -40,7 +47,6 @@
   height: 100vh;
   direction: rtl;
 }
-
 .main-header .navbar-nav .nav-item .nav-link {
   background: transparent;
   border: none;
