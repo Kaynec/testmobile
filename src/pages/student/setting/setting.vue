@@ -1,6 +1,10 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
-  <div v-else class="w-100" style="min-height: 100vh">
+  <div
+    v-else
+    class="w-100"
+    style="min-height: 100vh; background-color: rgba(33, 49, 84, 0.082)"
+  >
     <Header />
     <!-- Main Content -->
     <div
@@ -22,15 +26,14 @@
       />
       <Card
         label="ارتباط با پشتیبان"
-        TextDetail="۴ پیام نخوانده نشده دارید"
+        TextDetail="۴ پیام خوانده نشده دارید"
         iconSrc="support"
       />
-      <!-- Waiting For The Currect Picture -->
-      <!-- <Card
+      <Card
         label="پروفایل"
         TextDetail="تکمیل اطلاعات حساب کاربری را انجام دهید"
         iconSrc="profile"
-      /> -->
+      />
       <Card
         label="ارتباط با ما"
         TextDetail="کافیست ماهانی شوید"
@@ -39,14 +42,13 @@
       <Card
         label="محصولات آموزشی"
         TextDetail="کتابها و پادکست های جدید"
-        iconSrc="educational-product"
+        iconSrc="education"
       />
       <Card
         label="نقشه راه شما"
         TextDetail="۳۸ درصد از مسیر تا رسیدن به مقصد مانده!"
         iconSrc="roadmap"
       />
-      <!--  -->
     </div>
     <!--  -->
     <Footer />
@@ -58,6 +60,7 @@ import { defineComponent } from 'vue';
 import Footer from '@/modules/student-modules/footer/footer.vue';
 import Header from '@/modules/student-modules/header/header.vue';
 import Card from './card.vue';
+
 export default defineComponent({
   components: {
     Header,
@@ -66,9 +69,3 @@ export default defineComponent({
   }
 });
 </script>
-<style scoped>
-body {
-  background: #f4f4f4;
-  position: fixed;
-}
-</style>
