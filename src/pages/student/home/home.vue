@@ -26,20 +26,28 @@
       </div>
       <!--  User Home -->
       <div class="User---Home">
-        <img src="../../../assets/img/pancil.png" class="Cart" />
-        <img
-          src="../../../assets/img/map.png"
-          class="Cart"
-          @click="changeShowRoadMap(true)"
-        />
-        <img src="../../../assets/img/book.png" class="Cart" />
-        <img src="../../../assets/img/support.png" class="Cart" />
-        <img
-          src="../../../assets/img/exam.png"
-          @click="changeShowAzmoon(true)"
-          class="Cart"
-        />
-        <img src="../../../assets/img/calendar.png" class="Cart" />
+        <div class="Cart"><img src="../../../assets/img/pancil.png" /></div>
+        <div class="Cart">
+          <img
+            src="../../../assets/img/map.png"
+            @click="changeShowRoadMap(true)"
+          />
+        </div>
+        <div class="Cart">
+          <img src="../../../assets/img/book.png" />
+        </div>
+        <div class="Cart">
+          <img src="../../../assets/img/support.png" />
+        </div>
+        <div class="Cart">
+          <img
+            src="../../../assets/img/exam.png"
+            @click="changeShowAzmoon(true)"
+          />
+        </div>
+        <div class="Cart">
+          <img src="../../../assets/img/calendar.png" />
+        </div>
       </div>
       <Footer />
       <!--  -->
@@ -208,17 +216,26 @@ export default class Login extends Vue {
     }
     .User---Home {
       width: 100%;
-      flex-basis: clamp(47%, 57%, 63%);
+      min-height: 55%;
+      // flex-basis: clamp(47%, 57%, 63%);
       margin: 0;
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       align-items: center;
-      padding: 5px;
-      padding-bottom: 35px;
-      overflow: hidden;
+      // padding: 25px;
+      padding-bottom: 10px;
+      overflow: scroll;
       .Cart {
         width: 36%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        img {
+          width: 80%;
+          margin: 0 auto;
+        }
 
         &:nth-of-type(1) {
           margin-left: 15%;
@@ -234,8 +251,5 @@ export default class Login extends Vue {
       }
     }
   }
-}
-// Make The Picture disapper on small phones
-@media screen and (max-width: 320px) {
 }
 </style>

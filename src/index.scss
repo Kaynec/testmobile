@@ -99,6 +99,23 @@
 
   border-radius: 5px;
   background: transparent;
+
+  select {
+    width: 100%;
+    text-align: right;
+    border: 2px solid #ddd;
+    padding: 10px;
+    outline: none;
+    border-radius: 10px;
+    font-family: IRANSans;
+    font-size: 12px;
+    font-weight: normal;
+    background: transparent;
+    &:focus {
+      border: 2px solid #d89ea1;
+    }
+  }
+
   input {
     width: 100%;
     text-align: right;
@@ -113,26 +130,13 @@
     &:focus {
       // border: 2px solid #99151c;
       border: 2px solid #d89ea1;
-    }
-  }
-
-  select {
-    width: 100%;
-    text-align: right;
-    border: 2px solid #ddd;
-    padding: 10px;
-    outline: none;
-    border-radius: 10px;
-    font-family: IRANSans;
-    font-size: 12px;
-    font-weight: normal;
-    &:focus {
-      border: 2px solid #d89ea1;
+      visibility: visible;
     }
   }
 
   input::placeholder {
-    opacity: 0;
+    // opacity: 0;
+    visibility: hidden;
   }
   span {
     color: #d89ea1;
