@@ -183,6 +183,7 @@ export default class Login extends Vue {
         align-items: center;
         line-height: 1;
         height: 100%;
+        margin: 0.25rem;
         .text-style-1 {
           z-index: 25;
           font-family: DimaArsalan;
