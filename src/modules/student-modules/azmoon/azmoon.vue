@@ -20,10 +20,8 @@
           w-100
         "
       >
-        <Dialog label="برترینهای آزمون" />
-        <Dialog label="پاسخنامه" />
-        <Dialog label="کارنامه" />
-        <Dialog label="نمودار پیشرفت" />
+        <Dialog label="آزمون های خودسنجی" />
+        <Dialog label="آزمون های جامع" />
       </div>
 
       <!-- Img Icon -->
