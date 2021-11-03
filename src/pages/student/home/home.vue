@@ -31,6 +31,7 @@
           <img
             src="../../../assets/img/map.png"
             @click="changeShowRoadMap(true)"
+            @touchstart="changeShowRoadMap(true)"
           />
         </div>
         <div class="Cart">
@@ -43,6 +44,7 @@
           <img
             src="../../../assets/img/exam.png"
             @click="changeShowAzmoon(true)"
+            @touchstart="changeShowAzmoon(true)"
           />
         </div>
         <div class="Cart">
@@ -217,15 +219,13 @@ export default class Login extends Vue {
     .User---Home {
       width: 100%;
       min-height: 55%;
-      // flex-basis: clamp(47%, 57%, 63%);
       margin: 0;
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       align-items: center;
-      // padding: 25px;
       padding-bottom: 10px;
-      overflow: scroll;
+      overflow: hidden;
       .Cart {
         width: 36%;
         display: flex;

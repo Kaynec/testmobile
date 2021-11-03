@@ -54,8 +54,9 @@
   z-index: 4;
   .footer-icon {
     object-fit: contain;
-    width: 5.2rem;
-    min-width: 2.5rem;
+    // width: minmax(3.5rem, 5.2rem);
+    width: 25vw;
+    max-width: 5rem;
   }
 }
 .nav-link {
