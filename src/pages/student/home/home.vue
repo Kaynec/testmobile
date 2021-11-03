@@ -30,13 +30,13 @@
         <img
           src="../../../assets/img/map.png"
           class="Cart"
-          @touchstart="changeShowRoadMap(true)"
+          @click="changeShowRoadMap(true)"
         />
         <img src="../../../assets/img/book.png" class="Cart" />
         <img src="../../../assets/img/support.png" class="Cart" />
         <img
           src="../../../assets/img/exam.png"
-          @touchstart="changeShowAzmoon(true)"
+          @click="changeShowAzmoon(true)"
           class="Cart"
         />
         <img src="../../../assets/img/calendar.png" class="Cart" />
@@ -114,7 +114,9 @@ export default class Login extends Vue {
 }
 
 .mobile {
+  width: 100%;
   height: 100%;
+
   .user-home {
     width: 100%;
     height: 100%;
@@ -214,6 +216,7 @@ export default class Login extends Vue {
       align-items: center;
       padding: 5px;
       padding-bottom: 35px;
+      overflow: hidden;
       .Cart {
         width: 36%;
 

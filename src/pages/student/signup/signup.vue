@@ -306,6 +306,7 @@ export default defineComponent({
 <style lang="scss" scoped>
 .mobile {
   width: 100%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
