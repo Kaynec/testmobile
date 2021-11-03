@@ -59,7 +59,7 @@
 import { defineComponent } from 'vue';
 import Footer from '@/modules/student-modules/footer/footer.vue';
 import Header from '@/modules/student-modules/header/header.vue';
-import Card from './card.vue';
+import Card from '@/modules/student-modules/card.vue';
 
 export default defineComponent({
   components: {

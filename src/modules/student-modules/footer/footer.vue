@@ -51,7 +51,7 @@
   border-top-left-radius: 30px;
   border-top-right-radius: 30px;
   background-image: linear-gradient(to right, #880e13 20%, #ec3538);
-  z-index: 10;
+  z-index: 4;
   .footer-icon {
     object-fit: contain;
     width: 5.2rem;

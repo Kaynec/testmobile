@@ -27,17 +27,30 @@
       <!--  User Home -->
       <div class="User---Home">
         <img src="../../../assets/img/pancil.png" class="Cart" />
-        <img src="../../../assets/img/map.png" class="Cart" />
+        <img
+          src="../../../assets/img/map.png"
+          class="Cart"
+          @touchstart="changeShowRoadMap(true)"
+        />
         <img src="../../../assets/img/book.png" class="Cart" />
         <img src="../../../assets/img/support.png" class="Cart" />
-        <img src="../../../assets/img/exam.png" class="Cart" />
+        <img
+          src="../../../assets/img/exam.png"
+          @touchstart="changeShowAzmoon(true)"
+          class="Cart"
+        />
         <img src="../../../assets/img/calendar.png" class="Cart" />
       </div>
-      <!-- Footer  -->
       <Footer />
       <!--  -->
     </div>
   </div>
+
+  <!-- RoadMap  Add a Link as A Prop And Open That On Click -->
+  <RoadMap v-if="showRoadMap" @convertBoolean="changeShowRoadMap(false)" />
+  <!-- Azmoon -->
+
+  <Azmoon v-if="showAzmoon" @convertBoolean="changeShowAzmoon(false)" />
 </template>
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component';
@@ -45,24 +58,36 @@ import { useStudentStore } from '@/store';
 import { StudentActionTypes } from '@/store/modules/student/action-types';
 import Footer from '@/modules/student-modules/footer/footer.vue';
 import Header from '@/modules/student-modules/header/header.vue';
+import RoadMap from '@/modules/student-modules/roadmap/roadmap.vue';
+import Azmoon from '@/modules/student-modules/azmoon/azmoon.vue';
 
 @Options({
   components: {
-    Footer: Footer,
-    Header: Header
+    Footer,
+    Header,
+    RoadMap,
+    Azmoon
   }
 })
 export default class Login extends Vue {
-  public data(): any {
-    return {
-      windowHeight: window.innerHeight
-    };
-  }
+  public windowHeight = window.innerHeight;
+  public showAzmoon = false;
+  public showRoadMap = false;
 
   public mounted(): void {
     this.$nextTick(() => {
       window.addEventListener('resize', this.onResize);
     });
+  }
+
+  public changeShowRoadMap(boolean: boolean): void {
+    console.log('SOME');
+    this.showRoadMap = boolean;
+  }
+
+  public changeShowAzmoon(boolean: boolean): void {
+    console.log('SOME');
+    this.showAzmoon = boolean;
   }
 
   onResize(): void {

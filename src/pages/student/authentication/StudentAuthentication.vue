@@ -126,7 +126,7 @@ export default defineComponent({
   font-weight: bold;
 }
 .Rectangle {
-  width: 80vw;
+  width: 90vw;
   height: 315px;
   padding: 26px 20px 14px 21px;
   border-radius: 10px;

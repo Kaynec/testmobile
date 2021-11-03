@@ -78,10 +78,7 @@ export default defineComponent({
       Card.value.classList.remove('active');
     };
     const getImgUrl = (src, color) => {
-      return require('../../../assets/img/Studentsetting/' +
-        src +
-        color +
-        '.png');
+      return require('../../assets/img/Studentsetting/' + src + color + '.png');
     };
     return {
       touchend,
