@@ -10,8 +10,7 @@
     "dev:build": "vue-cli-service build",
     "dev:lint": "vue-cli-service lint",
     "dev:serve": "vue-cli-service serve",
-    "start": "node server.ts",
-    "postinstall": "npm run build"
+    "start": "node server.ts"
   },
   "dependencies": {
     "@majidh1/jalalidatepicker": "^0.2.9",
