@@ -22,29 +22,39 @@
     </div>
     <!--  User Home -->
     <div class="User---Home">
-      <div class="Cart"><img src="../../../assets/img/pancil.png" /></div>
+      <div class="Cart">
+        <img src="../../../assets/img/home-icons/pencil.png" />
+        <h4>کلاس ها</h4>
+      </div>
       <div class="Cart">
         <img
-          src="../../../assets/img/map.png"
+          src="../../../assets/img/home-icons/google-maps-icon-256.png"
           @click="changeShowRoadMap(true)"
           @touchstart="changeShowRoadMap(true)"
         />
+        <h4>نقشه راه</h4>
       </div>
       <div class="Cart">
-        <img src="../../../assets/img/book.png" />
+        <img src="../../../assets/img/home-icons/bitmap.png" />
+        <h4>کتب درسی</h4>
       </div>
       <div class="Cart">
-        <img src="../../../assets/img/support.png" />
+        <img src="../../../assets/img/home-icons/archive.png" />
+        <h4>بسته پشتیبانی</h4>
       </div>
       <div class="Cart">
         <img
-          src="../../../assets/img/exam.png"
+          src="../../../assets/img/home-icons/bill-of-document.png"
           @click="changeShowAzmoon(true)"
           @touchstart="changeShowAzmoon(true)"
         />
+        <h4>آزمون ها</h4>
       </div>
       <div class="Cart">
-        <img src="../../../assets/img/calendar.png" />
+        <img
+          src="../../../assets/img/home-icons/system-calendar-icon-256.png"
+        />
+        <h4>تقویم آموزشی</h4>
       </div>
     </div>
     <Footer />
@@ -212,18 +222,33 @@ export default class Login extends Vue {
   .User---Home {
     width: 100%;
     display: grid;
-    height: 50%;
     grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(3, 1fr);
-    background-color: #eee;
+    grid-auto-rows: 90px;
+    justify-content: center;
+    align-items: center;
+    // background-color: #ff2f2f;
+    // max-height: 55%;
     overflow: hidden;
+    // grid-gap: 0.5rem;
+    padding: 0.75rem;
+
     .Cart {
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-
+      overflow: hidden;
       img {
-        width: 65%;
+        padding: 0.55rem;
+        background: linear-gradient(to bottom, white 30%, #ddd);
+        border-radius: 15px;
+        margin-bottom: 0.5rem;
+        overflow: hidden;
+      }
+      h4 {
+        font-family: IRANSans;
+        font-size: 14px;
+        font-weight: bold;
       }
     }
   }
