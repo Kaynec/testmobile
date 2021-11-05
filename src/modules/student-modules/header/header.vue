@@ -24,8 +24,9 @@ header {
   padding: 0.5rem;
   z-index: 2;
   img.logo-mahan {
-    width: clamp(5.5rem, 6.5rem, 7.5rem);
-    object-fit: contain;
+    width: 5.5rem;
+    max-width: 120px;
+    object-fit: cover;
     background: rgba(0, 0, 0, 0.09);
   }
   .user-part {

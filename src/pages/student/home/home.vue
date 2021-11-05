@@ -160,7 +160,6 @@ export default class Login extends Vue {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   flex-grow: 1;
-  background-color: #921c20;
   justify-content: center;
   align-items: center;
 
