@@ -133,7 +133,6 @@ export default class Login extends Vue {
   height: 100vh;
   top: 0;
   left: 0;
-  position: fixed;
   background-color: #eee;
   display: flex;
   flex-direction: column;
@@ -144,7 +143,7 @@ export default class Login extends Vue {
     width: 100%;
     margin: 0;
     background-image: linear-gradient(to top right, #ec3538 -5%, #880e13);
-    flex-basis: clamp(17%, 27%, 31%);
+    // flex-basis: clamp(17%, 27%, 31%);
 
     .overlay {
       position: absolute;
@@ -229,11 +228,9 @@ export default class Login extends Vue {
     grid-auto-rows: 90px;
     justify-content: center;
     align-items: center;
-    // background-color: #ff2f2f;
-    // max-height: 55%;
     overflow: hidden;
-    // grid-gap: 0.5rem;
     padding: 0.75rem;
+    height: 50%;
 
     .Cart {
       display: flex;
