@@ -3,30 +3,19 @@
   <div class="user-home" v-else>
     <!-- Header -->
     <Header />
-    <!-- Hero Section -->
-    <div class="hero-section">
-      <div class="overlay"></div>
-      <div class="small-overlay"></div>
-      <img src="../../../assets/img/asset-1-288-x@3x.png" class="hero-image" />
+    <section class="hero">
+      <img src="../../../assets/img/asset-1-288-x@3x.png" alt="" />
+      <h5>نقشه راه</h5>
+      <h5>ازمون های جامع</h5>
+      <p>مشاهده<i class="fas fa-angle-left"></i></p>
+    </section>
 
-      <div class="heroDiv">
-        <div class="hero-header">
-          <p class="text-style-1">نقشه راه</p>
-          <p class="text-style-2">آزمون های جامع</p>
-          <p class="chevron">
-            مشاهده
-            <i class="fas fa-chevron-left"></i>
-          </p>
-        </div>
-      </div>
-    </div>
-    <!--  User Home -->
-    <div class="User---Home">
-      <div class="Cart">
+    <div class="cart-container">
+      <div class="cart">
         <img src="../../../assets/img/home-icons/pencil.png" />
         <h4>کلاس ها</h4>
       </div>
-      <div class="Cart">
+      <div class="cart">
         <img
           src="../../../assets/img/home-icons/google-maps-icon-256.png"
           @click="changeShowRoadMap(true)"
@@ -34,15 +23,15 @@
         />
         <h4>نقشه راه</h4>
       </div>
-      <div class="Cart">
+      <div class="cart">
         <img src="../../../assets/img/home-icons/bitmap.png" />
         <h4>کتب درسی</h4>
       </div>
-      <div class="Cart">
+      <div class="cart">
         <img src="../../../assets/img/home-icons/archive.png" />
         <h4>بسته پشتیبانی</h4>
       </div>
-      <div class="Cart">
+      <div class="cart">
         <img
           src="../../../assets/img/home-icons/bill-of-document.png"
           @click="changeShowAzmoon(true)"
@@ -50,7 +39,7 @@
         />
         <h4>آزمون ها</h4>
       </div>
-      <div class="Cart">
+      <div class="cart">
         <img
           src="../../../assets/img/home-icons/system-calendar-icon-256.png"
         />
@@ -120,128 +109,81 @@ export default class Login extends Vue {
 }
 
 .user-home {
-  width: 100%;
   height: 100%;
-  max-width: 100vw;
-  max-height: 100vh;
-  top: 0;
-  left: 0;
   background-color: #eee;
   display: flex;
-  position: absolute;
   flex-direction: column;
   overflow: hidden;
   z-index: 1;
 
-  .hero-section {
+  .hero {
     position: relative;
     width: 100%;
-    margin: 0;
     background-image: linear-gradient(to top right, #ec3538 -5%, #880e13);
     height: fit-content;
-    padding: 0.4rem;
-    .overlay {
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      top: 0;
-      background-color: #921c20;
-      opacity: 0.6;
-      max-width: 62.5%;
-      overflow: hidden;
-
-      -webkit-clip-path: polygon(0 0, 100% 0, 0% 166%, 0 100%);
-      clip-path: polygon(0 0, 100% 0, 0% 166%, 0 100%);
-    }
-
-    .small-overlay {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: 0;
-    }
-
-    .hero-image {
+    max-height: 37vh;
+    padding: 2rem;
+    color: white;
+    img {
       object-fit: cover;
       position: absolute;
       left: 0;
       bottom: 0;
-      width: auto;
-      height: auto;
-      max-width: 45%;
+      max-width: 50%;
       max-height: 95%;
+      float: left;
       z-index: 1;
     }
-    .heroDiv {
-      max-width: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      line-height: 1;
-      height: 100%;
-      margin: 0.25rem;
-      .text-style-1 {
-        z-index: 25;
+    h5 {
+      &:nth-of-type(1) {
+        font-size: clamp(2.5rem, 3.5rem, 3.5rem);
         font-family: DimaArsalan;
-        font-size: clamp(2rem, 2.5rem, 3rem);
-        color: #fff;
         margin: 0;
-        font-weight: 500;
+        line-height: 0.8;
       }
-      .text-style-2 {
-        z-index: 25;
-        font-weight: 300;
-        text-shadow: 0 3px 4px rgba(0, 0, 0, 0.33);
+      &:nth-of-type(2) {
+        font-size: clamp(12px, 14px, 16px);
         font-family: IRANSans;
-        font-size: clamp(1.2rem, 1.55rem, 1.8rem);
-        color: #fff;
+        margin: 0.25rem 0 0 0;
       }
     }
 
-    .chevron {
-      display: block;
-      margin-top: 2.25rem;
-      font-family: IRANSans;
-      font-size: 0.79rem;
-      font-weight: light;
-      color: #fff;
-      transform: translateY(-80%);
-
-      i {
-        color: white;
-        font-size: 11px;
-      }
+    p {
+      display: flex;
+      grid-gap: 0.5rem;
+      align-items: center;
+      margin: 1.5rem 0 0 0;
     }
   }
-  .User---Home {
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    grid-auto-rows: 5.62rem;
-    overflow: hidden;
-    padding: 0.75rem;
-    grid-gap: clamp(0.3rem, 0.5rem, 1rem);
-    flex-grow: 1;
+}
+.cart-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  flex-grow: 1;
+  background-color: #921c20;
+  justify-content: center;
+  align-items: center;
 
-    .Cart {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      overflow: hidden;
-      img {
-        padding: 0.55rem;
-        background: linear-gradient(to bottom, white 30%, #ddd);
-        border-radius: 1.5em;
-        margin-bottom: 0.5rem;
-        overflow: hidden;
-      }
-      h4 {
-        font-family: IRANSans;
-        font-size: 14px;
-        font-weight: bold;
-      }
+  .cart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-items: center;
+
+    &:nth-of-type(5),
+    &:nth-of-type(6) {
+      margin-bottom: 3rem;
+    }
+    img {
+      padding: 0.25rem;
+      background: linear-gradient(to bottom, white 30%, #ddd);
+      border-radius: 1.5em;
+      margin-bottom: 0.5rem;
+    }
+    h4 {
+      font-family: IRANSans;
+      font-size: 14px;
+      font-weight: bold;
     }
   }
 }
