@@ -59,8 +59,8 @@ export default defineComponent({
 <style language="scss">
 .roadmap {
   position: fixed;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   inset: 0;
   background: rgba(0, 0, 0, 0.5);
   background-repeat: no-repeat;
@@ -68,12 +68,14 @@ export default defineComponent({
   z-index: 5;
 }
 .x-icon {
-  padding: 3px;
+  padding: 4px;
   background: white;
   border-radius: 45%;
   display: block;
-  margin-bottom: 6vh;
+  position: fixed;
+  margin-bottom: 7vh;
   margin-top: 3rem;
+  bottom: 0;
 }
 
 .flex-child {

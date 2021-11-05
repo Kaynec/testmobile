@@ -60,11 +60,9 @@
     <Footer />
     <!--  -->
   </div>
-
   <!-- RoadMap  Add a Link as A Prop And Open That On Click -->
   <RoadMap v-if="showRoadMap" @convertBoolean="changeShowRoadMap(false)" />
   <!-- Azmoon -->
-
   <Azmoon v-if="showAzmoon" @convertBoolean="changeShowAzmoon(false)" />
 </template>
 <script lang="ts">
@@ -75,7 +73,6 @@ import Footer from '@/modules/student-modules/footer/footer.vue';
 import Header from '@/modules/student-modules/header/header.vue';
 import RoadMap from '@/modules/student-modules/roadmap/roadmap.vue';
 import Azmoon from '@/modules/student-modules/azmoon/azmoon.vue';
-
 @Options({
   components: {
     Footer,
@@ -88,31 +85,25 @@ export default class Login extends Vue {
   public windowHeight = window.innerHeight;
   public showAzmoon = false;
   public showRoadMap = false;
-
   public mounted(): void {
     this.$nextTick(() => {
       window.addEventListener('resize', this.onResize);
     });
   }
-
   public changeShowRoadMap(boolean: boolean): void {
     console.log('SOME');
     this.showRoadMap = boolean;
   }
-
   public changeShowAzmoon(boolean: boolean): void {
     console.log('SOME');
     this.showAzmoon = boolean;
   }
-
   onResize(): void {
     (this as any).windowHeight = window.innerHeight;
   }
-
   getMainStyle(): { height: string } {
     return { height: `${(this as any).windowHeight - 1}px` };
   }
-  // eslint-disable-next-line
   async logout() {
     debugger;
     await useStudentStore().dispatch(
@@ -129,43 +120,46 @@ export default class Login extends Vue {
 }
 
 .user-home {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
+  max-width: 100vw;
+  max-height: 100vh;
   top: 0;
   left: 0;
   background-color: #eee;
   display: flex;
+  position: absolute;
   flex-direction: column;
   overflow: hidden;
+  z-index: 1;
 
   .hero-section {
     position: relative;
     width: 100%;
     margin: 0;
     background-image: linear-gradient(to top right, #ec3538 -5%, #880e13);
-    // flex-basis: clamp(17%, 27%, 31%);
+    height: fit-content;
+    padding: 0.4rem;
     .overlay {
       position: absolute;
       left: 0;
       bottom: 0;
       top: 0;
-      background-color: #960c10;
+      background-color: #921c20;
       opacity: 0.6;
-      height: 100%;
-      width: 62.5%;
+      max-width: 62.5%;
       overflow: hidden;
+
       -webkit-clip-path: polygon(0 0, 100% 0, 0% 166%, 0 100%);
       clip-path: polygon(0 0, 100% 0, 0% 166%, 0 100%);
     }
 
     .small-overlay {
       position: absolute;
-      width: 0;
-      height: 0;
-      left: 0;
+      top: 0;
       bottom: 0;
-      border-top: 70vw solid #a61a1e;
-      border-right: 60vw solid transparent;
+      left: 0;
+      right: 0;
     }
 
     .hero-image {
@@ -224,11 +218,10 @@ export default class Login extends Vue {
     width: 100%;
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-auto-rows: 90px;
-    justify-content: center;
-    align-items: center;
+    grid-auto-rows: 5.62rem;
     overflow: hidden;
     padding: 0.75rem;
+    grid-gap: clamp(0.3rem, 0.5rem, 1rem);
 
     .Cart {
       display: flex;
@@ -239,7 +232,7 @@ export default class Login extends Vue {
       img {
         padding: 0.55rem;
         background: linear-gradient(to bottom, white 30%, #ddd);
-        border-radius: 15px;
+        border-radius: 1.5em;
         margin-bottom: 0.5rem;
         overflow: hidden;
       }

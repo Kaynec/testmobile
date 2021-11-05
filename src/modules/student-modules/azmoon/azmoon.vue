@@ -66,12 +66,14 @@ export default defineComponent({
   z-index: 5;
 }
 .x-icon {
-  padding: 3px;
+  padding: 4px;
   background: white;
   border-radius: 45%;
   display: block;
-  margin-bottom: 6vh;
+  position: fixed;
+  margin-bottom: 7vh;
   margin-top: 3rem;
+  bottom: 0;
 }
 
 .flex-child {
