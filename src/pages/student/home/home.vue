@@ -144,7 +144,6 @@ export default class Login extends Vue {
     margin: 0;
     background-image: linear-gradient(to top right, #ec3538 -5%, #880e13);
     // flex-basis: clamp(17%, 27%, 31%);
-
     .overlay {
       position: absolute;
       left: 0;
@@ -230,7 +229,6 @@ export default class Login extends Vue {
     align-items: center;
     overflow: hidden;
     padding: 0.75rem;
-    height: 50%;
 
     .Cart {
       display: flex;
