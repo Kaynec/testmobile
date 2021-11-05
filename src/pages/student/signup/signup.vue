@@ -14,9 +14,9 @@
       </label>
       <p
         v-for="error in v$.name.$errors"
-        class="text-danger text-bold small m-2"
+        class="text-danger text-bold m-2"
         :key="error.$uid"
-        style="font-family: IRANSans"
+        style="font-family: IRANSans; font-size: 12px"
       >
         {{ error.$message }}
       </p>
@@ -33,9 +33,9 @@
 
       <p
         v-for="error in v$.lastname.$errors"
-        class="text-danger text-bold small m-2"
+        class="text-danger text-bold m-2"
         :key="error.$uid"
-        style="font-family: IRANSans"
+        style="font-family: IRANSans; font-size: 12px"
       >
         {{ error.$message }}
       </p>
@@ -52,9 +52,9 @@
 
       <p
         v-for="error in v$.phone.$errors"
-        class="text-danger text-bold small m-2"
+        class="text-danger text-bold m-2"
         :key="error.$uid"
-        style="font-family: IRANSans"
+        style="font-family: IRANSans; font-size: 12px"
       >
         {{ error.$message }}
       </p>
@@ -78,9 +78,9 @@
 
       <p
         v-for="error in v$.estate.$errors"
-        class="text-danger text-bold small m-2"
+        class="text-danger text-bold m-2"
         :key="error.$uid"
-        style="font-family: IRANSans"
+        style="font-family: IRANSans; font-size: 12px"
       >
         {{ error.$message }}
       </p>
@@ -101,9 +101,9 @@
 
       <p
         v-for="error in v$.city.$errors"
-        class="text-danger text-bold small m-2"
+        class="text-danger text-bold m-2"
         :key="error.$uid"
-        style="font-family: IRANSans"
+        style="font-family: IRANSans; font-size: 12px"
       >
         {{ error.$message }}
       </p>
@@ -121,9 +121,9 @@
 
       <p
         v-for="error in v$.nationalCode.$errors"
-        class="text-danger text-bold small m-2"
+        class="text-danger text-bold m-2"
         :key="error.$uid"
-        style="font-family: IRANSans"
+        style="font-family: IRANSans; font-size: 12px"
       >
         {{ error.$message }}
       </p>
@@ -140,9 +140,9 @@
 
       <p
         v-for="error in v$.grade.$errors"
-        class="text-danger text-bold small m-2"
+        class="text-danger text-bold m-2"
         :key="error.$uid"
-        style="font-family: IRANSans"
+        style="font-family: IRANSans; font-size: 12px"
       >
         {{ error.$message }}
       </p>
@@ -159,9 +159,9 @@
 
       <p
         v-for="error in v$.orientation.$errors"
-        class="text-danger text-bold small m-2"
+        class="text-danger text-bold m-2"
         :key="error.$uid"
-        style="font-family: IRANSans"
+        style="font-family: IRANSans; font-size: 12px"
       >
         {{ error.$message }}
       </p>
@@ -304,7 +304,7 @@ export default defineComponent({
 .Sign-up {
   width: 100vw;
   height: 100vh;
-  background: #eee;
+  background: rgb(247, 244, 244);
   overflow-x: hidden;
   .Rectangle {
     margin: 0 auto;

@@ -222,6 +222,7 @@ export default class Login extends Vue {
     overflow: hidden;
     padding: 0.75rem;
     grid-gap: clamp(0.3rem, 0.5rem, 1rem);
+    flex-grow: 1;
 
     .Cart {
       display: flex;

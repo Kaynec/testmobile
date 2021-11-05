@@ -111,7 +111,7 @@
     font-weight: normal;
     background: transparent;
     &:focus {
-      border: 2px solid #d89ea1;
+      border: 2px solid #d87479;
     }
   }
 
@@ -126,17 +126,16 @@
     font-size: 12px;
     font-weight: normal;
     &:focus {
-      border: 2px solid #d89ea1;
+      border: 2px solid #d87479;
       visibility: visible;
     }
   }
 
   input::placeholder {
-    // opacity: 0;
     visibility: hidden;
   }
   span {
-    color: #d89ea1;
+    color: #cf5b61;
     font-family: IRANSans;
     position: absolute;
     right: 5%;
@@ -145,7 +144,6 @@
     transition-duration: 300ms;
     background-color: white;
     z-index: 2;
-    // background: transparent;
     padding: 0;
   }
 
@@ -157,7 +155,7 @@
     padding: 0 0.25rem;
   }
   select ~ span {
-    color: #d89ea1;
+    color: #cf5b61;
     font-family: IRANSans;
     position: absolute;
     right: 2%;
