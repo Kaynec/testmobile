@@ -24,14 +24,14 @@
 
 <script>
 import { defineComponent, ref } from 'vue';
-// Todo
-// Add a Link as A Prop And Open That On Click
+import router from '@/router/index';
 export default defineComponent({
   props: {
-    label: { type: String }
+    label: { type: String },
+    componentName: { type: String, default: 'empty' }
   },
 
-  setup() {
+  setup(props) {
     let Dialog = ref();
     let active = ref(null);
 
@@ -43,6 +43,12 @@ export default defineComponent({
     const touchend = () => {
       active.value = false;
       Dialog.value.classList.remove('active');
+
+      if (props.componentName != 'empty') {
+        router.push({
+          name: props.componentName
+        });
+      }
     };
     const getImgUrl = (src, color) => {
       return require('../../assets/img/Studentsetting/' + src + color + '.png');

@@ -43,6 +43,8 @@ import StudentAuthentication from '@/pages/student/authentication/StudentAuthent
 import StudentSetting from '@/pages/student/setting/setting.vue';
 import StudentShop from '@/pages/student/shop/shop.vue';
 import StudentGroupPage from '@/pages/student/group/group.vue';
+import SelfTest from '@/pages/student/azmoon/self-test.vue';
+import CompTest from '@/pages/student/azmoon/comp-test.vue';
 
 import { useAdminStore, useStudentStore } from '@/store';
 const ifNotAuthenticated = (to: any, from: any, next: any) => {
@@ -319,6 +321,16 @@ const routes: Array<RouteRecordRaw> = [
         path: 'group',
         name: 'StudentGroupPage',
         component: StudentGroupPage
+      },
+      {
+        path: 'self-test',
+        name: 'SelfTest',
+        component: SelfTest
+      },
+      {
+        path: 'comp-test',
+        name: 'compTest',
+        component: CompTest
       }
     ]
   },

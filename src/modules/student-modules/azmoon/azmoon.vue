@@ -20,8 +20,8 @@
           w-100
         "
       >
-        <Dialog label="آزمون های خودسنجی" />
-        <Dialog label="آزمون های جامع" />
+        <Dialog label="آزمون های خودسنجی" componentName="SelfTest" />
+        <Dialog label="آزمون های جامع" componentName="compTest" />
       </div>
 
       <!-- Img Icon -->
@@ -48,7 +48,6 @@ export default defineComponent({
         emit('convertBoolean');
       }, 150);
     };
-
     return { touchstart };
   }
 });
@@ -57,8 +56,8 @@ export default defineComponent({
 <style language="scss">
 .azmoon {
   position: fixed;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   inset: 0;
   background: rgba(0, 0, 0, 0.5);
   background-repeat: no-repeat;
