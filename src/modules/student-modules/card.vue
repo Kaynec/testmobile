@@ -56,15 +56,17 @@
 
 <script>
 import { defineComponent, ref } from 'vue';
+import router from '@/router';
 
 export default defineComponent({
   props: {
     iconSrc: { type: String },
     label: { type: String },
-    TextDetail: { type: String }
+    TextDetail: { type: String },
+    componentName: { type: String, default: 'empty' }
   },
 
-  setup() {
+  setup(props) {
     let Card = ref();
     let active = ref(null);
 
@@ -76,6 +78,11 @@ export default defineComponent({
     const touchend = () => {
       active.value = false;
       Card.value.classList.remove('active');
+      if (props.componentName != 'empty') {
+        router.push({
+          name: props.componentName
+        });
+      }
     };
     const getImgUrl = (src, color) => {
       return require('../../assets/img/Studentsetting/' + src + color + '.png');

@@ -41,10 +41,14 @@ import StudentSignup from '@/pages/student/signup/signup.vue';
 import StudentPasswordRecover from '@/pages/student/password-recover/password-recover.vue';
 import StudentAuthentication from '@/pages/student/authentication/StudentAuthentication.vue';
 import StudentSetting from '@/pages/student/setting/setting.vue';
+
 import StudentShop from '@/pages/student/shop/shop.vue';
+import ShopBookList from '@/pages/student/shop/shop-book-list.vue';
+
 import StudentGroupPage from '@/pages/student/group/group.vue';
 import SelfTest from '@/pages/student/azmoon/self-test.vue';
 import CompTest from '@/pages/student/azmoon/comp-test.vue';
+import ContactUs from '@/pages/student/contact-us/contact-us.vue';
 
 import { useAdminStore, useStudentStore } from '@/store';
 const ifNotAuthenticated = (to: any, from: any, next: any) => {
@@ -331,6 +335,17 @@ const routes: Array<RouteRecordRaw> = [
         path: 'comp-test',
         name: 'compTest',
         component: CompTest
+      },
+      {
+        path: 'contact-us',
+        name: 'contactUs',
+        component: ContactUs
+      },
+      {
+        path: 'shop-book-list',
+        name: 'ShopBookList',
+        component: ShopBookList,
+        props: true
       }
     ]
   },

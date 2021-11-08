@@ -1,5 +1,6 @@
 <template>
-  <div class="self-test">
+  <div class="desktop" v-if="!isMobile()"></div>
+  <div class="self-test" v-else>
     <SmallHeader />
     <div class="lessons">
       <LessonCard label="فارسی" imgSrc="farsi" />

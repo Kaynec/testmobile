@@ -3,13 +3,8 @@
   <div class="user-home" v-else>
     <!-- Header -->
     <Header />
-    <section class="hero">
-      <img src="../../../assets/img/asset-1-288-x@3x.png" alt="" />
-      <h5>نقشه راه</h5>
-      <h5>ازمون های جامع</h5>
-      <p>مشاهده<i class="fas fa-angle-left"></i></p>
-    </section>
-
+    <img src="../../../assets/img/hero@2x.png" class="hero" alt="hero-img" />
+    <!-- Main Container -->
     <div class="cart-container">
       <div class="cart">
         <img src="../../../assets/img/home-icons/pencil.png" />
@@ -117,71 +112,35 @@ export default class Login extends Vue {
   z-index: 1;
 
   .hero {
-    position: relative;
     width: 100%;
-    background-image: linear-gradient(to top right, #ec3538 -5%, #880e13);
-    height: fit-content;
-    max-height: 37vh;
-    padding: 2rem;
-    color: white;
-    img {
-      object-fit: cover;
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      max-width: 50%;
-      max-height: 95%;
-      float: left;
-      z-index: 1;
-    }
-    h5 {
-      &:nth-of-type(1) {
-        font-size: clamp(2.5rem, 3.5rem, 3.5rem);
-        font-family: DimaArsalan;
-        margin: 0;
-        line-height: 0.8;
-      }
-      &:nth-of-type(2) {
-        font-size: clamp(12px, 14px, 16px);
-        font-family: IRANSans;
-        margin: 0.25rem 0 0 0;
-      }
-    }
-
-    p {
-      display: flex;
-      grid-gap: 0.5rem;
-      align-items: center;
-      margin: 1.5rem 0 0 0;
-    }
+    max-height: 40vh;
+    object-fit: cover;
   }
 }
 .cart-container {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   flex-grow: 1;
-  justify-content: center;
-  align-items: center;
-
+  max-height: 400px;
+  padding-top: 1rem;
   .cart {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-items: center;
-
     &:nth-of-type(5),
     &:nth-of-type(6) {
       margin-bottom: 3rem;
     }
     img {
-      padding: 0.25rem;
+      padding: 0.45rem;
       background: linear-gradient(to bottom, white 30%, #ddd);
       border-radius: 1.5em;
       margin-bottom: 0.5rem;
     }
     h4 {
       font-family: IRANSans;
-      font-size: 14px;
+      font-size: 12px;
       font-weight: bold;
     }
   }

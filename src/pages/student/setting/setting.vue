@@ -38,6 +38,7 @@
         label="ارتباط با ما"
         TextDetail="کافیست ماهانی شوید"
         iconSrc="contact-us"
+        componentName="contactUs"
       />
       <Card
         label="محصولات آموزشی"
