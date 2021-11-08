@@ -3,17 +3,30 @@
   <div class="shop-book-list" v-else>
     <nav class="nav">
       <span>لیست محصولات کتاب (۱۸۴)</span>
-      <img src="../../../assets/img/arrow-left.png" alt="arrow left icon" />
+      <img
+        @click="goOnePageBack"
+        src="../../../assets/img/arrow-left.png"
+        alt="arrow left icon"
+      />
     </nav>
 
     <div class="card-container">
-      <div class="card" v-for="product in data" :key="product">
+      <div
+        class="card"
+        v-for="product in data"
+        :key="product"
+        @click="openSingleBookPage"
+      >
         <img :src="product.img" alt="book img" />
         <div class="text">
-          <p class="name">کارشناسی ارشد حقوق</p>
-          <p class="text-detail">حقوق بین الملل خصوصی</p>
-          <p class="price">قیمت : ۱۰۴،۰۰۰ تومان</p>
-          <p class="special-price">تخفیف ۱۰٪ : ۹۳،۶۰۰ تومان</p>
+          <p class="name">{{ product.name || 'کارشناسی ارشد حقوق' }}</p>
+          <p class="text-detail">
+            {{ product.description || ' حقوق بین الملل خصوصی' }}
+          </p>
+          <p class="price">قیمت : {{ product.price || '۱۰۴،۰۰۰' }} تومان</p>
+          <p class="special-price">
+            تخفیف ۱۰٪ : {{ product.specialPrice || '۹۳،۶۰۰' }} تومان
+          </p>
         </div>
       </div>
     </div>
@@ -35,37 +48,41 @@
 <script lang="ts">
 // Get All The Books The Relate To This Genre And List It In The Template
 import { defineComponent } from 'vue';
+import router from '@/router';
 
 export default defineComponent({
   setup() {
     const data = [
       {
-        name: 'حقوق',
+        name: '1 کارشناسی ارشد حقوق',
         img: 'https://www.mahan.ac.ir/images/ProductCategory/sampleProductCat.gif'
       },
       {
-        name: 'حقوق',
+        name: '2 کارشناسی ارشد حقوق',
         img: 'https://www.mahan.ac.ir/images/ProductCategory/sampleProductCat.gif'
       },
       {
-        name: 'حقوق',
+        name: '3 کارشناسی ارشد حقوق',
         img: 'https://www.mahan.ac.ir/images/ProductCategory/sampleProductCat.gif'
       },
       {
-        name: 'حقوق',
+        name: '4 کارشناسی ارشد حقوق',
         img: 'https://www.mahan.ac.ir/images/ProductCategory/sampleProductCat.gif'
       },
       {
-        name: 'حقوق',
+        name: '5 کارشناسی ارشد حقوق',
         img: 'https://www.mahan.ac.ir/images/ProductCategory/sampleProductCat.gif'
       },
       {
-        name: 'حقوق',
+        name: '6 کارشناسی ارشد حقوق',
         img: 'https://www.mahan.ac.ir/images/ProductCategory/sampleProductCat.gif'
       }
     ];
+    const openSingleBookPage = () =>
+      router.push({ name: 'SingleBookInfo', params: {} });
+    const goOnePageBack = () => router.go(-1);
 
-    return { data };
+    return { data, openSingleBookPage, goOnePageBack };
   }
 });
 </script>
@@ -109,7 +126,7 @@ export default defineComponent({
     .card {
       display: flex;
       flex-direction: row;
-      justify-content: start;
+      justify-content: flex-start;
       width: 90%;
       padding: 0.3rem;
       border: 1px solid #fff;

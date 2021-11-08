@@ -8,10 +8,7 @@
       <span class="user-parts"> احسان امینی | امتیاز شما: ۲۰۱۸۵ </span>
     </div>
 
-    <img
-      src="../../../assets/img/arrow-left.png"
-      @click="() => router.go(-1)"
-    />
+    <img src="../../../assets/img/arrow-left.png" @click="goOnePageBack" />
   </nav>
 </template>
 
@@ -21,7 +18,8 @@ import router from '@/router';
 
 export default defineComponent({
   setup() {
-    return { router };
+    const goOnePageBack = () => router.go(-1);
+    return { router, goOnePageBack };
   }
 });
 </script>

@@ -44,6 +44,7 @@ import StudentSetting from '@/pages/student/setting/setting.vue';
 
 import StudentShop from '@/pages/student/shop/shop.vue';
 import ShopBookList from '@/pages/student/shop/shop-book-list.vue';
+import SingleBookInfo from '@/pages/student/shop/shop-book-info.vue';
 
 import StudentGroupPage from '@/pages/student/group/group.vue';
 import SelfTest from '@/pages/student/azmoon/self-test.vue';
@@ -345,6 +346,12 @@ const routes: Array<RouteRecordRaw> = [
         path: 'shop-book-list',
         name: 'ShopBookList',
         component: ShopBookList,
+        props: true
+      },
+      {
+        path: 'shop-single-book',
+        name: 'SingleBookInfo',
+        component: SingleBookInfo,
         props: true
       }
     ]

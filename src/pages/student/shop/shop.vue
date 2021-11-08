@@ -3,10 +3,16 @@
   <div class="shop" v-else>
     <SmallHeader />
     <div class="grid">
-      <img src="../../../assets/img/shop/book.png" alt="" />
-      <img src="../../../assets/img/shop/online-classes.png" alt="" />
-      <img src="../../../assets/img/shop/azmoons@3x.png" alt="" />
-      <img src="../../../assets/img/shop/eduaction-package.png" alt="" />
+      <img src="../../../assets/img/shop/book.png" alt="book img" />
+      <img
+        src="../../../assets/img/shop/online-classes.png"
+        alt="online classes icon"
+      />
+      <img
+        src="../../../assets/img/shop/eduaction-package.png"
+        alt="education package icon"
+      />
+      <img src="../../../assets/img/shop/azmoons.png" alt="azmoons icon " />
     </div>
     <div class="btns">
       <button
@@ -154,13 +160,14 @@ export default defineComponent({
     width: 100%;
     grid-template-columns: repeat(2, 1fr);
     grid-auto-rows: repeat(auto-fit, minmax(150px, 1fr));
-    grid-gap: 0.5rem;
+    grid-gap: 0.25rem;
     padding: 0.5rem;
     justify-items: center;
     align-items: center;
-    flex: 1;
+    margin-bottom: 0.5rem;
     img {
       object-fit: contain;
+      width: 88%;
       max-width: 100%;
     }
   }
@@ -216,7 +223,7 @@ export default defineComponent({
       display: flex;
       flex-direction: column;
       align-items: center;
-      max-width: 100px;
+      max-width: 125px;
       max-height: 128px;
       padding: 3px 4px;
       border-radius: 14.7px;
@@ -229,7 +236,8 @@ export default defineComponent({
         margin-bottom: 5rem;
       }
       img {
-        width: 80%;
+        width: 70%;
+        margin-bottom: 0.5rem;
       }
 
       p {
