@@ -71,11 +71,10 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .contact-backup {
-  width: 100%;
+  position: relative;
   min-height: 100%;
   background-color: #f4f4f4;
   overflow-x: hidden;
-  overflow-y: auto;
   .flex {
     margin: 0.5rem;
 
