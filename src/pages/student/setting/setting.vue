@@ -28,6 +28,7 @@
         label="ارتباط با پشتیبان"
         TextDetail="۴ پیام خوانده نشده دارید"
         iconSrc="support"
+        componentName="ContactBackup"
       />
       <Card
         label="پروفایل"

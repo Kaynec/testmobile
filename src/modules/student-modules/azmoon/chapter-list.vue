@@ -1,10 +1,5 @@
 <template>
-  <div
-    ref="chapter"
-    class="chapter"
-    @touchstart="touchstart"
-    @touchend="touchend"
-  >
+  <div ref="chapter" class="chapter" @click="touch">
     <span>
       {{ text }}
     </span>
@@ -21,18 +16,23 @@
 import { defineComponent, ref } from 'vue';
 
 export default defineComponent({
-  props: {
-    text: { type: String }
-  },
-  setup() {
+  props: ['text', 'chapterContainer'],
+  setup(props, { emit }) {
     const chapter = ref(null) as any;
-    const touchstart = () => {
+    const touch = () => {
+      // Remove The Class From All The Siblings
+      props.chapterContainer
+        .querySelectorAll('.chapter')
+        .forEach((chapter: any) => {
+          chapter.classList.remove('active');
+        });
+      // Add It to current Card
       chapter.value.classList.add('active');
+      // Change This With Id Or Something Later
+      emit('changeCurrentItem', props.text);
     };
-    const touchend = () => {
-      chapter.value.classList.remove('active');
-    };
-    return { touchend, touchstart, chapter };
+
+    return { touch, chapter };
   }
 });
 </script>

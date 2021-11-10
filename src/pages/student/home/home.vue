@@ -7,7 +7,10 @@
     <!-- Main Container -->
     <div class="cart-container">
       <div class="cart">
-        <img src="../../../assets/img/home-icons/pencil.png" />
+        <img
+          src="../../../assets/img/home-icons/pencil.png"
+          @click="MoveToCLassRoom"
+        />
         <h4>کلاس ها</h4>
       </div>
       <div class="cart">
@@ -53,6 +56,7 @@
 import { Options, Vue } from 'vue-class-component';
 import { useStudentStore } from '@/store';
 import { StudentActionTypes } from '@/store/modules/student/action-types';
+import router from '@/router';
 import Footer from '@/modules/student-modules/footer/footer.vue';
 import Header from '@/modules/student-modules/header/header.vue';
 import RoadMap from '@/modules/student-modules/roadmap/roadmap.vue';
@@ -72,6 +76,11 @@ export default class Login extends Vue {
   public mounted(): void {
     this.$nextTick(() => {
       window.addEventListener('resize', this.onResize);
+    });
+  }
+  public MoveToCLassRoom(): void {
+    router.push({
+      name: 'ClassRoom'
     });
   }
   public changeShowRoadMap(boolean: boolean): void {
@@ -121,8 +130,9 @@ export default class Login extends Vue {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   flex-grow: 1;
-  max-height: 400px;
+  max-height: 500px;
   padding-top: 1rem;
+
   .cart {
     display: flex;
     flex-direction: column;
@@ -133,10 +143,10 @@ export default class Login extends Vue {
       margin-bottom: 3rem;
     }
     img {
-      padding: 0.45rem;
+      padding: 0.7rem;
       background: linear-gradient(to bottom, white 30%, #ddd);
       border-radius: 1.5em;
-      margin-bottom: 0.5rem;
+      // margin-bottom: 0.5rem;
     }
     h4 {
       font-family: IRANSans;

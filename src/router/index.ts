@@ -50,6 +50,10 @@ import StudentGroupPage from '@/pages/student/group/group.vue';
 import SelfTest from '@/pages/student/azmoon/self-test.vue';
 import CompTest from '@/pages/student/azmoon/comp-test.vue';
 import ContactUs from '@/pages/student/contact-us/contact-us.vue';
+import ContactBackup from '@/pages/student/contact-backup/contact-backup.vue';
+import ContactBackupInfo from '@/pages/student/contact-backup/contact-backup-info.vue';
+
+import ClassRoom from '@/pages/student/class/class-room.vue';
 
 import { useAdminStore, useStudentStore } from '@/store';
 const ifNotAuthenticated = (to: any, from: any, next: any) => {
@@ -352,6 +356,23 @@ const routes: Array<RouteRecordRaw> = [
         path: 'shop-single-book',
         name: 'SingleBookInfo',
         component: SingleBookInfo,
+        props: true
+      },
+      {
+        path: 'contact-backup',
+        name: 'ContactBackup',
+        component: ContactBackup
+      },
+      {
+        path: 'contact-backup-info',
+        name: 'ContactBackupInfo',
+        component: ContactBackupInfo,
+        props: true
+      },
+      {
+        path: 'class-room',
+        name: 'ClassRoom',
+        component: ClassRoom,
         props: true
       }
     ]

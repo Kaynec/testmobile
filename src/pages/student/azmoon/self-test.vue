@@ -6,39 +6,39 @@
       <LessonCard label="فارسی" imgSrc="farsi" />
       <LessonCard label="فیزیک" imgSrc="Physic" />
       <LessonCard label="ریاضی" imgSrc="math" />
-
-      <LessonCard label="فارسی" imgSrc="farsi" />
-      <LessonCard label="فیزیک" imgSrc="Physic" />
-      <LessonCard label="ریاضی" imgSrc="math" />
-
-      <LessonCard label="فارسی" imgSrc="farsi" />
-      <LessonCard label="فیزیک" imgSrc="Physic" />
-      <LessonCard label="ریاضی" imgSrc="math" />
-
-      <LessonCard label="فارسی" imgSrc="farsi" />
-      <LessonCard label="فیزیک" imgSrc="Physic" />
-      <LessonCard label="ریاضی" imgSrc="math" />
     </div>
-    <div class="chapters-list w-100">
-      <LessionList text="فصل اول :نهاد ها" />
-      <LessionList text="فصل دوم : بهداشت" />
-      <LessionList text="فصل سوم : اخلاق فردی و اجتماعی" />
+    <div class="chapters-list w-100" ref="chapterContainer">
+      <LessionList
+        :chapterContainer="chapterContainer"
+        @changeCurrentItem="toggleCurrentItem"
+        text="فصل اول :نهاد ها"
+      />
+      <LessionList
+        :chapterContainer="chapterContainer"
+        @changeCurrentItem="toggleCurrentItem"
+        text="فصل دوم : بهداشت"
+      />
+      <LessionList
+        :chapterContainer="chapterContainer"
+        @changeCurrentItem="toggleCurrentItem"
+        text="فصل سوم : اخلاق فردی و اجتماعی"
+      />
 
-      <LessionList text="فصل اول :نهاد ها" />
-      <LessionList text="فصل دوم : بهداشت" />
-      <LessionList text="فصل سوم : اخلاق فردی و اجتماعی" />
-
-      <LessionList text="فصل اول :نهاد ها" />
-      <LessionList text="فصل دوم : بهداشت" />
-      <LessionList text="فصل سوم : اخلاق فردی و اجتماعی" />
-
-      <LessionList text="فصل اول :نهاد ها" />
-      <LessionList text="فصل دوم : بهداشت" />
-      <LessionList text="فصل سوم : اخلاق فردی و اجتماعی" />
-
-      <LessionList text="فصل اول :نهاد ها" />
-      <LessionList text="فصل دوم : بهداشت" />
-      <LessionList text="فصل سوم : اخلاق فردی و اجتماعی" />
+      <LessionList
+        :chapterContainer="chapterContainer"
+        @changeCurrentItem="toggleCurrentItem"
+        text="فصل اول :نهاد ها"
+      />
+      <LessionList
+        :chapterContainer="chapterContainer"
+        @changeCurrentItem="toggleCurrentItem"
+        text="فصل دوم : بهداشت"
+      />
+      <LessionList
+        :chapterContainer="chapterContainer"
+        @changeCurrentItem="toggleCurrentItem"
+        text="فصل سوم : اخلاق فردی و اجتماعی"
+      />
     </div>
     <div class="continue-wrapper">
       <div class="continue">
@@ -49,7 +49,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import SmallHeader from '@/modules/student-modules/header/small-header.vue';
 import LessonCard from '@/modules/student-modules/azmoon/lesson-card.vue';
 import LessionList from '@/modules/student-modules/azmoon/chapter-list.vue';
@@ -59,8 +59,15 @@ export default defineComponent({
     LessonCard,
     LessionList
   },
-  setup() {
-    return { salam: 'salam' };
+  setup(_, { emit }) {
+    const currentItem = ref(null);
+    const chapterContainer = ref(null) as any;
+    const toggleCurrentItem = (e: any) => {
+      // Changing The CurrentItem To Send To Next Page
+      currentItem.value = e;
+    };
+
+    return { toggleCurrentItem, chapterContainer };
   }
 });
 </script>
