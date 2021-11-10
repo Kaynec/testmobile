@@ -113,7 +113,7 @@ export default class Login extends Vue {
 }
 
 .user-home {
-  height: 100%;
+  min-height: 110%;
   background-color: #eee;
   display: flex;
   flex-direction: column;
