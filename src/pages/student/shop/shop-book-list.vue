@@ -91,7 +91,7 @@ export default defineComponent({
 @import '@/css-variable/Global.scss';
 .shop-book-list {
   position: relative;
-  min-height: 100%;
+  min-height: 110%;
   overflow-x: hidden;
   background: #f4f4f4;
   .nav {

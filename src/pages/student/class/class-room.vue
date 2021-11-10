@@ -6,27 +6,27 @@
     <img src="../../../assets/img/class/hero.png" alt="hero img" class="hero" />
     <div class="grid">
       <div class="card" @click="toggleClassInfo">
-        <img src="../../../assets/img/class/purple.png" alt="colored img" />
+        <img src="../../../assets/img/class/purple@3x.png" alt="colored img" />
         <span> نام درس </span>
       </div>
 
       <div class="card" @click="toggleClassInfo">
-        <img src="../../../assets/img/class/orange.png" alt="colored img" />
+        <img src="../../../assets/img/class/orange@3x.png" alt="colored img" />
         <span> نام درس </span>
       </div>
 
       <div class="card" @click="toggleClassInfo">
-        <img src="../../../assets/img/class/pink.png" alt="colored img" />
+        <img src="../../../assets/img/class/pink@3x.png" alt="colored img" />
         <span> نام درس </span>
       </div>
 
       <div class="card" @click="toggleClassInfo">
-        <img src="../../../assets/img/class/green.png" alt="colored img" />
+        <img src="../../../assets/img/class/green@3x.png" alt="colored img" />
         <span> نام درس </span>
       </div>
 
       <div class="card" @click="toggleClassInfo">
-        <img src="../../../assets/img/class/pink.png" alt="colored img" />
+        <img src="../../../assets/img/class/pink@3x.png" alt="colored img" />
         <span> نام درس </span>
       </div>
     </div>
@@ -57,7 +57,7 @@ export default defineComponent({
 <style lang="scss" scoped>
 .class {
   width: 100%;
-  min-height: 100%;
+  min-height: 110%;
   overflow-x: hidden;
   background-color: #f4f4f4;
   position: relative;
@@ -70,6 +70,7 @@ export default defineComponent({
   .grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
+    grid-auto-rows: repeat(auto-fit, minmax(180px, 1fr));
     grid-gap: 0.7rem;
     padding: 0.9rem;
 

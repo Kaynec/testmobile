@@ -57,7 +57,7 @@ export default defineComponent({
 <style lang="scss" scoped>
 .contact-backup-info {
   position: relative;
-  min-height: 100%;
+  min-height: 110%;
   background-color: #f4f4f4;
   overflow-x: hidden;
 

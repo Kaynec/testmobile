@@ -76,7 +76,7 @@ export default defineComponent({
 @import '@/css-variable//Global.scss';
 .self-test {
   position: relative;
-  min-height: 100%;
+  min-height: 110%;
   background: #f4f4f4;
   overflow-x: hidden;
 

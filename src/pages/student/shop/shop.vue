@@ -150,7 +150,7 @@ export default defineComponent({
 @import '@/css-variable/Global.scss';
 .shop {
   position: relative;
-  min-height: 100%;
+  min-height: 110%;
   background-color: #f4f4f4;
   overflow-x: hidden;
 
