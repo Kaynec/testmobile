@@ -84,11 +84,9 @@ export default class Login extends Vue {
     });
   }
   public changeShowRoadMap(boolean: boolean): void {
-    console.log('SOME');
     this.showRoadMap = boolean;
   }
   public changeShowAzmoon(boolean: boolean): void {
-    console.log('SOME');
     this.showAzmoon = boolean;
   }
   onResize(): void {
@@ -130,7 +128,6 @@ export default class Login extends Vue {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   flex-grow: 1;
-  max-height: 500px;
   padding-top: 1rem;
 
   .cart {
