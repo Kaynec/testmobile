@@ -82,6 +82,13 @@ export default defineComponent({
       display: flex;
       flex-direction: column;
       font-family: IRANSans;
+      justify-content: center;
+      align-items: center;
+
+      img {
+        width: 100%;
+        height: 100%;
+      }
 
       span {
         margin: 7px 0 0;
