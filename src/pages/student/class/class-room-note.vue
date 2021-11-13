@@ -14,7 +14,9 @@
       <span> ذخیره </span>
     </div>
     <!-- Text Area  -->
-    <textarea class="textarea" placeholder="شروع به نوشتن کنید…"> </textarea>
+    <div class="textarea">
+      <textarea placeholder="شروع به نوشتن کنید…"></textarea>
+    </div>
     <!--  -->
   </div>
 </template>
@@ -34,10 +36,12 @@ export default defineComponent({
 <style lang="scss" scoped>
 .class-note {
   width: 100%;
-  min-height: 110%;
-  overflow-x: hidden;
+  min-height: 105%;
+  overflow: hidden;
   background-color: #f4f4f4;
   position: relative;
+  display: flex;
+  flex-direction: column;
 
   .sm-nav {
     display: flex;
@@ -82,24 +86,25 @@ export default defineComponent({
     }
   }
   .textarea {
-    border: none;
-    outline: none;
-    flex-grow: 1;
-    background: transparent;
-    resize: none;
-    color: #171717;
-    padding: 0.5rem;
-    font-family: IRANSans;
     width: 100%;
-    height: 50vh;
-    overflow: hidden;
-  }
-  .textarea::placeholder {
-    margin: 15px 15px 0 221px;
-    font-family: IRANSans;
-    font-size: 14px;
-    text-align: right;
-    color: black;
+    flex-grow: 1;
+    overflow: auto;
+    display: flex;
+    align-items: stretch;
+    justify-content: stretch;
+    textarea {
+      border: none;
+      outline: none;
+      flex-grow: 1;
+      background: transparent;
+      resize: none;
+      padding: 1.25rem 1.25rem 0 0;
+      font-family: IRANSans;
+      width: 100%;
+      font-size: 14px;
+      text-align: right;
+      color: #313131;
+    }
   }
 }
 </style>
