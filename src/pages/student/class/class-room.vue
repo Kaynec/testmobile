@@ -1,6 +1,6 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
-  <div class="class" v-else>
+  <div class="class" :style="styles" v-else>
     <SmallHeader />
     <ClassInfo v-if="classInfo" @convertBoolean="toggleClassInfo" />
     <img src="../../../assets/img/class/hero.png" alt="hero img" class="hero" />
@@ -40,7 +40,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, computed } from 'vue';
 import SmallHeader from '@/modules/student-modules/header/small-header.vue';
 import router from '@/router';
 import ClassInfo from '@/modules/student-modules/class/class-info.vue';
@@ -57,7 +57,13 @@ export default defineComponent({
       });
     };
 
-    return { classInfo, toggleClassInfo, openNote };
+    let styles = computed(() => {
+      return {
+        'min-height': `calc( 1vh * 100) `
+      };
+    });
+
+    return { classInfo, toggleClassInfo, openNote, styles };
   }
 });
 </script>
@@ -65,7 +71,6 @@ export default defineComponent({
 <style lang="scss" scoped>
 .class {
   width: 100%;
-  min-height: 110%;
   overflow-x: hidden;
   background-color: #f4f4f4;
   position: relative;

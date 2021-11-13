@@ -1,6 +1,6 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
-  <div v-else class="contact-us">
+  <div v-else class="contact-us" :style="styles">
     <SmallHeader />
     <img src="@/assets/img/contact-us.png" alt="contact us img" class="hero" />
     <div class="contact-us-card">
@@ -35,7 +35,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, computed } from 'vue';
 import SmallHeader from '@/modules/student-modules/header/small-header.vue';
 
 export default defineComponent({
@@ -43,7 +43,13 @@ export default defineComponent({
     SmallHeader
   },
   setup() {
-    console.log('salam');
+    let styles = computed(() => {
+      return {
+        'min-height': `calc( 1vh * 100) `
+      };
+    });
+
+    return { styles };
   }
 });
 </script>
@@ -51,7 +57,6 @@ export default defineComponent({
 <style lang="scss" scoped>
 .contact-us {
   width: 100%;
-  min-height: 110%;
   background-color: #f4f4f4;
 
   .contact-us-card {
