@@ -51,7 +51,8 @@ export default defineComponent({
 <style lang="scss" scoped>
 .contact-us {
   width: 100%;
-  min-height: 110%;
+  // min-height: 110%;
+  height: calc(100%);
   background-color: #f4f4f4;
 
   .contact-us-card {

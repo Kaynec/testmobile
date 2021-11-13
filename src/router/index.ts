@@ -54,6 +54,7 @@ import ContactBackup from '@/pages/student/contact-backup/contact-backup.vue';
 import ContactBackupInfo from '@/pages/student/contact-backup/contact-backup-info.vue';
 
 import ClassRoom from '@/pages/student/class/class-room.vue';
+import ClassRoomNote from '@/pages/student/class/class-room-note.vue';
 
 import { useAdminStore, useStudentStore } from '@/store';
 const ifNotAuthenticated = (to: any, from: any, next: any) => {
@@ -373,6 +374,12 @@ const routes: Array<RouteRecordRaw> = [
         path: 'class-room',
         name: 'ClassRoom',
         component: ClassRoom,
+        props: true
+      },
+      {
+        path: 'class-room-note',
+        name: 'ClassRoomNote',
+        component: ClassRoomNote,
         props: true
       }
     ]

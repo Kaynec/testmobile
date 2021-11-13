@@ -34,6 +34,7 @@
       src="../../../assets/img/class/pencil.png"
       alt="pencil icon"
       class="pencil"
+      @click="openNote"
     />
   </div>
 </template>
@@ -41,6 +42,7 @@
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
 import SmallHeader from '@/modules/student-modules/header/small-header.vue';
+import router from '@/router';
 import ClassInfo from '@/modules/student-modules/class/class-info.vue';
 
 export default defineComponent({
@@ -49,7 +51,13 @@ export default defineComponent({
     const classInfo = ref(false);
     const toggleClassInfo = () => (classInfo.value = !classInfo.value);
 
-    return { classInfo, toggleClassInfo };
+    const openNote = () => {
+      router.push({
+        name: 'ClassRoomNote'
+      });
+    };
+
+    return { classInfo, toggleClassInfo, openNote };
   }
 });
 </script>
