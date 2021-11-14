@@ -52,6 +52,8 @@ import StudentGroupPage from '@/pages/student/group/group.vue';
 
 import SelfTest from '@/pages/student/azmoon/self-test.vue';
 import SelfTestQuestions from '@/pages/student/azmoon/self-test-questions.vue';
+import SelfTestQuestionsMain from '@/pages/student/azmoon/self-test-questions-main.vue';
+import SelfTestQuestionsChoosen from '@/pages/student/azmoon/self-test-choosen-questions.vue';
 
 import CompTest from '@/pages/student/azmoon/comp-test.vue';
 import ContactUs from '@/pages/student/contact-us/contact-us.vue';
@@ -346,6 +348,19 @@ const routes: Array<RouteRecordRaw> = [
         path: 'self-test-questions',
         name: 'SelfTestQuestions',
         component: SelfTestQuestions,
+        props: true
+      },
+      {
+        path: 'self-test-questions-main',
+        name: 'SelfTestQuestionsMain',
+        component: SelfTestQuestionsMain,
+        props: true
+      },
+
+      {
+        path: 'self-test-questions-choosen',
+        name: 'SelfTestQuestionsChoosen',
+        component: SelfTestQuestionsChoosen,
         props: true
       },
       {

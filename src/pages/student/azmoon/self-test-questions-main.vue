@@ -18,13 +18,13 @@
           {{ label }}
         </span>
         <!-- Change This And Width Of The Progress Bar Dynamically -->
-        <span> ۱۰۰/۱۰۰ </span>
+        <span> ۱۰۰/۶۰ </span>
       </div>
       <div class="progress" style="height: 5px">
         <div
           class="progress-bar bg-success"
           role="progressbar"
-          style="width: 100%"
+          :style="`width: ${60}%`"
           aria-valuenow="25"
           aria-valuemin="0"
           aria-valuemax="100"
@@ -80,7 +80,7 @@
       <button class="red">
         سوالات بیشتر <i class="fas fa-arrow-right"></i>
       </button>
-      <button class="green">پاسخنامه تشریحی</button>
+      <img src="../../../assets/img/bookmark-light.png" alt="" />
     </div>
   </div>
 </template>
@@ -244,7 +244,7 @@ export default defineComponent({
     width: 90%;
     margin: 2.5rem auto 0.8rem auto;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     flex-wrap: nowrap;
     gap: 0.5rem;
 

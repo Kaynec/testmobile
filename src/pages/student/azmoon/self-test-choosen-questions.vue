@@ -3,9 +3,7 @@
   <div v-else class="self-test-questions" :style="styles">
     <nav class="sm-nav">
       <div>
-        <span class="user-parts">
-          امتیازات کسب شده : ۴۹۸۴ &nbsp; | &nbsp; امتیاز این فصل : ۱۸۷
-        </span>
+        <span class="user-parts"> سوالات برگزیده </span>
       </div>
 
       <img src="../../../assets/img/arrow-left.png" @click="goOnePageBack" />
@@ -18,13 +16,13 @@
           {{ label }}
         </span>
         <!-- Change This And Width Of The Progress Bar Dynamically -->
-        <span> ۱۰۰/۱۰۰ </span>
+        <span> ۲/۱ </span>
       </div>
       <div class="progress" style="height: 5px">
         <div
           class="progress-bar bg-success"
           role="progressbar"
-          style="width: 100%"
+          :style="`width: ${50}%`"
           aria-valuenow="25"
           aria-valuemin="0"
           aria-valuemax="100"
@@ -77,10 +75,8 @@
 
     <!-- Buttons -->
     <div class="btns">
-      <button class="red">
-        سوالات بیشتر <i class="fas fa-arrow-right"></i>
-      </button>
-      <button class="green">پاسخنامه تشریحی</button>
+      <button class="red">سوال بعدی <i class="fas fa-arrow-right"></i></button>
+      <img src="../../../assets/img/bookmark.png" alt="" />
     </div>
   </div>
 </template>
@@ -93,14 +89,12 @@ export default defineComponent({
   props: {
     label: { type: String, default: 'فصل دوم بهداشت' }
   },
-  setup(props) {
+  setup() {
     let styles = computed(() => {
       return {
         'min-height': `calc( 1vh * 100) `
       };
     });
-
-    console.log(props.label);
 
     const goOnePageBack = () => router.go(-1);
 
@@ -244,7 +238,7 @@ export default defineComponent({
     width: 90%;
     margin: 2.5rem auto 0.8rem auto;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     flex-wrap: nowrap;
     gap: 0.5rem;
 
