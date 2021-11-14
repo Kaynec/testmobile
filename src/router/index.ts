@@ -45,9 +45,14 @@ import StudentSetting from '@/pages/student/setting/setting.vue';
 import StudentShop from '@/pages/student/shop/shop.vue';
 import ShopBookList from '@/pages/student/shop/shop-book-list.vue';
 import SingleBookInfo from '@/pages/student/shop/shop-book-info.vue';
+import ShopSuccess from '@/pages/student/shop/shop-order-success.vue';
+import ShopFailure from '@/pages/student/shop/shop-order-fail.vue';
 
 import StudentGroupPage from '@/pages/student/group/group.vue';
+
 import SelfTest from '@/pages/student/azmoon/self-test.vue';
+import SelfTestQuestions from '@/pages/student/azmoon/self-test-questions.vue';
+
 import CompTest from '@/pages/student/azmoon/comp-test.vue';
 import ContactUs from '@/pages/student/contact-us/contact-us.vue';
 import ContactBackup from '@/pages/student/contact-backup/contact-backup.vue';
@@ -338,6 +343,12 @@ const routes: Array<RouteRecordRaw> = [
         component: SelfTest
       },
       {
+        path: 'self-test-questions',
+        name: 'SelfTestQuestions',
+        component: SelfTestQuestions,
+        props: true
+      },
+      {
         path: 'comp-test',
         name: 'compTest',
         component: CompTest
@@ -357,6 +368,18 @@ const routes: Array<RouteRecordRaw> = [
         path: 'shop-single-book',
         name: 'SingleBookInfo',
         component: SingleBookInfo,
+        props: true
+      },
+      {
+        path: 'shop-failure',
+        name: 'ShopFailure',
+        component: ShopFailure,
+        props: true
+      },
+      {
+        path: 'shop-success',
+        name: 'ShopSuccess',
+        component: ShopSuccess,
         props: true
       },
       {

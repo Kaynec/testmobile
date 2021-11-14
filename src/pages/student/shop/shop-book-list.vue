@@ -1,6 +1,6 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
-  <div class="shop-book-list" v-else>
+  <div class="shop-book-list" :style="styles" v-else>
     <nav class="nav">
       <span>لیست محصولات کتاب (۱۸۴)</span>
       <img
@@ -47,7 +47,7 @@
 
 <script lang="ts">
 // Get All The Books The Relate To This Genre And List It In The Template
-import { defineComponent } from 'vue';
+import { defineComponent, computed } from 'vue';
 import router from '@/router';
 
 export default defineComponent({
@@ -82,7 +82,13 @@ export default defineComponent({
       router.push({ name: 'SingleBookInfo', params: {} });
     const goOnePageBack = () => router.go(-1);
 
-    return { data, openSingleBookPage, goOnePageBack };
+    let styles = computed(() => {
+      return {
+        'min-height': `calc( 1vh * 100) `
+      };
+    });
+
+    return { data, openSingleBookPage, goOnePageBack, styles };
   }
 });
 </script>
@@ -91,7 +97,6 @@ export default defineComponent({
 @import '@/css-variable/Global.scss';
 .shop-book-list {
   position: relative;
-  min-height: 110%;
   overflow-x: hidden;
   background: #f4f4f4;
   .nav {

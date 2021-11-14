@@ -1,6 +1,6 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
-  <div class="shop-book-list" v-else>
+  <div class="shop-book-list" v-else :style="styles">
     <nav class="nav">
       <span>لیست محصولات کتاب (۱۸۴)</span>
       <img
@@ -88,14 +88,20 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, computed } from 'vue';
 import router from '@/router';
 
 export default defineComponent({
   setup() {
     const goOnePageBack = () => router.go(-1);
 
-    return { goOnePageBack };
+    let styles = computed(() => {
+      return {
+        'min-height': `calc( 1vh * 100) `
+      };
+    });
+
+    return { goOnePageBack, styles };
   }
 });
 </script>
@@ -104,7 +110,6 @@ export default defineComponent({
 @import '@/css-variable/Global.scss';
 .shop-book-list {
   position: relative;
-  min-height: 110%;
   overflow-x: hidden;
   overflow-y: scroll;
   background: #f4f4f4;

@@ -1,6 +1,6 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
-  <div class="user-home" v-else>
+  <div class="user-home" v-else :style="styles">
     <!-- Header -->
     <Header />
     <img src="../../../assets/img/hero@2x.png" class="hero" alt="hero-img" />
@@ -67,7 +67,8 @@ import Azmoon from '@/modules/student-modules/azmoon/azmoon.vue';
     Header,
     RoadMap,
     Azmoon
-  }
+  },
+  computed: {}
 })
 export default class Login extends Vue {
   public windowHeight = window.innerHeight;
@@ -82,6 +83,12 @@ export default class Login extends Vue {
     router.push({
       name: 'ClassRoom'
     });
+  }
+
+  get styles() {
+    return {
+      'min-height': `calc( 1vh * 100) `
+    };
   }
   public changeShowRoadMap(boolean: boolean): void {
     this.showRoadMap = boolean;
@@ -129,6 +136,9 @@ export default class Login extends Vue {
   grid-template-columns: repeat(2, 1fr);
   flex-grow: 1;
   padding-top: 1rem;
+  align-items: center;
+  justify-items: center;
+  max-height: 475px;
 
   .cart {
     display: flex;

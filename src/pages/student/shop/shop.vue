@@ -1,6 +1,6 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
-  <div class="shop" v-else>
+  <div class="shop" v-else :style="styles">
     <SmallHeader />
     <div class="grid">
       <img src="../../../assets/img/shop/book.png" alt="book img" />
@@ -72,7 +72,7 @@
 </template>
 
 <script>
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, computed } from 'vue';
 import SmallHeader from '@/modules/student-modules/header/small-header.vue';
 import router from '@/router';
 export default defineComponent({
@@ -141,7 +141,13 @@ export default defineComponent({
       });
     };
 
-    return { currentState, yourData, newsetData, sendToBookShopList };
+    let styles = computed(() => {
+      return {
+        'min-height': `calc( 1vh * 100) `
+      };
+    });
+
+    return { currentState, yourData, newsetData, sendToBookShopList, styles };
   }
 });
 </script>
@@ -150,7 +156,6 @@ export default defineComponent({
 @import '@/css-variable/Global.scss';
 .shop {
   position: relative;
-  min-height: 110%;
   background-color: #f4f4f4;
   overflow-x: hidden;
 

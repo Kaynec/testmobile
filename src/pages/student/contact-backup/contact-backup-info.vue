@@ -1,6 +1,6 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
-  <div class="contact-backup-info" v-else>
+  <div class="contact-backup-info" :style="styles" v-else>
     <!-- <img :src="getImgUrl(img)" alt="" /> -->
     <div class="nav">
       <span> اطلاعات بیشتر </span>
@@ -34,7 +34,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, computed } from 'vue';
 import router from '@/router';
 
 export default defineComponent({
@@ -49,7 +49,13 @@ export default defineComponent({
 
     const MoveOnePageBack = () => router.go(-1);
 
-    return { getImgUrl, MoveOnePageBack };
+    let styles = computed(() => {
+      return {
+        'min-height': `calc( 1vh * 100) `
+      };
+    });
+
+    return { getImgUrl, MoveOnePageBack, styles };
   }
 });
 </script>
@@ -57,7 +63,6 @@ export default defineComponent({
 <style lang="scss" scoped>
 .contact-backup-info {
   position: relative;
-  min-height: 110%;
   background-color: #f4f4f4;
   overflow-x: hidden;
 

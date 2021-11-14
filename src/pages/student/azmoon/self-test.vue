@@ -1,6 +1,6 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
-  <div class="self-test" v-else>
+  <div class="self-test" :style="styles" v-else>
     <SmallHeader />
     <div class="lessons">
       <LessonCard label="فارسی" imgSrc="farsi" />
@@ -43,31 +43,47 @@
     <div class="continue-wrapper">
       <div class="continue">
         <i class="fas fa-arrow-right"></i>
-        <span> ادامه آزمون خودسنجی </span>
+        <span @click="moveToQuestions"> ادامه آزمون خودسنجی </span>
       </div>
     </div>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, computed } from 'vue';
 import SmallHeader from '@/modules/student-modules/header/small-header.vue';
 import LessonCard from '@/modules/student-modules/azmoon/lesson-card.vue';
 import LessionList from '@/modules/student-modules/azmoon/chapter-list.vue';
+import router from '@/router';
 export default defineComponent({
   components: {
     SmallHeader,
     LessonCard,
     LessionList
   },
-  setup(_, { emit }) {
-    const currentItem = ref(null);
+  setup() {
+    const currentItem = ref(null) as any;
     const chapterContainer = ref(null) as any;
     const toggleCurrentItem = (e: any) => {
       // Changing The CurrentItem To Send To Next Page
       currentItem.value = e;
     };
 
-    return { toggleCurrentItem, chapterContainer };
+    let styles = computed(() => {
+      return {
+        'min-height': `calc( 1vh * 100) `
+      };
+    });
+
+    const moveToQuestions = () => {
+      if (currentItem.value) {
+        router.push({
+          name: 'SelfTestQuestions',
+          params: { label: currentItem.value }
+        });
+      }
+    };
+
+    return { toggleCurrentItem, chapterContainer, styles, moveToQuestions };
   }
 });
 </script>
@@ -76,7 +92,6 @@ export default defineComponent({
 @import '@/css-variable//Global.scss';
 .self-test {
   position: relative;
-  min-height: 110%;
   background: #f4f4f4;
   overflow-x: hidden;
 

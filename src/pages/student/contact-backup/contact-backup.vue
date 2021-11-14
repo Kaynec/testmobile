@@ -1,6 +1,6 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
-  <div class="contact-backup" v-else>
+  <div class="contact-backup" :style="styles" v-else>
     <SmallHeader />
     <!-- Change THis With Real Data Coming From Some Server-->
     <div class="flex">
@@ -49,7 +49,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, computed } from 'vue';
 import SmallHeader from '@/modules/student-modules/header/small-header.vue';
 import router from '@/router';
 
@@ -64,7 +64,13 @@ export default defineComponent({
         params: { name, img }
       });
     };
-    return { MoveToBackUpInfo };
+
+    let styles = computed(() => {
+      return {
+        'min-height': `calc( 1vh * 100) `
+      };
+    });
+    return { MoveToBackUpInfo, styles };
   }
 });
 </script>
@@ -72,7 +78,6 @@ export default defineComponent({
 <style lang="scss" scoped>
 .contact-backup {
   position: relative;
-  min-height: 110%;
   background-color: #f4f4f4;
   overflow-x: hidden;
   .flex {
