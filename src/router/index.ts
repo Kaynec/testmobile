@@ -50,10 +50,13 @@ import ShopFailure from '@/pages/student/shop/shop-order-fail.vue';
 
 import StudentGroupPage from '@/pages/student/group/group.vue';
 
+import RoadMap from '@/pages/student/roadmap/roadmap.vue';
+
 import SelfTest from '@/pages/student/azmoon/self-test.vue';
 import SelfTestQuestions from '@/pages/student/azmoon/self-test-questions.vue';
 import SelfTestQuestionsMain from '@/pages/student/azmoon/self-test-questions-main.vue';
 import SelfTestQuestionsChoosen from '@/pages/student/azmoon/self-test-choosen-questions.vue';
+import SelfTestQuestionsAnswers from '@/pages/student/azmoon/self-test-answers.vue';
 
 import CompTest from '@/pages/student/azmoon/comp-test.vue';
 import ContactUs from '@/pages/student/contact-us/contact-us.vue';
@@ -364,6 +367,12 @@ const routes: Array<RouteRecordRaw> = [
         props: true
       },
       {
+        path: 'self-test-answers',
+        name: 'SelfTestQuestionsAnswers',
+        component: SelfTestQuestionsAnswers,
+        props: true
+      },
+      {
         path: 'comp-test',
         name: 'compTest',
         component: CompTest
@@ -418,6 +427,12 @@ const routes: Array<RouteRecordRaw> = [
         path: 'class-room-note',
         name: 'ClassRoomNote',
         component: ClassRoomNote,
+        props: true
+      },
+      {
+        path: 'roadmap',
+        name: 'RoadMap',
+        component: RoadMap,
         props: true
       }
     ]

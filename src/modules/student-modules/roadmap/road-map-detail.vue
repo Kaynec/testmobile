@@ -22,8 +22,10 @@
           w-100
         "
       >
-        <Dialog label="آزمون های دروس" />
-        <Dialog label="نقشه راه کلی" componentName="RoadMap" />
+        <Dialog label="برترینهای آزمون" />
+        <Dialog label="پاسخنامه" />
+        <Dialog label="کارنامه" />
+        <Dialog label="نمودار پیشرفت" />
       </div>
 
       <!-- Img Icon -->
@@ -45,11 +47,11 @@ export default defineComponent({
     Dialog
   },
   setup(_, { emit }) {
-    const touchstart = () => {
+    const touchstart = () =>
       setTimeout(() => {
+        // Run after a bit of time so we don't accidentally touch footer component
         emit('convertBoolean');
       }, 150);
-    };
 
     return { touchstart };
   }

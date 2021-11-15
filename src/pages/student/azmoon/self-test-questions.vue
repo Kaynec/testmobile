@@ -80,7 +80,9 @@
       <button class="red">
         سوالات بیشتر <i class="fas fa-arrow-right"></i>
       </button>
-      <button class="green">پاسخنامه تشریحی</button>
+      <button class="green" @click="openSelfTestQuestionsAnswers">
+        پاسخنامه تشریحی
+      </button>
     </div>
   </div>
 </template>
@@ -93,18 +95,21 @@ export default defineComponent({
   props: {
     label: { type: String, default: 'فصل دوم بهداشت' }
   },
-  setup(props) {
+  setup() {
     let styles = computed(() => {
       return {
         'min-height': `calc( 1vh * 100) `
       };
     });
 
-    console.log(props.label);
+    const openSelfTestQuestionsAnswers = () =>
+      router.push({
+        name: 'SelfTestQuestionsAnswers'
+      });
 
     const goOnePageBack = () => router.go(-1);
 
-    return { styles, goOnePageBack };
+    return { styles, goOnePageBack, openSelfTestQuestionsAnswers };
   }
 });
 </script>
