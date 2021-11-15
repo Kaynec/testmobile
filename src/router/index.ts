@@ -62,6 +62,7 @@ import CompTest from '@/pages/student/azmoon/comp-test.vue';
 import ContactUs from '@/pages/student/contact-us/contact-us.vue';
 import ContactBackup from '@/pages/student/contact-backup/contact-backup.vue';
 import ContactBackupInfo from '@/pages/student/contact-backup/contact-backup-info.vue';
+import ContactBackupChat from '@/pages/student/contact-backup/contact-backup-chat.vue';
 
 import ClassRoom from '@/pages/student/class/class-room.vue';
 import ClassRoomNote from '@/pages/student/class/class-room-note.vue';
@@ -415,6 +416,12 @@ const routes: Array<RouteRecordRaw> = [
         path: 'contact-backup-info',
         name: 'ContactBackupInfo',
         component: ContactBackupInfo,
+        props: true
+      },
+      {
+        path: 'contact-backup-chat',
+        name: 'ContactBackupChat',
+        component: ContactBackupChat,
         props: true
       },
       {

@@ -4,7 +4,6 @@
     <SmallHeader />
     <!-- Change THis With Real Data Coming From Some Server-->
     <div class="flex">
-      <!-- Change This Images When Real Pictures Are Available -->
       <div class="card">
         <img
           src="../../../assets/img/contact/PictureOfFirstGuy.png"
@@ -19,8 +18,16 @@
             <h6>مشاوره تحصیلی</h6>
           </div>
           <div>
-            <img src="../../../assets/img/contact/Chaticon.png" alt="" />
-            <img src="../../../assets/img/contact/info.png" alt="" />
+            <img
+              src="../../../assets/img/contact/Chaticon.png"
+              alt="chat icon"
+              @click="goToChatPage"
+            />
+            <img
+              src="../../../assets/img/contact/info.png"
+              alt="info icon"
+              @click="goToChatPage"
+            />
           </div>
         </div>
       </div>
@@ -30,7 +37,13 @@
           src="../../../assets/img/contact/PictureOfSecondGuy.png"
           alt="Picture of a supporot person"
           class="person-img"
-          @click="MoveToBackUpInfo('احسان امینی', 'PictureOfSecondGuy')"
+          @click="
+            MoveToBackUpInfo(
+              'احسان امینی',
+              'PictureOfFirstGuy',
+              'مشاوره تحصیلی'
+            )
+          "
         />
 
         <div class="child-flex">
@@ -58,19 +71,24 @@ export default defineComponent({
     SmallHeader
   },
   setup() {
-    const MoveToBackUpInfo = (name: string, img: string) => {
+    const MoveToBackUpInfo = (
+      name: string,
+      img: string,
+      profession: string
+    ) => {
       router.push({
         name: 'ContactBackupInfo',
-        params: { name, img }
+        params: { name, img, profession }
       });
     };
 
+    const goToChatPage = () => router.push({ name: 'ContactBackupChat' });
     let styles = computed(() => {
       return {
         'min-height': `calc( 1vh * 100) `
       };
     });
-    return { MoveToBackUpInfo, styles };
+    return { MoveToBackUpInfo, styles, goToChatPage };
   }
 });
 </script>

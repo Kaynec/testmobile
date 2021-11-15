@@ -4,20 +4,12 @@
     <!-- <img :src="getImgUrl(img)" alt="" /> -->
     <div class="nav">
       <span> اطلاعات بیشتر </span>
-      <img
-        src="../../../assets/img/arrow-left.png"
-        alt="arrow left icon"
-        @click="MoveOnePageBack"
-      />
+      <img src="../../../assets/img/arrow-left.png" @click="goOnePageBack" />
     </div>
-    <img
-      src="../../../assets/img/contact/PictureOfFirstGuy-1.png"
-      alt="hero img"
-      class="hero"
-    />
+    <img :src="getImgUrl()" alt="hero img" class="hero" @click="goToChatPage" />
     <div class="text">
-      <h4>پشتیبان علیرضا خوش بیان</h4>
-      <h5>مشاوره تحصیلی</h5>
+      <h4>پشتیبان {{ name }}</h4>
+      <h5>{{ profession }}</h5>
       <p>
         مشاور چندین رتبه تک رقمی و دورقمی طراح و ایده پرداز سبک مطالعاتی
         ITDEPEND مشاور پروازی کنکور مدیر کلینیک مشاوره سابقه بیش از 15 سال
@@ -40,14 +32,14 @@ import router from '@/router';
 export default defineComponent({
   props: {
     name: { type: String },
-    img: { type: String }
+    img: { type: String, default: 'PictureOfFirstGuy' },
+    profession: { type: String }
   },
-  setup() {
-    const getImgUrl = (src: string) => {
-      return require('../../../assets/img/contact/' + src + '.png');
+  setup(props) {
+    const getImgUrl = () => {
+      return require('../../../assets/img/contact/' + props.img + '-1.png');
     };
-
-    const MoveOnePageBack = () => router.go(-1);
+    const goOnePageBack = () => router.go(-1);
 
     let styles = computed(() => {
       return {
@@ -55,7 +47,9 @@ export default defineComponent({
       };
     });
 
-    return { getImgUrl, MoveOnePageBack, styles };
+    const goToChatPage = () => router.push({ name: 'ContactBackupChat' });
+
+    return { getImgUrl, goOnePageBack, styles, goToChatPage };
   }
 });
 </script>
