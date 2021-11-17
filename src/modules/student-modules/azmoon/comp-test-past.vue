@@ -19,21 +19,20 @@
     >
       <div class="d-flex flex-column mt-1 p-0 m-0">
         <span class="label text-dark text-right mb-2 text-bold">
-          تعداد آزمون : {{ item.count }}
+          {{ !item.passed ? 'تعداد آزمون' : 'رتبه شما' }} : {{ item.count }}
         </span>
         <span class="text-detail text-right">
           <i class="far fa-clock"></i>
           {{ item.detail }}
           <strong> | </strong>
-          {{ item.timeLeft }} تا شروع آزمون
+          {{ `ساعت ${item.timeLeft}` }}
         </span>
       </div>
-      <div
-        v-if="item.passed"
-        class="img position-absolute top-50 start-0 ml-5 translate-middle"
-      >
+      <div class="img position-absolute top-50 start-0 ml-5 translate-middle">
         <img
-          src="../../../assets/img/azmoon-icons/accept-path-light.png"
+          src="../../../assets/img/accept-path-light.png"
+          class="img"
+          @click="changeShowDetail"
           alt="active"
         />
       </div>
@@ -44,55 +43,50 @@
       />
     </div>
     <!--  -->
+    <CompTestDetail v-if="showCompDetail" @convertBoolean="changeShowDetail" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
+import CompTestDetail from '@/modules/student-modules/azmoon/comp-test-detail.vue';
+
+// TODO
+// SEND THE NEEDED DATA TO THE ROADMAPDETAIL COMPONENT
 
 export default defineComponent({
+  components: {
+    CompTestDetail
+  },
   setup() {
     const data = [
       {
-        count: '10',
-        detail: ' لحظاتی دیگر ',
-        timeLeft: '۰۰:۲۴',
-        passed: true
+        count: '33',
+        detail: ' پنجشنبه بیست آبان ',
+        timeLeft: '۱۵:۳۰'
       },
       {
-        count: '10',
-        detail: ' لحظاتی دیگر ',
-        timeLeft: '۰۰:۲۴'
+        count: '33',
+        detail: ' پنجشنبه بیست آبان ',
+        timeLeft: '۱۵:۳۰'
       },
       {
-        count: '10',
-        detail: ' لحظاتی دیگر ',
-        timeLeft: '۰۰:۲۴',
-        passed: true
+        count: '33',
+        detail: ' پنجشنبه بیست آبان ',
+        timeLeft: '۱۵:۳۰'
       },
       {
-        count: '10',
-        detail: ' لحظاتی دیگر ',
-        timeLeft: '۰۰:۲۴',
-        passed: false
-      },
-      {
-        count: '10',
-        detail: ' لحظاتی دیگر ',
-        timeLeft: '۰۰:۲۴'
-      },
-      {
-        count: '10',
-        detail: ' لحظاتی دیگر ',
-        timeLeft: '۰۰:۲۴'
-      },
-      {
-        count: '10',
-        detail: ' لحظاتی دیگر ',
-        timeLeft: '۰۰:۲۴'
+        count: '33',
+        detail: ' پنجشنبه بیست آبان ',
+        timeLeft: '۱۵:۳۰'
       }
     ];
-    return { data };
+
+    const showCompDetail = ref(false);
+    const changeShowDetail = () =>
+      (showCompDetail.value = !showCompDetail.value);
+
+    return { data, changeShowDetail, showCompDetail };
   }
 });
 </script>
@@ -114,11 +108,11 @@ export default defineComponent({
     width: 27px;
     height: 27px;
     padding: 7px;
-    background-color: #4ac367;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
+    background: #4ac367;
 
     img {
       object-fit: contain;
@@ -151,30 +145,4 @@ export default defineComponent({
     margin-bottom: 4rem !important;
   }
 }
-// .card.danger {
-//   .text-detail {
-//     color: #d26c34;
-//     strong {
-//       margin-inline: 0.4rem;
-//     }
-//     i {
-//       background-color: transparent;
-//       color: #d26c34;
-//       font-size: 14px;
-//     }
-//   }
-// }
-
-// .card.warning {
-//   .text-detail {
-//     color: #d21921;
-//     strong {
-//       margin-inline: 0.4rem;
-//     }
-//     i {
-//       color: #d21921;
-//       font-size: 14px;
-//     }
-//   }
-// }
 </style>

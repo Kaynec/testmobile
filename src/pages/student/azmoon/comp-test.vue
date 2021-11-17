@@ -20,7 +20,6 @@
     <!--  -->
     <CompTestFuture v-if="currentState == 'future'" />
     <CompTestPast v-if="currentState == 'past'" />
-    <!--  -->
   </div>
 </template>
 

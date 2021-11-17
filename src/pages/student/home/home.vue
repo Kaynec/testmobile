@@ -138,7 +138,6 @@ export default class Login extends Vue {
   padding-top: 1rem;
   align-items: center;
   justify-items: center;
-  max-height: 475px;
 
   .cart {
     display: flex;

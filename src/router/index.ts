@@ -59,6 +59,8 @@ import SelfTestQuestionsChoosen from '@/pages/student/azmoon/self-test-choosen-q
 import SelfTestQuestionsAnswers from '@/pages/student/azmoon/self-test-answers.vue';
 
 import CompTest from '@/pages/student/azmoon/comp-test.vue';
+import ReportCard from '@/pages/student/azmoon/report-card.vue';
+
 import ContactUs from '@/pages/student/contact-us/contact-us.vue';
 import ContactBackup from '@/pages/student/contact-backup/contact-backup.vue';
 import ContactBackupInfo from '@/pages/student/contact-backup/contact-backup-info.vue';
@@ -377,6 +379,11 @@ const routes: Array<RouteRecordRaw> = [
         path: 'comp-test',
         name: 'compTest',
         component: CompTest
+      },
+      {
+        path: 'report-card',
+        name: 'ReportCard',
+        component: ReportCard
       },
       {
         path: 'contact-us',

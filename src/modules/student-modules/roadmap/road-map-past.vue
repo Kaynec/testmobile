@@ -47,14 +47,22 @@
       />
     </div>
     <!--  -->
+    <RoadMapDetail v-if="showCompDetail" @convertBoolean="changeShowDetail" />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
+import RoadMapDetail from '@/modules/student-modules/roadmap/road-map-detail.vue';
+
+// TODO
+// SEND THE NEEDED DATA TO THE ROADMAPDETAIL COMPONENT
 
 export default defineComponent({
-  setup(_, { emit }) {
+  components: {
+    RoadMapDetail
+  },
+  setup() {
     const data = [
       {
         count: '33',
@@ -80,12 +88,11 @@ export default defineComponent({
         passed: false
       }
     ];
-    // Emit A Response to parent on click To Show A Detail component
-    const changeShowDetail = () => {
-      console.log('dude');
-      emit('convertBoolean');
-    };
-    return { data, changeShowDetail };
+
+    const showCompDetail = ref(false);
+    const changeShowDetail = () =>
+      (showCompDetail.value = !showCompDetail.value);
+    return { data, changeShowDetail, showCompDetail };
   }
 });
 </script>
