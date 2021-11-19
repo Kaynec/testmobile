@@ -105,7 +105,7 @@ export default defineComponent({
 
       a {
         text-decoration: none;
-        margin: 8px 0 9px 112px;
+        margin: 8px 0 9px 12px;
         font-family: Roboto;
         font-size: 11.4px;
         letter-spacing: 0.66px;

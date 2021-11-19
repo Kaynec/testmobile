@@ -37,13 +37,13 @@
     <div class="Login">
       <div>
         <label class="floating-label">
-          <input type="text" v-model="email" placeholder="ایمیل" />
-          <span style="background-color: #f6f8fa"> نام کاربری </span>
+          <input type="text" v-model="email" placeholder="" />
+          <span> نام کاربری </span>
         </label>
         <!--  -->
         <label class="floating-label">
-          <input type="text" v-model="password" placeholder="رمز عبور" />
-          <span style="background-color: #f6f8fa"> رمز عبور</span>
+          <input type="text" v-model="password" placeholder="" />
+          <span> رمز عبور</span>
         </label>
         <!--  -->
 

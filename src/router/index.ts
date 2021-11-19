@@ -52,6 +52,8 @@ import StudentGroupPage from '@/pages/student/group/group.vue';
 
 import RoadMap from '@/pages/student/roadmap/roadmap.vue';
 
+import Hamnavard from '@/pages/student/hamnavard/hamnavard.vue';
+
 import SelfTest from '@/pages/student/azmoon/self-test.vue';
 import SelfTestQuestions from '@/pages/student/azmoon/self-test-questions.vue';
 import SelfTestQuestionsMain from '@/pages/student/azmoon/self-test-questions-main.vue';
@@ -384,6 +386,11 @@ const routes: Array<RouteRecordRaw> = [
         path: 'report-card',
         name: 'ReportCard',
         component: ReportCard
+      },
+      {
+        path: 'hamnavard',
+        name: 'Hamnavard',
+        component: Hamnavard
       },
       {
         path: 'contact-us',

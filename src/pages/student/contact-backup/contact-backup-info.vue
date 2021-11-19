@@ -72,7 +72,7 @@ export default defineComponent({
     justify-content: space-between;
 
     span {
-      margin: 7px 0 7px 242px;
+      margin: 7px 0 7px 2px;
       font-family: IRANSans;
       font-size: 11px;
       font-weight: bold;

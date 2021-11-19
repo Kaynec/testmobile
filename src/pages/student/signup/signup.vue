@@ -46,6 +46,7 @@
           placeholder="شماره همراه"
           v-model="model.phone"
           @blur="v$.phone.$touch()"
+          style="appearance: none"
         />
         <span> شماره همراه </span>
       </label>
