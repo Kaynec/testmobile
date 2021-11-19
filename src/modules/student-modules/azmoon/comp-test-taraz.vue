@@ -21,20 +21,36 @@
         "
       >
         <div class="middle-card">
-          <h5>لطفا تراز کاربری خود را وارد کنید</h5>
+          <h5 v-if="sendRequest == false">لطفا تراز کاربری خود را وارد کنید</h5>
+          <h5 v-else>رتبه شما</h5>
 
-          <label class="floating-label">
+          <label class="floating-label" v-if="sendRequest == false">
             <input type="text" v-model="taraz" placeholder="00000" />
             <span> تراز کاربری </span>
           </label>
 
+          <div class="points" v-else>
+            <span> {{ taraz }} </span>
+          </div>
+
           <button
             class="button-linear"
             style="color: white; padding: 0.85rem"
-            @click="calculateTaraz"
+            @click="changeSendRequest"
+            v-if="sendRequest == false"
           >
             محاسبه شود
           </button>
+          <!--  -->
+          <button
+            class="button-linear"
+            style="color: white; padding: 0.85rem"
+            @click="sendRequestAgain"
+            v-else
+          >
+            مجدد
+          </button>
+          <!--  -->
         </div>
       </div>
 
@@ -54,12 +70,16 @@ import { defineComponent, ref } from 'vue';
 export default defineComponent({
   setup(_, { emit }) {
     const taraz = ref('');
+    const sendRequest = ref(false);
 
-    const calculateTaraz = () => {
-      // For now just return a number
-      setTimeout(() => {
-        taraz.value = '۱۵۲۲۱۵';
-      }, 1000);
+    const changeSendRequest = () => {
+      sendRequest.value = true;
+      taraz.value = '۱۵۲۲۱۵';
+    };
+
+    const sendRequestAgain = () => {
+      taraz.value = '';
+      sendRequest.value = false;
     };
 
     const touchstart = () => {
@@ -68,7 +88,13 @@ export default defineComponent({
       }, 150);
     };
 
-    return { touchstart, taraz, calculateTaraz };
+    return {
+      touchstart,
+      taraz,
+      changeSendRequest,
+      sendRequest,
+      sendRequestAgain
+    };
   }
 });
 </script>
@@ -90,6 +116,16 @@ export default defineComponent({
     padding: 1.5rem;
     border-radius: 10px;
     background-color: rgba(255, 255, 255, 0.97);
+
+    .points {
+      background: #ededed;
+      padding: 1rem;
+      color: #d21921;
+      font-size: 20px;
+      font-weight: bold;
+      border-radius: 10px;
+      text-align: center;
+    }
 
     .floating-label {
       margin-bottom: 1.8rem;

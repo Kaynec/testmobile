@@ -28,7 +28,7 @@
         <span>{{ duration || 0 }}</span>
         <!-- Attaching The event listener to the parent element and filling the child using a ref -->
 
-        <div class="progressbar" @touchmove="touchMove">
+        <div class="progressbar" @touchend="onTouch" @touchmove="touchMove">
           <div
             :style="`width : ${
               (video && (video.currentTime / video.duration) * 100) || 0
@@ -113,6 +113,15 @@ export default defineComponent({
       video.value.currentTime = ~~tmp;
       video.value.play();
     };
+    const onTouch = (e: any) => {
+      let clientRect = e.currentTarget.getBoundingClientRect();
+      let fullWidth = clientRect.right;
+      // Account for margin and etc
+      let deltaX = e.changedTouches[0].clientX - clientRect.left;
+      const tmp = ~~video.value.duration / (~~fullWidth / ~~deltaX);
+      video.value.currentTime = ~~tmp;
+      video.value.play();
+    };
 
     let styles = computed(() => {
       return {
@@ -133,7 +142,8 @@ export default defineComponent({
       progressbarChild,
       sendRequest,
       changeSendRequest,
-      touchMove
+      touchMove,
+      onTouch
     };
   }
 });
