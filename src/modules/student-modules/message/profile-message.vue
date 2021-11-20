@@ -50,7 +50,7 @@ export default defineComponent({
   .card {
     width: 80%;
     margin: 0 auto;
-    padding: 4rem 2.25rem;
+    padding: 2rem 2.25rem;
     border-radius: 10px;
     background-color: rgba(255, 255, 255, 0.97);
     font-family: IRANSans;
