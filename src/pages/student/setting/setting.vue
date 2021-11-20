@@ -1,10 +1,6 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
-  <div
-    v-else
-    class="w-100"
-    style="min-height: 100vh; background-color: rgba(33, 49, 84, 0.082)"
-  >
+  <div v-else class="w-100" :style="styles">
     <Header />
     <!-- Main Content -->
     <div
@@ -34,6 +30,7 @@
         label="پروفایل"
         TextDetail="تکمیل اطلاعات حساب کاربری را انجام دهید"
         iconSrc="profile"
+        componentName="MyProfile"
       />
       <Card
         label="ارتباط با ما"
@@ -58,7 +55,7 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue';
+import { defineComponent, computed } from 'vue';
 import Footer from '@/modules/student-modules/footer/footer.vue';
 import Header from '@/modules/student-modules/header/header.vue';
 import Card from '@/modules/student-modules/card.vue';
@@ -68,6 +65,15 @@ export default defineComponent({
     Header,
     Footer,
     Card
+  },
+  setup() {
+    const styles = computed(() => {
+      return {
+        'min-height': `calc( 1vh * 100) `,
+        'background-color': 'rgba(33, 49, 84, 0.082)'
+      };
+    });
+    return { styles };
   }
 });
 </script>

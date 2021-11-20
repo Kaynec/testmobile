@@ -61,6 +61,8 @@ import SelfTestQuestionsChoosen from '@/pages/student/azmoon/self-test-choosen-q
 import SelfTestQuestionsAnswers from '@/pages/student/azmoon/self-test-answers.vue';
 
 import CompTest from '@/pages/student/azmoon/comp-test.vue';
+import CompTestQuestions from '@/pages/student/azmoon/comp-test-questions.vue';
+import CompTestStart from '@/pages/student/azmoon/comp-test-startTest.vue';
 import ReportCard from '@/pages/student/azmoon/report-card.vue';
 
 import ContactUs from '@/pages/student/contact-us/contact-us.vue';
@@ -70,6 +72,13 @@ import ContactBackupChat from '@/pages/student/contact-backup/contact-backup-cha
 
 import ClassRoom from '@/pages/student/class/class-room.vue';
 import ClassRoomNote from '@/pages/student/class/class-room-note.vue';
+
+import MyProfile from '@/pages/student/profile/my-profile.vue';
+import ProfilePoints from '@/pages/student/profile/points.vue';
+import Inbox from '@/pages/student/profile/inbox.vue';
+import PurchaseHistory from '@/pages/student/profile/history.vue';
+import EditProfile from '@/pages/student/profile/edit-profile.vue';
+import InviteFriends from '@/pages/student/profile/invite.vue';
 
 import { useAdminStore, useStudentStore } from '@/store';
 const ifNotAuthenticated = (to: any, from: any, next: any) => {
@@ -383,6 +392,16 @@ const routes: Array<RouteRecordRaw> = [
         component: CompTest
       },
       {
+        path: 'comp-test-start',
+        name: 'compTestStart',
+        component: CompTestStart
+      },
+      {
+        path: 'comp-test-questions',
+        name: 'CompTestQuestions',
+        component: CompTestQuestions
+      },
+      {
         path: 'report-card',
         name: 'ReportCard',
         component: ReportCard
@@ -454,6 +473,42 @@ const routes: Array<RouteRecordRaw> = [
         path: 'roadmap',
         name: 'RoadMap',
         component: RoadMap,
+        props: true
+      },
+      {
+        path: 'my-profile',
+        name: 'MyProfile',
+        component: MyProfile,
+        props: true
+      },
+      {
+        path: 'profile-points',
+        name: 'ProfilePoints',
+        component: ProfilePoints,
+        props: true
+      },
+      {
+        path: 'profile-inbox',
+        name: 'Inbox',
+        component: Inbox,
+        props: true
+      },
+      {
+        path: 'purchase-history',
+        name: 'PurchaseHistory',
+        component: PurchaseHistory,
+        props: true
+      },
+      {
+        path: 'edit-profile',
+        name: 'EditProfile',
+        component: EditProfile,
+        props: true
+      },
+      {
+        path: 'profile-invite',
+        name: 'InviteFriends',
+        component: InviteFriends,
         props: true
       }
     ]

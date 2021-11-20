@@ -122,7 +122,7 @@ export default class Login extends Vue {
   background-color: #eee;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow-x: hidden;
   z-index: 1;
 
   .hero {
@@ -138,12 +138,13 @@ export default class Login extends Vue {
   padding-top: 1rem;
   align-items: center;
   justify-items: center;
-
   .cart {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+
     &:nth-of-type(5),
     &:nth-of-type(6) {
       margin-bottom: 3rem;

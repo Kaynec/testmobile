@@ -1,6 +1,8 @@
 <template>
   <div class="container">
     <div
+      v-for="item in data"
+      :key="item"
       class="
         card
         w-100
@@ -14,6 +16,9 @@
         customDiv
       "
     >
+      <!-- Todo
+    Change Class Based On The Day
+     -->
       <div class="d-flex flex-column mt-1 p-0 m-0">
         <span class="label text-dark text-right mb-2 text-bold">
           تعداد آزمون : ۱۰
@@ -27,265 +32,54 @@
       </div>
 
       <img
+        @click="openStartTest"
         src="../../../assets/img/shape.svg"
         class="position-absolute top-50 start-0 translate-middle ml-3"
         alt="angle left icon"
       />
     </div>
 
-    <!--  -->
-    <div
-      class="
-        card
-        w-100
-        d-inline-flex
-        align-items-center
-        m-1
-        position-relative
-        flex-row flex-wrap
-        border border-white
-        rounded-10
-        customDiv
-        danger
-      "
-    >
-      <div class="d-flex flex-column mt-1 p-0 m-0">
-        <span class="label text-dark text-right mb-2 text-bold">
-          تعداد آزمون : ۱۰
-        </span>
-        <span class="text-detail text-right">
-          <i class="far fa-clock"></i>
-          لحظاتی دیگر
-          <strong> | </strong>
-          ۰۰:۲۴ تا شروع آزمون
-        </span>
-      </div>
-
-      <img
-        src="../../../assets/img/shape.svg"
-        class="position-absolute top-50 start-0 translate-middle ml-3"
-        alt="angle left icon"
-      />
-    </div>
-    <!--  -->
-
-    <!--  -->
-    <div
-      class="
-        card
-        w-100
-        d-inline-flex
-        align-items-center
-        m-1
-        position-relative
-        flex-row flex-wrap
-        border border-white
-        rounded-10
-        customDiv
-        warning
-      "
-    >
-      <div class="d-flex flex-column mt-1 p-0 m-0">
-        <span class="label text-dark text-right mb-2 text-bold">
-          تعداد آزمون : ۱۰
-        </span>
-        <span class="text-detail text-right">
-          <i class="far fa-clock"></i>
-          لحظاتی دیگر
-          <strong> | </strong>
-          ۰۰:۲۴ تا شروع آزمون
-        </span>
-      </div>
-
-      <img
-        src="../../../assets/img/shape.svg"
-        class="position-absolute top-50 start-0 translate-middle ml-3"
-        alt="angle left icon"
-      />
-    </div>
-    <!--  -->
-    <!--  -->
-    <div
-      class="
-        card
-        w-100
-        d-inline-flex
-        align-items-center
-        m-1
-        position-relative
-        flex-row flex-wrap
-        border border-white
-        rounded-10
-        customDiv
-        danger
-      "
-    >
-      <div class="d-flex flex-column mt-1 p-0 m-0">
-        <span class="label text-dark text-right mb-2 text-bold">
-          تعداد آزمون : ۱۰
-        </span>
-        <span class="text-detail text-right">
-          <i class="far fa-clock"></i>
-          لحظاتی دیگر
-          <strong> | </strong>
-          ۰۰:۲۴ تا شروع آزمون
-        </span>
-      </div>
-
-      <img
-        src="../../../assets/img/shape.svg"
-        class="position-absolute top-50 start-0 translate-middle ml-3"
-        alt="angle left icon"
-      />
-    </div>
-    <!--  -->
-    <!--  -->
-    <div
-      class="
-        card
-        w-100
-        d-inline-flex
-        align-items-center
-        m-1
-        position-relative
-        flex-row flex-wrap
-        border border-white
-        rounded-10
-        customDiv
-        warning
-      "
-    >
-      <div class="d-flex flex-column mt-1 p-0 m-0">
-        <span class="label text-dark text-right mb-2 text-bold">
-          تعداد آزمون : ۱۰
-        </span>
-        <span class="text-detail text-right">
-          <i class="far fa-clock"></i>
-          لحظاتی دیگر
-          <strong> | </strong>
-          ۰۰:۲۴ تا شروع آزمون
-        </span>
-      </div>
-
-      <img
-        src="../../../assets/img/shape.svg"
-        class="position-absolute top-50 start-0 translate-middle ml-3"
-        alt="angle left icon"
-      />
-    </div>
-    <!--  -->
-    <!--  -->
-    <div
-      class="
-        card
-        w-100
-        d-inline-flex
-        align-items-center
-        m-1
-        position-relative
-        flex-row flex-wrap
-        border border-white
-        rounded-10
-        customDiv
-        warning
-      "
-    >
-      <div class="d-flex flex-column mt-1 p-0 m-0">
-        <span class="label text-dark text-right mb-2 text-bold">
-          تعداد آزمون : ۱۰
-        </span>
-        <span class="text-detail text-right">
-          <i class="far fa-clock"></i>
-          لحظاتی دیگر
-          <strong> | </strong>
-          ۰۰:۲۴ تا شروع آزمون
-        </span>
-      </div>
-
-      <img
-        src="../../../assets/img/shape.svg"
-        class="position-absolute top-50 start-0 translate-middle ml-3"
-        alt="angle left icon"
-      />
-    </div>
-    <!--  -->
-    <!--  -->
-    <div
-      class="
-        card
-        w-100
-        d-inline-flex
-        align-items-center
-        m-1
-        position-relative
-        flex-row flex-wrap
-        border border-white
-        rounded-10
-        customDiv
-        warning
-      "
-    >
-      <div class="d-flex flex-column mt-1 p-0 m-0">
-        <span class="label text-dark text-right mb-2 text-bold">
-          تعداد آزمون : ۱۰
-        </span>
-        <span class="text-detail text-right">
-          <i class="far fa-clock"></i>
-          لحظاتی دیگر
-          <strong> | </strong>
-          ۰۰:۲۴ تا شروع آزمون
-        </span>
-      </div>
-
-      <img
-        src="../../../assets/img/shape.svg"
-        class="position-absolute top-50 start-0 translate-middle ml-3"
-        alt="angle left icon"
-      />
-    </div>
-    <!--  -->
-    <!--  -->
-    <div
-      class="
-        card
-        w-100
-        d-inline-flex
-        align-items-center
-        m-1
-        position-relative
-        flex-row flex-wrap
-        border border-white
-        rounded-10
-        customDiv
-        warning
-      "
-    >
-      <div class="d-flex flex-column mt-1 p-0 m-0">
-        <span class="label text-dark text-right mb-2 text-bold">
-          تعداد آزمون : ۱۰
-        </span>
-        <span class="text-detail text-right">
-          <i class="far fa-clock"></i>
-          لحظاتی دیگر
-          <strong> | </strong>
-          ۰۰:۲۴ تا شروع آزمون
-        </span>
-      </div>
-      <img
-        src="../../../assets/img/azmoon-icons/accept-path-light.png"
-        class="position-absolute top-50 start-0 translate-middle ml-3"
-        alt="angle left icon"
-      />
-
-      <!-- <img
-        src="../../../assets/img/shape.svg"
-        class="position-absolute top-50 start-0 translate-middle ml-3"
-        alt="angle left icon"
-      /> -->
-    </div>
     <!--  -->
   </div>
 </template>
+
+<script lang="ts">
+import { defineComponent, reactive } from 'vue';
+import router from '@/router';
+
+export default defineComponent({
+  setup() {
+    const data = reactive([
+      {
+        count: '۱۰',
+        detail: ' پنجشنبه بیست آبان ',
+        timeLeft: '۱۵:۳۰'
+      }
+      // {
+      //   count: '۱۰',
+      //   detail: ' پنجشنبه بیست آبان ',
+      //   timeLeft: '۱۵:۳۰'
+      // },
+      // {
+      //   count: '۱۰',
+      //   detail: ' پنجشنبه بیست آبان ',
+      //   timeLeft: '۱۵:۳۰'
+      // },
+      // {
+      //   count: '۱۰',
+      //   detail: ' پنجشنبه بیست آبان ',
+      //   timeLeft: '۱۵:۳۰'
+      // }
+    ]);
+
+    const openStartTest = () =>
+      router.push({
+        name: 'compTestStart'
+      });
+    return { data, openStartTest };
+  }
+});
+</script>
 
 <style lang="scss" scoped>
 .container {
