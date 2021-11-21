@@ -9,14 +9,13 @@
       <div class="cart">
         <img
           src="../../../assets/img/home-icons/pencil.png"
-          @click="MoveToCLassRoom"
+          @touchstart="MoveToCLassRoom"
         />
         <h4>کلاس ها</h4>
       </div>
       <div class="cart">
         <img
           src="../../../assets/img/home-icons/google-maps-icon-256.png"
-          @click="changeShowRoadMap(true)"
           @touchstart="changeShowRoadMap(true)"
         />
         <h4>نقشه راه</h4>
@@ -32,13 +31,13 @@
       <div class="cart">
         <img
           src="../../../assets/img/home-icons/bill-of-document.png"
-          @click="changeShowAzmoon(true)"
           @touchstart="changeShowAzmoon(true)"
         />
         <h4>آزمون ها</h4>
       </div>
       <div class="cart">
         <img
+          @touchstart="MoveToCalendar"
           src="../../../assets/img/home-icons/system-calendar-icon-256.png"
         />
         <h4>تقویم آموزشی</h4>
@@ -82,6 +81,11 @@ export default class Login extends Vue {
   public MoveToCLassRoom(): void {
     router.push({
       name: 'ClassRoom'
+    });
+  }
+  public MoveToCalendar(): void {
+    router.push({
+      name: 'Calendar'
     });
   }
 

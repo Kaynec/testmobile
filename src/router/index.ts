@@ -80,6 +80,8 @@ import PurchaseHistory from '@/pages/student/profile/history.vue';
 import EditProfile from '@/pages/student/profile/edit-profile.vue';
 import InviteFriends from '@/pages/student/profile/invite.vue';
 
+import Calendar from '@/pages/student/calendar/calendar.vue';
+
 import { useAdminStore, useStudentStore } from '@/store';
 const ifNotAuthenticated = (to: any, from: any, next: any) => {
   if (!useAdminStore().getters.getUserToken) {
@@ -510,6 +512,11 @@ const routes: Array<RouteRecordRaw> = [
         name: 'InviteFriends',
         component: InviteFriends,
         props: true
+      },
+      {
+        path: 'calendar',
+        name: 'Calendar',
+        component: Calendar
       }
     ]
   },
