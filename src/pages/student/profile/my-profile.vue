@@ -159,6 +159,7 @@ export default defineComponent({
       img {
         width: 100%;
         max-width: 75px;
+
         border-radius: 50px;
         padding: 2px;
         border: solid 4.4px rgba(255, 255, 255, 0.21);

@@ -49,7 +49,7 @@ export default defineComponent({
   width: 100%;
   background-color: #f4f4f4;
   display: flex;
-  flex-direction: column;
+  // flex-direction: column;
   align-items: center;
   justify-content: center;
   position: relative;
@@ -81,10 +81,9 @@ export default defineComponent({
   //
   .container {
     width: 90%;
-    margin: 2rem auto;
     background: #fff;
     position: relative;
-    padding: 3rem;
+    padding: 5rem 1rem 2rem 1rem;
     color: #1c1c1c;
     border-radius: 15px;
 
@@ -95,7 +94,7 @@ export default defineComponent({
       left: 0;
       right: 0;
       text-align: center;
-      top: -30%;
+      top: -5rem;
     }
 
     h5 {
@@ -117,7 +116,7 @@ export default defineComponent({
     .border-dashed {
       padding: 15px 25px;
       border-radius: 30px;
-      border: dashed 1px #ff5960;
+      border: dashed 2px #ff5960;
       text-align: center;
 
       span {
