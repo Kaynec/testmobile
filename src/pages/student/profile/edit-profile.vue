@@ -333,17 +333,26 @@ export default defineComponent({
       transform: translateY(50%);
     }
     .avatar {
-      border: solid 6.2px rgba(210, 25, 33, 0);
+      position: relative;
       max-width: 104px;
       max-height: 104px;
       padding: 10px;
-      border-style: solid;
-      border-width: 5.6px;
-      border-image-slice: 1;
       border-radius: 50px;
       padding: 2px;
       border: solid 4.4px white;
-      outline: 0.4rem solid #d42527;
+      // outline: 0.4rem solid #d42527;
+      box-shadow: 0 0 0 0.4rem #d42527, 0 0 0 0.4rem #d42527;
+    }
+    .avatar::before {
+      content: '';
+      position: absolute;
+      // z-index: -1;
+      background: #d42527;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      top: 0;
+      border: 0.4 solid #d42527;
     }
   }
 
