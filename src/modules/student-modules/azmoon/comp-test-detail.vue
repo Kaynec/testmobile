@@ -61,9 +61,10 @@ export default defineComponent({
 <style language="scss">
 .comptest {
   position: fixed;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
-  inset: 0;
   background: rgba(0, 0, 0, 0.5);
   background-repeat: no-repeat;
   background-attachment: fixed;
