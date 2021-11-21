@@ -1,6 +1,6 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
-  <div class="user-home" v-else :style="getMainStyle">
+  <div class="user-home" v-else :style="styles">
     <!-- Header -->
     <Header />
     <img src="../../../assets/img/hero@2x.png" class="hero" alt="hero-img" />
@@ -144,7 +144,6 @@ export default class Login extends Vue {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 0.5rem;
 
     &:nth-of-type(5),
     &:nth-of-type(6) {
@@ -154,7 +153,7 @@ export default class Login extends Vue {
       padding: 0.7rem;
       background: linear-gradient(to bottom, white 30%, #ddd);
       border-radius: 1.5em;
-      // margin-bottom: 0.5rem;
+      margin-bottom: 0.5rem;
     }
     h4 {
       font-family: IRANSans;
