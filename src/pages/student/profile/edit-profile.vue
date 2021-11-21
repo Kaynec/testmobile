@@ -315,8 +315,11 @@ export default defineComponent({
     margin: 3rem auto 1rem auto;
     display: flex;
     justify-content: center;
+    // background: red;
     .img {
       position: relative;
+      border: 0.4rem solid #d42527;
+      border-radius: 50px;
     }
     .camera {
       position: absolute;
@@ -340,19 +343,6 @@ export default defineComponent({
       border-radius: 50px;
       padding: 2px;
       border: solid 4.4px white;
-      // outline: 0.4rem solid #d42527;
-      box-shadow: 0 0 0 0.4rem #d42527, 0 0 0 0.4rem #d42527;
-    }
-    .avatar::before {
-      content: '';
-      position: absolute;
-      // z-index: -1;
-      background: #d42527;
-      width: 100%;
-      height: 100%;
-      left: 0;
-      top: 0;
-      border: 0.4 solid #d42527;
     }
   }
 

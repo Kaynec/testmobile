@@ -117,6 +117,12 @@ export default defineComponent({
     padding: 1.5rem;
     border-radius: 10px;
     background-color: rgba(255, 255, 255, 0.97);
+    position: absolute;
+    left: 0;
+    top: 20%;
+    right: 0;
+    margin-left: auto;
+    margin-right: auto;
 
     .points {
       background: #ededed;

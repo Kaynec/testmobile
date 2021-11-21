@@ -1,6 +1,6 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
-  <div class="user-home" v-else :style="styles">
+  <div class="user-home" v-else :style="getMainStyle">
     <!-- Header -->
     <Header />
     <img src="../../../assets/img/hero@2x.png" class="hero" alt="hero-img" />

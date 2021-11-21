@@ -185,7 +185,7 @@ export default defineComponent({
     .left {
       color: white;
       white-space: nowrap;
-      margin-right: 0.5rem;
+      margin-right: 1.2rem;
       h4 {
         font-size: 22px;
         font-weight: bold;
