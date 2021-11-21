@@ -124,6 +124,7 @@ export default class Login extends Vue {
   flex-direction: column;
   overflow-x: hidden;
   z-index: 1;
+  position: relative;
 
   .hero {
     width: 100%;

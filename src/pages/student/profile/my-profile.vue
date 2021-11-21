@@ -148,7 +148,6 @@ export default defineComponent({
     );
     display: flex;
     justify-content: flex-start;
-    gap: 2rem;
     padding: 2.5rem;
     border-radius: 15px;
 
@@ -186,6 +185,7 @@ export default defineComponent({
     .left {
       color: white;
       white-space: nowrap;
+      margin-right: 0.5rem;
       h4 {
         font-size: 22px;
         font-weight: bold;
@@ -217,6 +217,7 @@ export default defineComponent({
   .container {
     width: 100%;
     margin: 0 auto;
+    padding-bottom: 4rem;
 
     .dialog {
       box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.05);
@@ -245,7 +246,6 @@ export default defineComponent({
         font-weight: 500;
       }
     }
-
     .active {
       background-color: rgba(177, 16, 21, 0.96);
       color: #fff;

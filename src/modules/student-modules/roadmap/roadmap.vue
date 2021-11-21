@@ -58,7 +58,7 @@ export default defineComponent({
 
 <style language="scss">
 .roadmap {
-  position: fixed;
+  position: absolute;
   width: 100%;
   height: 100%;
   inset: 0;

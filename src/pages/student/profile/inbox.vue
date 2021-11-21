@@ -108,6 +108,7 @@ export default defineComponent({
   width: 100%;
   background-color: #f4f4f4;
   font-family: IRANSans;
+  position: relative;
 
   .nav {
     width: 100%;
