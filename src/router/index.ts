@@ -47,6 +47,7 @@ import ShopBookList from '@/pages/student/shop/shop-book-list.vue';
 import SingleBookInfo from '@/pages/student/shop/shop-book-info.vue';
 import ShopSuccess from '@/pages/student/shop/shop-order-success.vue';
 import ShopFailure from '@/pages/student/shop/shop-order-fail.vue';
+import ShopBasket from '@/pages/student/shop/shop-basket.vue';
 
 import StudentGroupPage from '@/pages/student/group/group.vue';
 
@@ -417,6 +418,11 @@ const routes: Array<RouteRecordRaw> = [
         path: 'contact-us',
         name: 'contactUs',
         component: ContactUs
+      },
+      {
+        path: 'shop-basket',
+        name: 'ShopBasket',
+        component: ShopBasket
       },
       {
         path: 'shop-book-list',

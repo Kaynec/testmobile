@@ -66,7 +66,7 @@
         />
         2 محصول
       </div>
-      <span>مشاهده سبد خرید</span>
+      <span @touchstart="moveToBasket">مشاهده سبد خرید</span>
     </div>
   </div>
 </template>
@@ -146,8 +146,20 @@ export default defineComponent({
         'min-height': `calc( 1vh * 100) `
       };
     });
+    const moveToBasket = () => {
+      router.push({
+        name: 'ShopBasket'
+      });
+    };
 
-    return { currentState, yourData, newsetData, sendToBookShopList, styles };
+    return {
+      currentState,
+      yourData,
+      newsetData,
+      sendToBookShopList,
+      styles,
+      moveToBasket
+    };
   }
 });
 </script>

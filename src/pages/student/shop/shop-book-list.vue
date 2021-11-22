@@ -40,7 +40,7 @@
         />
         2 محصول
       </div>
-      <span>مشاهده سبد خرید</span>
+      <span @touchstart="moveToBasket">مشاهده سبد خرید</span>
     </div>
   </div>
 </template>
@@ -88,7 +88,13 @@ export default defineComponent({
       };
     });
 
-    return { data, openSingleBookPage, goOnePageBack, styles };
+    const moveToBasket = () => {
+      router.push({
+        name: 'ShopBasket'
+      });
+    };
+
+    return { data, openSingleBookPage, goOnePageBack, styles, moveToBasket };
   }
 });
 </script>

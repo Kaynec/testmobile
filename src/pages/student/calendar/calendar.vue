@@ -96,7 +96,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref } from 'vue';
+import { defineComponent, computed, ref, reactive } from 'vue';
 import SmallHeader from '@/modules/student-modules/header/small-header.vue';
 import CalendarAddEvent from '@/modules/student-modules/calendar/calendar-add-event.vue';
 
@@ -120,11 +120,9 @@ export default defineComponent({
     };
 
     const days = ref();
-
     const showCalendarAddEvent = ref(false);
     const changeCalendarAddEvent = () => {
       showCalendarAddEvent.value = !showCalendarAddEvent.value;
-      console.log('DUDE');
     };
 
     //

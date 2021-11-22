@@ -5,7 +5,7 @@
     </span>
     <div class="img">
       <img
-        src="../../../assets/img/azmoon-icons/accept-path-light.png"
+        src="../../assets/img/azmoon-icons/accept-path-light.png"
         alt="active"
       />
     </div>
@@ -40,7 +40,6 @@ export default defineComponent({
 <style lang="scss">
 // Giving Some Margin To Last Child
 .chapter {
-  width: 90%;
   margin: 0.5rem auto;
   padding: 1rem;
   box-shadow: 0 11px 17px 0 rgba(41, 94, 255, 0.05);

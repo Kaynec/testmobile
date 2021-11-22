@@ -4,7 +4,7 @@
     <nav class="nav">
       <span>لیست محصولات کتاب (۱۸۴)</span>
       <img
-        @click="goOnePageBack"
+        @touchstart="goOnePageBack"
         src="../../../assets/img/arrow-left.png"
         alt="arrow left icon"
       />
@@ -13,8 +13,9 @@
     <div class="card">
       <img
         src="../../../assets/img/shop/bitmap-copy-19.png"
-        alt="اضافه به سبد خرید "
+        alt="  book img  "
       />
+
       <div class="text">
         <!-- <p class="name">کارشناسی ارشد حقوق</p> -->
         <p class="text-detail">حقوق بین الملل خصوصی</p>
@@ -22,9 +23,10 @@
         <p class="special-price">تخفیف ۱۰٪ : ۹۳،۶۰۰ تومان</p>
         <!-- Add This Item To List Of Sale -->
         <img
+          @touchstart="addToBasket"
           class="img-add"
           src="../../../assets/img/shop/pluss.png"
-          alt="book img"
+          alt="plus icon "
         />
       </div>
     </div>
@@ -82,7 +84,7 @@
         />
         2 محصول
       </div>
-      <span>مشاهده سبد خرید</span>
+      <span @touchstart="moveToBasket">مشاهده سبد خرید</span>
     </div>
   </div>
 </template>
@@ -90,6 +92,7 @@
 <script lang="ts">
 import { defineComponent, computed } from 'vue';
 import router from '@/router';
+const alertify = require('../../../assets/alertifyjs/alertify');
 
 export default defineComponent({
   setup() {
@@ -101,7 +104,16 @@ export default defineComponent({
       };
     });
 
-    return { goOnePageBack, styles };
+    const moveToBasket = () =>
+      router.push({
+        name: 'ShopBasket'
+      });
+
+    const addToBasket = () => {
+      alertify.success('محصول شما با موفقیت به سبد خرید اضافه شد');
+    };
+
+    return { goOnePageBack, styles, addToBasket, moveToBasket };
   }
 });
 </script>

@@ -25,8 +25,8 @@
 
       <label class="floating-label">
         <input
-          type="number"
-          placeholder="شماره همراه"
+          type="text"
+          placeholder="عنوان"
           v-model="model.eventName"
           @blur="v$.eventName.$touch()"
           style="appearance: none"
@@ -62,6 +62,7 @@
 import { defineComponent, reactive, computed } from 'vue';
 import useVuelidate from '@vuelidate/core';
 import { helpers, required } from '@vuelidate/validators';
+const alertify = require('../../../assets/alertifyjs/alertify');
 
 export default defineComponent({
   //   props: {
@@ -90,9 +91,17 @@ export default defineComponent({
       }
     }));
 
+    const onSubmit = () => {
+      v$.value.$touch();
+      if (!v$.value.$invalid) {
+        emit('convertBoolean', model);
+        alertify.success('رویداد با موفقیت اضافه شد');
+      }
+    };
+
     const v$ = useVuelidate(rules, model);
 
-    return { touchstart, v$, model };
+    return { touchstart, v$, model, onSubmit };
   }
 });
 </script>

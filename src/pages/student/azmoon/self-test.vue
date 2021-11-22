@@ -52,7 +52,7 @@
 import { defineComponent, ref, computed } from 'vue';
 import SmallHeader from '@/modules/student-modules/header/small-header.vue';
 import LessonCard from '@/modules/student-modules/azmoon/lesson-card.vue';
-import LessionList from '@/modules/student-modules/azmoon/chapter-list.vue';
+import LessionList from '@/modules/student-modules/chapter-list.vue';
 import router from '@/router';
 export default defineComponent({
   components: {
