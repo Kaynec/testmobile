@@ -60,6 +60,7 @@ import SelfTestQuestions from '@/pages/student/azmoon/self-test-questions.vue';
 import SelfTestQuestionsMain from '@/pages/student/azmoon/self-test-questions-main.vue';
 import SelfTestQuestionsChoosen from '@/pages/student/azmoon/self-test-choosen-questions.vue';
 import SelfTestQuestionsAnswers from '@/pages/student/azmoon/self-test-answers.vue';
+import QuestionsChoosenNumbers from '@/pages/student/azmoon/self-test-choosen-questions-number.vue';
 
 import CompTest from '@/pages/student/azmoon/comp-test.vue';
 import CompTestQuestions from '@/pages/student/azmoon/comp-test-questions.vue';
@@ -382,6 +383,11 @@ const routes: Array<RouteRecordRaw> = [
         name: 'SelfTestQuestionsChoosen',
         component: SelfTestQuestionsChoosen,
         props: true
+      },
+      {
+        path: 'choosen-number',
+        name: 'QuestionsChoosenNumbers',
+        component: QuestionsChoosenNumbers
       },
       {
         path: 'self-test-answers',

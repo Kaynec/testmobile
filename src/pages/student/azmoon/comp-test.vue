@@ -17,7 +17,7 @@
         آزمون های گذشته
       </button>
     </div>
-    <!--  -->
+
     <CompTestFuture v-if="currentState == 'future'" />
     <CompTestPast v-if="currentState == 'past'" />
   </div>
@@ -28,6 +28,7 @@ import { defineComponent, ref, computed } from 'vue';
 import SmallHeader from '@/modules/student-modules/header/small-header.vue';
 import CompTestPast from '@/modules/student-modules/azmoon/comp-test-past.vue';
 import CompTestFuture from '@/modules/student-modules/azmoon/comp-test-future.vue';
+import { PoseTransition } from 'vue-pose';
 
 export default defineComponent({
   components: {
