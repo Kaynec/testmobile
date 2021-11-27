@@ -1,19 +1,19 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
-  <div class="Sign-up" v-else>
-    <form @submit.prevent="register()" class="Rectangle">
+  <div class="Sign-up" v-else :style="styles">
+    <form @submit.prevent="register()">
       <h1 class="text-header">اطلاعات خود را وارد کنید</h1>
       <label class="floating-label">
         <input
-          placeholder="نام"
+          placeholder="نام کاربری"
           type="text"
-          v-model="model.name"
+          v-model="model.username"
           @blur="v$.name.$touch()"
         />
         <span> نام </span>
       </label>
       <p
-        v-for="error in v$.name.$errors"
+        v-for="error in v$.username.$errors"
         class="text-danger text-bold m-2"
         :key="error.$uid"
         style="font-family: IRANSans; font-size: 12px"
@@ -42,7 +42,7 @@
 
       <label class="floating-label">
         <input
-          type="number"
+          type="text"
           placeholder="شماره همراه"
           v-model="model.phone"
           @blur="v$.phone.$touch()"
@@ -59,83 +59,66 @@
       >
         {{ error.$message }}
       </p>
+      <!--  -->
+
+      <label class="floating-label">
+        <input
+          type="text"
+          placeholder=" کد ملی"
+          v-model="model.nationalId"
+          @blur="v$.nationalId.$touch()"
+          style="appearance: none"
+        />
+        <span> کد ملی </span>
+      </label>
+
+      <p
+        v-for="error in v$.nationalId.$errors"
+        class="text-danger text-bold m-2"
+        :key="error.$uid"
+        style="font-family: IRANSans; font-size: 12px"
+      >
+        {{ error.$message }}
+      </p>
+      <!--  -->
 
       <label class="floating-label">
         <select
-          v-model="model.estate"
-          class="select estate"
-          @blur="v$.estate.$touch()"
+          v-model="model.province"
+          class="select province"
+          @blur="v$.province.$touch()"
         >
           <option
-            v-for="estate in estates"
-            :value="estate.name"
-            :key="estate.name"
+            v-for="province in provinces"
+            :value="province.name"
+            :key="province.name"
           >
-            {{ estate.name }}
+            {{ province.name }}
           </option>
         </select>
         <span> استان </span>
       </label>
 
       <p
-        v-for="error in v$.estate.$errors"
+        v-for="error in v$.province.$errors"
         class="text-danger text-bold m-2"
         :key="error.$uid"
         style="font-family: IRANSans; font-size: 12px"
       >
         {{ error.$message }}
       </p>
-
       <!--  -->
       <label class="floating-label">
-        <select v-model="model.city" class="select" @blur="v$.city.$touch()">
-          <option
-            v-for="city in citiesOfCurrentEstate"
-            :value="city.name"
-            :key="city.name"
-          >
-            {{ city.name }}
-          </option>
-        </select>
-        <span> شهر </span>
-      </label>
-
-      <p
-        v-for="error in v$.city.$errors"
-        class="text-danger text-bold m-2"
-        :key="error.$uid"
-        style="font-family: IRANSans; font-size: 12px"
-      >
-        {{ error.$message }}
-      </p>
-
-      <!--  -->
-      <label class="floating-label">
-        <input
-          type="text"
-          v-model="model.nationalCode"
-          placeholder="کد ملی"
-          @blur="v$.nationalCode.$touch()"
-        />
-        <span> کد ملی </span>
-      </label>
-
-      <p
-        v-for="error in v$.nationalCode.$errors"
-        class="text-danger text-bold m-2"
-        :key="error.$uid"
-        style="font-family: IRANSans; font-size: 12px"
-      >
-        {{ error.$message }}
-      </p>
-
-      <label class="floating-label">
-        <input
-          type="text"
+        <select
+          class="select grade"
           v-model="model.grade"
           placeholder=" مقطع تحصیلی"
           @blur="v$.grade.$touch()"
-        />
+        >
+          <option v-for="grade in allGrades" :key="grade.__id">
+            {{ grade.title }}
+          </option>
+        </select>
         <span> مقطع تحصیلی </span>
       </label>
 
@@ -149,17 +132,24 @@
       </p>
 
       <label class="floating-label">
-        <input
-          type="text"
-          v-model="model.orientation"
-          placeholder="رشته تحصیلی"
-          @blur="v$.grade.$touch()"
-        />
+        <select
+          class="select oriantation"
+          v-model="model.oriantation"
+          placeholder=" رشته تحصیلی"
+          @blur="v$.oriantation.$touch()"
+        >
+          <option
+            v-for="oriantation in allOrientations"
+            :key="oriantation.__id"
+          >
+            {{ oriantation.title }}
+          </option>
+        </select>
         <span> رشته تحصیلی </span>
       </label>
 
       <p
-        v-for="error in v$.orientation.$errors"
+        v-for="error in v$.oriantation.$errors"
         class="text-danger text-bold m-2"
         :key="error.$uid"
         style="font-family: IRANSans; font-size: 12px"
@@ -179,109 +169,117 @@
 </template>
 
 <script lang="ts">
-const estates = [
-  {
-    name: 'تهران',
-    cities: [
-      {
-        name: 'ورامین'
-      },
-      {
-        name: 'شهر ری'
-      }
-    ]
-  },
-  {
-    name: 'کرج',
-    cities: [
-      {
-        name: 'البرز'
-      },
-      {
-        name: 'هشتگرد'
-      }
-    ]
-  }
-];
-
+import { provinces } from '@/assets/provinces';
 import router from '@/router';
 import { computed, defineComponent, reactive } from 'vue';
 import useVuelidate from '@vuelidate/core';
-import { minLength, maxLength, helpers, required } from '@vuelidate/validators';
+import { helpers, minLength, required, sameAs } from '@vuelidate/validators';
 import { store } from '@/store';
 import { StudentMutationTypes } from '@/store/modules/student/mutation-types';
+import { StudentOrientationApi } from '@/api/services/student/student-orientation-service';
+import { StudentGradeApi } from '@/api/services/student/student-grade-service';
+import { StudentAuthServiceApi } from '@/api/services/student/student-auth-service';
+
 export default defineComponent({
   setup() {
+    const allGrades = reactive([]) as any;
+    const allOrientations = reactive([]) as any;
+    // Filling The Grades And Orientations
+    StudentOrientationApi.getAll().then((res) => {
+      res.data.data.forEach((orientation: any) => {
+        allOrientations.push(orientation);
+      });
+    });
+
+    StudentGradeApi.getAll().then((res) => {
+      res.data.data.forEach((grade: any) => {
+        allGrades.push(grade);
+      });
+    });
     const model = reactive({
-      name: '',
+      username: '',
       lastname: '',
       phone: '',
-      estate: '',
-      city: '',
-      nationalCode: '',
-      orientation: '',
-      grade: ''
+      province: '',
+      nationalId: '',
+      oriantation: {},
+      grade: {}
     } as any);
     const register = async () => {
       v$.value.$touch();
 
       if (!v$.value.$invalid) {
-        console.log(model);
-        router.push({
-          name: 'StudentAuthentication',
-          params: { phone: model.phone }
-        });
+        // router.push({
+        //   name: 'StudentAuthentication',
+        //   params: { phone: model.phone }
+        // });
+        StudentAuthServiceApi.signUp(model).then((res) => console.log(res));
 
         store.commit(StudentMutationTypes.SET_USER, model);
       }
     };
+
+    const styles = computed(() => {
+      return {
+        'min-height': `calc( 1vh * 100) `
+      };
+    });
+
     const cancel = () => {
       router.push({
         name: 'StudentLogin'
       });
     };
+    //
+    const mustBeValidPhone = (value: string) => value.length === 11;
+    const mustBeValidNationalId = (value: string) => value.length === 10;
+
+    const mustBeNumber = (value: string) => {
+      let allAreNumbers = true;
+      for (let i = 0; i < value.length; i++) {
+        if (isNaN(+value[i])) allAreNumbers = false;
+      }
+      return allAreNumbers;
+    };
+
     const rules = computed(() => ({
-      name: {
+      username: {
         required: helpers.withMessage('لطفا نام خود را وارد کنید', required)
       },
       lastname: {
-        required: helpers.withMessage('لطفا فامیلی خود را وارد کنید', required)
+        required: helpers.withMessage(
+          'لطفا نام خانوادگی خود را وارد کنید',
+          required
+        )
       },
       phone: {
         required: helpers.withMessage(
           'لطفا شماره همراه خود را وارد کنید',
           required
         ),
-        minLength: helpers.withMessage(
-          'شماره همراه باید 11 رقم باشد',
-          minLength(11)
+        mustBeNumber: helpers.withMessage(
+          'شماره همراه نباید دارای حروف باشد',
+          mustBeNumber
         ),
-        maxLength: helpers.withMessage(
+        mustBeValidPhone: helpers.withMessage(
           'شماره همراه باید 11 رقم باشد',
-          maxLength(11)
+          mustBeValidPhone
         )
       },
-      estate: {
+      nationalId: {
+        required: helpers.withMessage('لطفا کد ملی خود را وارد کنید', required),
+        mustBeValidNationalId: helpers.withMessage(
+          'کد ملی باید 10 رقم باشد',
+          mustBeValidNationalId
+        )
+      },
+      province: {
         required: helpers.withMessage('لطفا استان را وارد کنید', required)
       },
-      city: {
-        required: helpers.withMessage('لطفا شهر را وارد کنید', required)
-      },
-      orientation: {
+      oriantation: {
         required: helpers.withMessage(
           'لطفا رشته تحصیلی خود را وارد کنید',
           required
-        )
-      },
-      nationalCode: {
-        required: helpers.withMessage('لطفا کد ملی خود را وارد کنید', required),
-        minLength: helpers.withMessage(
-          'کد ملی باید دقیقا 10 رقم باشد',
-          minLength(10)
-        ),
-        maxLength: helpers.withMessage(
-          'کد ملی باید دقیقا 10 رقم باشد',
-          maxLength(10)
         )
       },
       grade: {
@@ -293,28 +291,42 @@ export default defineComponent({
     }));
 
     const v$ = useVuelidate(rules, model);
-    const citiesOfCurrentEstate = computed(() => {
-      const tmp: any = estates.find((el) => el.name === model.estate);
+    const citiesOfCurrentprovince = computed(() => {
+      const tmp: any = provinces.find((el: any) => el.name === model.province);
       return tmp && tmp.cities;
     });
-    return { model, estates, citiesOfCurrentEstate, register, cancel, v$ };
+    return {
+      model,
+      provinces,
+      citiesOfCurrentprovince,
+      register,
+      cancel,
+      v$,
+      styles,
+      allGrades,
+      allOrientations
+    };
   }
 });
 </script>
-<style lang="scss">
+<style lang="scss" scoped>
 .Sign-up {
-  width: 100vw;
-  height: 100vh;
-  background: rgb(247, 244, 244);
+  min-width: 100vw;
+  background: #f6f8fa;
+  overflow-y: auto;
   overflow-x: hidden;
-  .Rectangle {
-    margin: 0 auto;
-    margin-top: 5%;
-    width: 88vw;
-    padding: 9px 20px 16px 21px;
+  font-family: IRANSans;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  form {
+    width: 90%;
+    max-width: 350px;
     border-radius: 10px;
     background-color: rgba(255, 255, 255, 0.97);
     text-align: center;
+    padding: 2.5rem 1.25rem;
+    margin: 2rem 0;
     .select {
       width: 100%;
       padding: 10px;
@@ -323,23 +335,19 @@ export default defineComponent({
       appearance: none;
     }
     .text-header {
-      font-family: IRANSans;
       font-size: 1.35rem;
       font-weight: 500;
       letter-spacing: -2.09px;
       color: #171717;
-      margin-bottom: 1rem;
-      margin-top: 1rem;
+      margin-bottom: 2rem;
     }
-    .estate {
+    .province {
       background-image: url('https://s4.uupload.ir/files/arrow-down-filled-triangle-svgrepo-com_cfk0.png');
       background-repeat: no-repeat;
       background-position: left 1.5em top 50%, 0 0;
       background-size: 0.85em auto, 100%;
     }
     .cancel {
-      font-weight: normal;
-      font-family: IRANSans;
       font-size: 13px;
       letter-spacing: -2px;
       text-align: center;

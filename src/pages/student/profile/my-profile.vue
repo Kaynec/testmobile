@@ -3,7 +3,8 @@
   <div class="my-profile" v-else :style="styles">
     <nav class="nav">
       <span> پروفایل من </span>
-      <img src="../../../assets/img/arrow-left.png" @click="goOnePageBack" />
+      <!-- <img src="../../../assets/img/arrow-left.png" @click="goOnePageBack" /> -->
+      <span class="red"> خروج از حساب کاربری</span>
     </nav>
     <!-- Red Div -->
     <div class="info">

@@ -12,11 +12,11 @@
         </p>
         <div class="flex">
           <h6>کارشناسی ارشد و دکتری</h6>
-          <h6>۰۲۱-۸۸۴۸۲۱۲۷ ۰۲۱-۸۵۰۶</h6>
+          <h6 class="green">۰۲۱-۸۸۴۸۲۱۲۷ ۰۲۱-۸۵۰۶</h6>
         </div>
         <div class="flex">
           <h6>دفتر انقلاب:</h6>
-          <h6>۰۲۱-۶۶۴۷۷۴۲۴</h6>
+          <h6 class="green">۰۲۱-۶۶۴۷۷۴۲۴</h6>
         </div>
       </div>
       <div class="second-section">
@@ -104,8 +104,7 @@ export default defineComponent({
       }
 
       a {
-        text-decoration: none;
-        margin: 8px 0 9px 12px;
+        display: block;
         font-family: Roboto;
         font-size: 11.4px;
         letter-spacing: 0.66px;

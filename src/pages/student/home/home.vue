@@ -6,6 +6,27 @@
     <img src="../../../assets/img/hero@2x.png" class="hero" alt="hero-img" />
     <!-- Main Container -->
     <div class="cart-container">
+      <div class="cart long">
+        <img
+          src="../../../assets/img/home-icons/time-exam.png"
+          @touchstart="MoveToCLassRoom"
+        />
+        <h4>آزمون بازی</h4>
+      </div>
+
+      <div class="cart long">
+        <img
+          src="../../../assets/img/home-icons/duel.png"
+          @touchstart="MoveToCLassRoom"
+        />
+        <h4>دوئل حرفه ای</h4>
+      </div>
+
+      <div class="cart">
+        <img src="../../../assets/img/home-icons/bitmap.png" />
+        <h4>کتب درسی</h4>
+      </div>
+
       <div class="cart">
         <img
           src="../../../assets/img/home-icons/pencil.png"
@@ -13,21 +34,12 @@
         />
         <h4>کلاس ها</h4>
       </div>
-      <div class="cart">
-        <img
-          src="../../../assets/img/home-icons/google-maps-icon-256.png"
-          @touchstart="changeShowRoadMap(true)"
-        />
-        <h4>نقشه راه</h4>
-      </div>
-      <div class="cart">
-        <img src="../../../assets/img/home-icons/bitmap.png" />
-        <h4>کتب درسی</h4>
-      </div>
+
       <div class="cart">
         <img src="../../../assets/img/home-icons/archive.png" />
         <h4>بسته پشتیبانی</h4>
       </div>
+
       <div class="cart">
         <img
           src="../../../assets/img/home-icons/bill-of-document.png"
@@ -35,6 +47,15 @@
         />
         <h4>آزمون ها</h4>
       </div>
+
+      <div class="cart">
+        <img
+          src="../../../assets/img/home-icons/google-maps-icon-256.png"
+          @touchstart="changeShowRoadMap(true)"
+        />
+        <h4>نقشه راه</h4>
+      </div>
+
       <div class="cart">
         <img
           @touchstart="MoveToCalendar"
@@ -137,32 +158,52 @@ export default class Login extends Vue {
   }
 }
 .cart-container {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  width: 100%;
   flex-grow: 1;
-  padding-top: 1rem;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding: 0.25rem;
   align-items: center;
-  justify-items: center;
   .cart {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    flex-basis: 33.33%;
+    width: 33.33%;
 
-    &:nth-of-type(5),
-    &:nth-of-type(6) {
-      margin-bottom: 3rem;
+    &:nth-of-type(7),
+    &:nth-of-type(6),
+    &:nth-of-type(8) {
+      margin-bottom: 3.8rem;
     }
     img {
-      padding: 0.7rem;
+      width: 60%;
+      height: 60%;
+      aspect-ratio: 1;
+      padding: 10%;
       background: linear-gradient(to bottom, white 30%, #ddd);
-      border-radius: 1.5em;
+      border-radius: 10px;
       margin-bottom: 0.5rem;
+      object-fit: contain;
     }
     h4 {
       font-family: IRANSans;
       font-size: 12px;
       font-weight: bold;
+    }
+  }
+  .long {
+    flex-basis: 42%;
+    height: 6.2rem;
+    margin: 0.7rem auto 0 auto;
+    border-radius: 18px;
+
+    background: linear-gradient(to bottom, white 30%, #ddd);
+    img {
+      background: none;
+      padding: 3%;
     }
   }
 }
