@@ -48,6 +48,8 @@ import SingleBookInfo from '@/pages/student/shop/shop-book-info.vue';
 import ShopSuccess from '@/pages/student/shop/shop-order-success.vue';
 import ShopFailure from '@/pages/student/shop/shop-order-fail.vue';
 import ShopBasket from '@/pages/student/shop/shop-basket.vue';
+import ShopAddress from '@/pages/student/shop/shop-address.vue';
+import ShopMessage from '@/pages/student/shop/shop-message.vue';
 
 import StudentGroupPage from '@/pages/student/group/group.vue';
 
@@ -61,11 +63,17 @@ import SelfTestQuestionsMain from '@/pages/student/azmoon/self-test-questions-ma
 import SelfTestQuestionsChoosen from '@/pages/student/azmoon/self-test-choosen-questions.vue';
 import SelfTestQuestionsAnswers from '@/pages/student/azmoon/self-test-answers.vue';
 import QuestionsChoosenNumbers from '@/pages/student/azmoon/self-test-choosen-questions-number.vue';
+import ListOfExams from '@/pages/student/azmoon/list-of-exams.vue';
 
 import CompTest from '@/pages/student/azmoon/comp-test.vue';
 import CompTestQuestions from '@/pages/student/azmoon/comp-test-questions.vue';
 import CompTestStart from '@/pages/student/azmoon/comp-test-startTest.vue';
 import ReportCard from '@/pages/student/azmoon/report-card.vue';
+
+import Duel from '@/pages/student/duel/duel.vue';
+import DuelStart from '@/pages/student/duel/duel-start.vue';
+import DuelReportCard from '@/pages/student/duel/duel-report-card.vue';
+import DuelAll from '@/pages/student/duel/duel-all.vue';
 
 import ContactUs from '@/pages/student/contact-us/contact-us.vue';
 import ContactBackup from '@/pages/student/contact-backup/contact-backup.vue';
@@ -74,6 +82,7 @@ import ContactBackupChat from '@/pages/student/contact-backup/contact-backup-cha
 
 import ClassRoom from '@/pages/student/class/class-room.vue';
 import ClassRoomNote from '@/pages/student/class/class-room-note.vue';
+import ClassAdobe from '@/pages/student/class/class-adobe.vue';
 
 import MyProfile from '@/pages/student/profile/my-profile.vue';
 import ProfilePoints from '@/pages/student/profile/points.vue';
@@ -396,6 +405,12 @@ const routes: Array<RouteRecordRaw> = [
         props: true
       },
       {
+        path: 'list-of-exams',
+        name: 'ListOfExams',
+        component: ListOfExams,
+        props: true
+      },
+      {
         path: 'comp-test',
         name: 'compTest',
         component: CompTest
@@ -409,6 +424,30 @@ const routes: Array<RouteRecordRaw> = [
         path: 'comp-test-questions',
         name: 'CompTestQuestions',
         component: CompTestQuestions
+      },
+
+      {
+        path: 'duel',
+        name: 'Duel',
+        component: Duel
+      },
+
+      {
+        path: 'duel-start',
+        name: 'DuelStart',
+        component: DuelStart
+      },
+
+      {
+        path: 'duel-report-card',
+        name: 'DuelReportCard',
+        component: DuelReportCard
+      },
+
+      {
+        path: 'duel-all',
+        name: 'DuelAll',
+        component: DuelAll
       },
       {
         path: 'report-card',
@@ -455,6 +494,16 @@ const routes: Array<RouteRecordRaw> = [
         props: true
       },
       {
+        path: 'shop-address',
+        name: 'ShopAddress',
+        component: ShopAddress
+      },
+      {
+        path: 'shop-message',
+        name: 'ShopMessage',
+        component: ShopMessage
+      },
+      {
         path: 'contact-backup',
         name: 'ContactBackup',
         component: ContactBackup
@@ -476,6 +525,11 @@ const routes: Array<RouteRecordRaw> = [
         name: 'ClassRoom',
         component: ClassRoom,
         props: true
+      },
+      {
+        path: 'class-adobe',
+        name: 'ClassAdobe',
+        component: ClassAdobe
       },
       {
         path: 'class-room-note',

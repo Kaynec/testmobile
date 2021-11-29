@@ -32,7 +32,7 @@
     <div class="budget">
       <div class="budget-img">
         <h5>بودجه بندی آزمون</h5>
-        <img src="../../../assets/img/start-test.png" />
+        <img src="../../../assets/img/duel-start.png" />
       </div>
 
       <div class="budget-label">
@@ -55,7 +55,7 @@
 
     <!--  -->
     <button @click="goToquestions">
-      شروع آزمون
+      شروع آزمون دوئل
       <i class="fas fa-arrow-right"></i>
     </button>
   </div>
@@ -180,6 +180,9 @@ export default defineComponent({
         border: 2px solid red;
         border-radius: 50%;
         margin-bottom: 0.2rem;
+        width: 1.8rem;
+        padding: 4px;
+        background: #000;
       }
 
       h5 {
@@ -289,7 +292,6 @@ export default defineComponent({
       align-items: center;
       justify-content: center;
       margin-right: 0.7rem;
-      // background: rgb(255, 0, 0);
       background: rgb(207, 8, 8);
       border-radius: 50%;
       position: absolute;

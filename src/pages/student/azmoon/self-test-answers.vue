@@ -140,18 +140,11 @@ export default defineComponent({
     padding-top: 1rem;
     margin: 0 auto;
     justify-content: space-between;
-
-    img {
-      margin-left: 1.5rem;
-      margin-right: 0.5rem;
-    }
-
     span {
       padding: 5px 27px 7px;
       border-radius: 15px;
       box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.06);
       background-color: #fff;
-      margin-left: 1rem;
     }
     span.active {
       background: $redish-background;

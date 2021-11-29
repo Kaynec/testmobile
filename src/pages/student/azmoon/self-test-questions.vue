@@ -271,6 +271,7 @@ export default defineComponent({
       justify-content: space-between;
       background: $redish-background;
       flex-direction: row-reverse;
+      color: #fff;
 
       i {
         display: flex;
@@ -286,7 +287,7 @@ export default defineComponent({
 
     .green {
       background-color: #3fca60;
-      color: white;
+      color: #fff;
     }
   }
 }

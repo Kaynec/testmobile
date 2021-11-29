@@ -5,12 +5,12 @@
       <h1 class="text-header">اطلاعات خود را وارد کنید</h1>
       <label class="floating-label">
         <input
-          placeholder="نام کاربری"
+          placeholder="نام و نام خانوادگی"
           type="text"
           v-model="model.username"
-          @blur="v$.name.$touch()"
+          @blur="v$.username.$touch()"
         />
-        <span> نام </span>
+        <span> نام و نام خانوادگی</span>
       </label>
       <p
         v-for="error in v$.username.$errors"
@@ -23,16 +23,33 @@
 
       <label class="floating-label">
         <input
-          type="text"
-          placeholder="نام خانوادگی"
-          v-model="model.lastname"
-          @blur="v$.lastname.$touch()"
+          placeholder="رمز عبور"
+          type="password"
+          v-model="model.password"
+          @blur="v$.password.$touch()"
         />
-        <span> نام خانوادگی </span>
+        <span> رمز عبور</span>
       </label>
-
       <p
-        v-for="error in v$.lastname.$errors"
+        v-for="error in v$.password.$errors"
+        class="text-danger text-bold m-2"
+        :key="error.$uid"
+        style="font-family: IRANSans; font-size: 12px"
+      >
+        {{ error.$message }}
+      </p>
+
+      <label class="floating-label">
+        <input
+          placeholder="تکرار رمز عبور"
+          type="password"
+          v-model="model.repassword"
+          @blur="v$.repassword.$touch()"
+        />
+        <span>تکرار رمز عبور </span>
+      </label>
+      <p
+        v-for="error in v$.repassword.$errors"
         class="text-danger text-bold m-2"
         :key="error.$uid"
         style="font-family: IRANSans; font-size: 12px"
@@ -53,27 +70,6 @@
 
       <p
         v-for="error in v$.phone.$errors"
-        class="text-danger text-bold m-2"
-        :key="error.$uid"
-        style="font-family: IRANSans; font-size: 12px"
-      >
-        {{ error.$message }}
-      </p>
-      <!--  -->
-
-      <label class="floating-label">
-        <input
-          type="text"
-          placeholder=" کد ملی"
-          v-model="model.nationalId"
-          @blur="v$.nationalId.$touch()"
-          style="appearance: none"
-        />
-        <span> کد ملی </span>
-      </label>
-
-      <p
-        v-for="error in v$.nationalId.$errors"
         class="text-danger text-bold m-2"
         :key="error.$uid"
         style="font-family: IRANSans; font-size: 12px"
@@ -108,6 +104,28 @@
         {{ error.$message }}
       </p>
       <!--  -->
+
+      <label class="floating-label">
+        <input
+          type="text"
+          placeholder=" کد ملی"
+          v-model="model.nationalId"
+          @blur="v$.nationalId.$touch()"
+          style="appearance: none"
+        />
+        <span> کد ملی </span>
+      </label>
+
+      <p
+        v-for="error in v$.nationalId.$errors"
+        class="text-danger text-bold m-2"
+        :key="error.$uid"
+        style="font-family: IRANSans; font-size: 12px"
+      >
+        {{ error.$message }}
+      </p>
+      <!--  -->
+      <!--  -->
       <label class="floating-label">
         <select
           class="select grade"
@@ -115,7 +133,11 @@
           placeholder=" مقطع تحصیلی"
           @blur="v$.grade.$touch()"
         >
-          <option v-for="grade in allGrades" :key="grade.__id">
+          <option
+            v-for="grade in allGrades"
+            :value="{ _id: grade._id }"
+            :key="grade.__id"
+          >
             {{ grade.title }}
           </option>
         </select>
@@ -133,29 +155,39 @@
 
       <label class="floating-label">
         <select
-          class="select oriantation"
-          v-model="model.oriantation"
+          class="select orientation"
+          v-model="model.orientation"
           placeholder=" رشته تحصیلی"
-          @blur="v$.oriantation.$touch()"
+          @blur="v$.orientation.$touch()"
         >
           <option
-            v-for="oriantation in allOrientations"
-            :key="oriantation.__id"
+            v-for="orientation in allOrientations"
+            :key="orientation.__id"
+            :value="{ _id: orientation._id }"
           >
-            {{ oriantation.title }}
+            {{ orientation.title }}
           </option>
         </select>
         <span> رشته تحصیلی </span>
       </label>
 
       <p
-        v-for="error in v$.oriantation.$errors"
+        v-for="error in v$.orientation.$errors"
         class="text-danger text-bold m-2"
         :key="error.$uid"
         style="font-family: IRANSans; font-size: 12px"
       >
         {{ error.$message }}
       </p>
+
+      <!-- If Error After Sending Information-->
+      <p
+        class="text-danger text-bold m-2"
+        style="font-family: IRANSans; font-size: 12px"
+      >
+        {{ errorMessage }}
+      </p>
+      <!--  -->
 
       <button type="submit" class="button-linear">
         <span> ثبت اطلاعات </span>
@@ -171,7 +203,7 @@
 <script lang="ts">
 import { provinces } from '@/assets/provinces';
 import router from '@/router';
-import { computed, defineComponent, reactive } from 'vue';
+import { computed, defineComponent, reactive, ref } from 'vue';
 import useVuelidate from '@vuelidate/core';
 import { helpers, minLength, required, sameAs } from '@vuelidate/validators';
 import { store } from '@/store';
@@ -180,10 +212,26 @@ import { StudentOrientationApi } from '@/api/services/student/student-orientatio
 import { StudentGradeApi } from '@/api/services/student/student-grade-service';
 import { StudentAuthServiceApi } from '@/api/services/student/student-auth-service';
 
+interface Student {
+  username: string;
+  pasword: string;
+  repassword: string;
+  phone: string;
+  province: string;
+  nationalId: string;
+  grade: {
+    _id: string;
+  };
+  orientation: {
+    _id: string;
+  };
+}
+
 export default defineComponent({
   setup() {
     const allGrades = reactive([]) as any;
     const allOrientations = reactive([]) as any;
+    const errorMessage = ref('');
     // Filling The Grades And Orientations
     StudentOrientationApi.getAll().then((res) => {
       res.data.data.forEach((orientation: any) => {
@@ -198,24 +246,29 @@ export default defineComponent({
     });
     const model = reactive({
       username: '',
-      lastname: '',
+      password: '',
+      repassword: '',
       phone: '',
       province: '',
       nationalId: '',
-      oriantation: {},
-      grade: {}
+      grade: {},
+      orientation: {}
     } as any);
     const register = async () => {
       v$.value.$touch();
 
       if (!v$.value.$invalid) {
-        // router.push({
-        //   name: 'StudentAuthentication',
-        //   params: { phone: model.phone }
-        // });
-        StudentAuthServiceApi.signUp(model).then((res) => console.log(res));
-
-        store.commit(StudentMutationTypes.SET_USER, model);
+        // Copy Every Element Of Model Except repassword
+        let { repassword, ...temp } = model;
+        StudentAuthServiceApi.signUp(temp).then((res) => {
+          // Everything Okay
+          if (res.data.status === 200) {
+            router.push({
+              name: 'StudentAuthentication',
+              params: { model: model }
+            });
+          } else errorMessage.value = res.data.statusText;
+        });
       }
     };
 
@@ -244,12 +297,29 @@ export default defineComponent({
 
     const rules = computed(() => ({
       username: {
-        required: helpers.withMessage('لطفا نام خود را وارد کنید', required)
-      },
-      lastname: {
         required: helpers.withMessage(
-          'لطفا نام خانوادگی خود را وارد کنید',
+          'لطفا نام و نام خانوادگی خود را وارد کنید',
           required
+        ),
+        minLength: helpers.withMessage(
+          'نام و نام خانوادگی باید حداقل ۶ رقم باشد',
+          minLength(6)
+        )
+      },
+      password: {
+        required: helpers.withMessage(
+          'لطفا رمز عبور خود را وارد کنید',
+          required
+        ),
+        minLength: helpers.withMessage(
+          'رمز عبور باید حداقل  ۸ رقم باشد ',
+          minLength(8)
+        )
+      },
+      repassword: {
+        sameAs: helpers.withMessage(
+          'رمز عبور و تکرار رمز عبور باید یکسان باشند',
+          sameAs(model.password)
         )
       },
       phone: {
@@ -267,7 +337,7 @@ export default defineComponent({
         )
       },
       nationalId: {
-        required: helpers.withMessage('لطفا کد ملی خود را وارد کنید', required),
+        // required: helpers.withMessage('لطفا کد ملی خود را وارد کنید', required),
         mustBeValidNationalId: helpers.withMessage(
           'کد ملی باید 10 رقم باشد',
           mustBeValidNationalId
@@ -276,7 +346,7 @@ export default defineComponent({
       province: {
         required: helpers.withMessage('لطفا استان را وارد کنید', required)
       },
-      oriantation: {
+      orientation: {
         required: helpers.withMessage(
           'لطفا رشته تحصیلی خود را وارد کنید',
           required
@@ -304,7 +374,8 @@ export default defineComponent({
       v$,
       styles,
       allGrades,
-      allOrientations
+      allOrientations,
+      errorMessage
     };
   }
 });

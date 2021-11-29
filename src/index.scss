@@ -27,7 +27,6 @@
   font-weight: 300;
   font-style: normal;
 }
-
 @font-face {
   font-family: 'IRANSans';
   src: url('./assets/fonts/IRANSans.ttf') format('truetype');
@@ -115,6 +114,23 @@
     }
   }
 
+  textarea {
+    width: 100%;
+    text-align: right;
+    border: 2px solid #ddd;
+    padding: 10px;
+    outline: none;
+    border-radius: 10px;
+    font-family: IRANSans;
+    font-size: 12px;
+    font-weight: normal;
+    background: transparent;
+    resize: none;
+    &:focus {
+      border: 2px solid #d87479;
+    }
+  }
+
   input {
     width: 100%;
     text-align: right;
@@ -135,6 +151,11 @@
     visibility: hidden;
     opacity: 0;
   }
+  textarea::placeholder {
+    visibility: hidden;
+    opacity: 0;
+  }
+
   span {
     color: #cf5b61;
     font-family: IRANSans;
@@ -156,6 +177,18 @@
     background-color: white;
   }
   select ~ span {
+    color: #cf5b61;
+    font-family: IRANSans;
+    position: absolute;
+    right: 2%;
+    transform: translateY(-0.25rem);
+    font-size: 0.6rem;
+    transition-duration: 300ms;
+    background-color: white;
+    z-index: 2;
+    padding-inline: 0.5rem;
+  }
+  textarea ~ span {
     color: #cf5b61;
     font-family: IRANSans;
     position: absolute;
@@ -192,9 +225,9 @@
   }
 }
 
-.red {
+.red-color {
   color: #a50d14 !important;
 }
-.green {
+.green-color {
   color: #4ac367 !important;
 }

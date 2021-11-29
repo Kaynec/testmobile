@@ -100,7 +100,7 @@
       />
     </div>
     <!-- Btn  -->
-    <div class="continue">
+    <div class="continue" @click="moveToAddress">
       <i class="fas fa-arrow-right"></i>
       <span> ثبت و پرداخت نهایی </span>
     </div>
@@ -121,12 +121,14 @@ export default defineComponent({
 
     const goOnePageBack = () => router.go(-1);
 
+    const moveToAddress = () => router.push({ name: 'ShopAddress' });
+
     let styles = computed(() => {
       return {
         'min-height': `calc( 1vh * 100) `
       };
     });
-    return { goOnePageBack, styles, payment };
+    return { goOnePageBack, styles, payment, moveToAddress };
   }
 });
 </script>

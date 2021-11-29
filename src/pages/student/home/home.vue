@@ -7,17 +7,14 @@
     <!-- Main Container -->
     <div class="cart-container">
       <div class="cart long">
-        <img
-          src="../../../assets/img/home-icons/time-exam.png"
-          @touchstart="MoveToCLassRoom"
-        />
+        <img src="../../../assets/img/home-icons/time-exam.png" />
         <h4>آزمون بازی</h4>
       </div>
 
       <div class="cart long">
         <img
           src="../../../assets/img/home-icons/duel.png"
-          @touchstart="MoveToCLassRoom"
+          @touchstart="MoveToDoul"
         />
         <h4>دوئل حرفه ای</h4>
       </div>
@@ -100,14 +97,27 @@ export default class Login extends Vue {
     });
   }
   public MoveToCLassRoom(): void {
-    router.push({
-      name: 'ClassRoom'
-    });
+    setTimeout(() => {
+      router.push({
+        name: 'ClassRoom'
+      });
+    }, 100);
   }
+
+  public MoveToDoul(): void {
+    setTimeout(() => {
+      router.push({
+        name: 'Duel'
+      });
+    }, 100);
+  }
+
   public MoveToCalendar(): void {
-    router.push({
-      name: 'Calendar'
-    });
+    setTimeout(() => {
+      router.push({
+        name: 'Calendar'
+      });
+    }, 100);
   }
 
   get styles() {

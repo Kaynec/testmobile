@@ -79,9 +79,13 @@ export default defineComponent({
       active.value = false;
       Card.value.classList.remove('active');
       if (props.componentName != 'empty') {
-        router.push({
-          name: props.componentName
-        });
+        setTimeout(
+          () =>
+            router.push({
+              name: props.componentName
+            }),
+          100
+        );
       }
     };
     const getImgUrl = (src, color) => {

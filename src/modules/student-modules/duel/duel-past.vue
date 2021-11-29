@@ -28,11 +28,14 @@
           {{ `ساعت ${item.timeLeft}` }}
         </span>
       </div>
-      <div class="img position-absolute top-50 start-0 ml-5 translate-middle">
+      <div
+        class="img position-absolute top-50 start-0 ml-5 translate-middle"
+        @click="changeShowDetail"
+        v-if="item.passed"
+      >
         <img
           src="../../../assets/img/accept-path-light.png"
           class="img"
-          @click="changeShowDetail"
           alt="active"
         />
       </div>
@@ -43,20 +46,20 @@
       />
     </div>
     <!--  -->
-    <CompTestDetail v-if="showCompDetail" @convertBoolean="changeShowDetail" />
+    <DuelDetail v-if="showCompDetail" @convertBoolean="changeShowDetail" />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
-import CompTestDetail from '@/modules/student-modules/azmoon/comp-test-detail.vue';
+import DuelDetail from '@/modules/student-modules/duel/duel-detail.vue';
 
 // TODO
 // SEND THE NEEDED DATA TO THE ROADMAPDETAIL COMPONENT
 
 export default defineComponent({
   components: {
-    CompTestDetail
+    DuelDetail
   },
   setup() {
     const data = [
@@ -97,10 +100,11 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .container {
-  width: 100%;
+  width: 95.5%;
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
+  margin: 0 auto;
 }
 .card {
   border-radius: 10px;
