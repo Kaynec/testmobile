@@ -28,7 +28,7 @@
       <label class="floating-label custom-label">
         <input
           type="text"
-          v-model="model.code"
+          v-model="code.code"
           placeholder="_ _ _ _"
           @blur="v$.code.$touch()"
         />
@@ -66,32 +66,49 @@ import { computed, defineComponent, reactive } from 'vue';
 import useVuelidate from '@vuelidate/core';
 import { required, helpers } from '@vuelidate/validators';
 
+//
+import { store } from '@/store';
+// import { StudentMutationTypes } from '@/store/modules/student/mutation-types';
+import { StudentActionTypes } from '@/store/modules/student/action-types';
+
 export default defineComponent({
   props: {
-    phone: { type: String }
+    model: { type: String, default: ' {} ' }
   },
   setup(props) {
+    const model = reactive(JSON.parse(props.model) as any);
+    // const notModel = JSON.parse(props.model);
+    // console.log(props.model, JSON.parse(props.model), notModel, model);
     // If Entered Without Authentication
-    if (!props.phone) router.push({ name: 'StudentLogin' });
+    console.log(model);
+    // if (!model.phone) router.push({ name: 'StudentLogin' });
+
+    console.log(store.getters.getStudentToken, store.getters.getCurrentStudent);
     //
-    const model = reactive({
-      code: ''
-    });
+    const code = reactive({ code: '' });
 
     const sendToHome = async () => {
       v$.value.$touch();
 
       if (!v$.value.$invalid) {
-        console.log(model);
-        router.push({
-          name: 'Home'
-        });
+        console.log(`Everything Working As Expected ${model}`);
+        store
+          .dispatch(StudentActionTypes.AUTH_REQUEST_STUDENT, {
+            username: model.username,
+            password: model.password
+          })
+          .then((res) => {
+            if (res) {
+              store.dispatch(StudentActionTypes.CURRENT_STUDENT);
+              router.push({ name: 'Home' });
+            }
+          });
       }
     };
     const sendToPasswordRecover = () =>
       router.push({
         name: 'StudentPasswordRecover',
-        params: { phone: props.phone }
+        params: { phone: model.phone }
       });
     const cancel = () => {
       router.push({ name: 'StudentLogin' });
@@ -105,8 +122,8 @@ export default defineComponent({
         )
       }
     }));
-    const v$ = useVuelidate(rules, model);
-    return { cancel, model, v$, sendToHome, sendToPasswordRecover };
+    const v$ = useVuelidate(rules, code);
+    return { cancel, code, v$, sendToHome, sendToPasswordRecover };
   }
 });
 </script>

@@ -5,6 +5,8 @@ import { Mutations } from './mutations';
 import { StudentActionTypes } from './action-types';
 import { StudentMutationTypes } from './mutation-types';
 import { StudentAuthServiceApi } from '@/api/services/student/student-auth-service';
+import { StudentOrientationApi } from '@/api/services/student/student-orientation-service';
+import { StudentGradeApi } from '@/api/services/student/student-grade-service';
 
 type AugmentedActionContext = {
   commit<K extends keyof Mutations>(
@@ -40,15 +42,23 @@ export const actions: ActionTree<State, RootState> & Actions = {
   async [StudentActionTypes.LOG_OUT_STUDENT]({ commit }) {
     // const result = await AuthServiceApi.logout();
     commit(StudentMutationTypes.SET_TOKEN, null);
+    commit(StudentMutationTypes.SET_USER, null);
     return true;
   },
   async [StudentActionTypes.CURRENT_STUDENT]({ commit }) {
     const result = await StudentAuthServiceApi.currentUser();
     if (result.data) {
-      commit(StudentMutationTypes.SET_USER, result.data);
+      const temp = result.data;
+      commit(StudentMutationTypes.SET_USER, temp);
+
+      await StudentOrientationApi.get(temp.orientation).then((res) => {
+        commit(StudentMutationTypes.SET_ORIENTATION_NAME, res.data.data.title);
+      });
+      await StudentGradeApi.get(temp.grade).then((res) => {
+        commit(StudentMutationTypes.SET_GRADE_NAME, res.data.data.title);
+      });
+
       return true;
-    } else {
-      return false;
-    }
+    } else return false;
   }
 };

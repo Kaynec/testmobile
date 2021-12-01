@@ -3,6 +3,18 @@
   <div class="shop" v-else :style="styles">
     <SmallHeader />
     <div class="grid">
+      <img :src="maybeSrc" alt="JUST WORK PLEASE JUST WORK NOW" />
+      <img
+        :src="
+          async () => {
+            const result = await StudentproductApi.getCategoryPicture(item._id);
+            return result;
+          }
+        "
+        v-for="item in productCategories"
+        alt="WHY YOU DO THIS"
+        :key="item._id"
+      />
       <img src="../../../assets/img/shop/book.png" alt="book img" />
       <img
         src="../../../assets/img/shop/online-classes.png"
@@ -14,6 +26,7 @@
       />
       <img src="../../../assets/img/shop/azmoons.png" alt="azmoons icon " />
     </div>
+    <!--  -->
     <div class="btns">
       <button
         @click="() => (currentState = 'yourProduct')"
@@ -35,7 +48,7 @@
         <div
           class="Card"
           @click="sendToBookShopList"
-          v-for="product in yourData"
+          v-for="product in newsetData"
           :key="product"
         >
           <img :src="product.img" alt="Card img" />
@@ -72,41 +85,45 @@
 </template>
 
 <script>
-import { defineComponent, ref, computed } from 'vue';
+import { defineComponent, ref, computed, reactive } from 'vue';
 import SmallHeader from '@/modules/student-modules/header/small-header.vue';
+import { StudentproductApi } from '@/api/services/student/student-product';
 import router from '@/router';
+import { store } from '@/store';
+
 export default defineComponent({
-  components: {
-    SmallHeader
-  },
+  components: { SmallHeader },
   setup() {
+    const maybeSrc = ref();
+
+    //     //
+
+    //     const getImageData = (imageId) => {
+    //      StudentproductApi.getCategoryPicture(imageId).then((res) => {
+    //           console.log(res);
+    //           maybeSrc.value = res;
+    //         });
+
+    // },
+    //     //
+    const productCategories = reactive([]);
+    //     StudentproductApi.getAllCategories().then((res) => {
+    //       res.data.data.forEach(async (category) => {
+    //         productCategories.push(category);
+    //         StudentproductApi.getCategoryPicture(category._id).then((res) => {
+    //           console.log(res);
+    //           maybeSrc.value = res;
+    //         });
+    //       });
+    //     });
+
+    // setTimeout(() => console.log(productCategories), 1000);
+
+    // StudentproductApi.getAllProducts().then((res) => {
+    //   console.log(res);
+    // });
+
     const currentState = ref('yourProduct');
-    const yourData = [
-      {
-        name: 'حقوق',
-        img: 'https://www.mahan.ac.ir/images/ProductCategory/sampleProductCat.gif'
-      },
-      {
-        name: 'حقوق',
-        img: 'https://www.mahan.ac.ir/images/ProductCategory/sampleProductCat.gif'
-      },
-      {
-        name: 'حقوق',
-        img: 'https://www.mahan.ac.ir/images/ProductCategory/sampleProductCat.gif'
-      },
-      {
-        name: 'حقوق',
-        img: 'https://www.mahan.ac.ir/images/ProductCategory/sampleProductCat.gif'
-      },
-      {
-        name: 'حقوق',
-        img: 'https://www.mahan.ac.ir/images/ProductCategory/sampleProductCat.gif'
-      },
-      {
-        name: 'حقوق',
-        img: 'https://www.mahan.ac.ir/images/ProductCategory/sampleProductCat.gif'
-      }
-    ];
 
     const newsetData = [
       {
@@ -154,11 +171,14 @@ export default defineComponent({
 
     return {
       currentState,
-      yourData,
+      productCategories,
       newsetData,
       sendToBookShopList,
       styles,
-      moveToBasket
+      moveToBasket,
+      StudentproductApi,
+      store,
+      maybeSrc
     };
   }
 });

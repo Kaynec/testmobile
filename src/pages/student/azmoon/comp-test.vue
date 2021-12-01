@@ -18,8 +18,14 @@
       </button>
     </div>
 
-    <CompTestFuture v-if="currentState == 'future'" />
-    <CompTestPast v-if="currentState == 'past'" />
+    <CompTestFuture
+      v-if="currentState == 'future'"
+      :data="JSON.stringify(futureExams)"
+    />
+    <CompTestPast
+      v-if="currentState == 'past'"
+      :data="JSON.stringify(pastExams)"
+    />
   </div>
 </template>
 
@@ -28,8 +34,9 @@ import { defineComponent, ref, computed } from 'vue';
 import SmallHeader from '@/modules/student-modules/header/small-header.vue';
 import CompTestPast from '@/modules/student-modules/azmoon/comp-test-past.vue';
 import CompTestFuture from '@/modules/student-modules/azmoon/comp-test-future.vue';
-import { PoseTransition } from 'vue-pose';
-
+import { StudentExamApi } from '@/api/services/student/student-exam-service';
+const moment = require('moment-jalaali');
+import { compareAsc } from 'date-fns';
 export default defineComponent({
   components: {
     SmallHeader,
@@ -37,16 +44,28 @@ export default defineComponent({
     CompTestFuture
   },
   setup() {
-    //  Compare Dates Once Data Is available   //
-    const currentState = ref('past');
+    const pastExams = ref([]) as any;
+    const futureExams = ref([]) as any;
+    // if the past has been done than move it to the past section
+    StudentExamApi.getAll().then((res) => {
+      res.data.data.forEach((date: any) => {
+        let mDate = moment(date.date, 'jYYYY/jM/jD');
 
+        if (
+          compareAsc(new Date(mDate.format('YYYY/M/D')), new Date()) === 1 ||
+          compareAsc(new Date(mDate.format('YYYY/M/D')), new Date()) === 0
+        )
+          pastExams.value.push(date);
+        else futureExams.value.push(date);
+      });
+    });
+    const currentState = ref('past');
     let styles = computed(() => {
       return {
         'min-height': `calc( 1vh * 100) `
       };
     });
-
-    return { currentState, styles };
+    return { currentState, styles, futureExams, pastExams };
   }
 });
 </script>

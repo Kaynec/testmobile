@@ -1,15 +1,15 @@
 import { studentInstance as instance } from './student-api-client';
-class Orientation {
-  async get(id: string) {
-    return instance.get(`orientation/${id}`, {
+class Basket {
+  async get() {
+    return instance.get('shopping-cart/get', {
       headers: {
         // Overwrite Axios's automatically set Content-Type
         'Content-Type': 'application/json'
       }
     });
   }
-  async getAll() {
-    return instance.get(`orientation`, {
+  async add(product: any) {
+    return instance.post('shopping-cart', product, {
       headers: {
         // Overwrite Axios's automatically set Content-Type
         'Content-Type': 'application/json'
@@ -18,4 +18,4 @@ class Orientation {
   }
 }
 
-export const StudentOrientationApi = new Orientation();
+export const StudentBasketApi = new Basket();

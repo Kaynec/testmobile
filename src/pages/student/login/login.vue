@@ -37,25 +37,43 @@
     <div class="Login">
       <div>
         <label class="floating-label">
-          <input type="text" v-model="email" placeholder="" />
-          <span> نام کاربری </span>
+          <input
+            placeholder="نام کاربری"
+            type="text"
+            v-model="model.username"
+            @blur="v$.username.$touch()"
+          />
+          <span>نام کاربری </span>
         </label>
-        <!--  -->
+        <p
+          v-for="error in v$.username.$errors"
+          class="text-danger text-bold m-2"
+          :key="error.$uid"
+          style="font-family: IRANSans; font-size: 12px"
+        >
+          {{ error.$message }}
+        </p>
+
         <label class="floating-label">
-          <input type="text" v-model="password" placeholder="" />
+          <input
+            placeholder="رمز عبور"
+            type="password"
+            v-model="model.password"
+            @blur="v$.password.$touch()"
+          />
           <span> رمز عبور</span>
         </label>
-        <!--  -->
+        <p
+          v-for="error in v$.password.$errors"
+          class="text-danger text-bold m-2"
+          :key="error.$uid"
+          style="font-family: IRANSans; font-size: 12px"
+        >
+          {{ error.$message }}
+        </p>
 
         <button @click="login" class="button-linear"><span> ورود </span></button
         ><br />
-        <p
-          v-if="error"
-          class="text-center text-bold text-danger"
-          style="font-family: IRANSans"
-        >
-          {{ error }}
-        </p>
         <span class="register" @click="moveToSignUp"> ثبت نام در ماهان </span
         ><br />
         <span class="reset-password" @click="moveToPasswordRecover()">
@@ -65,68 +83,87 @@
     </div>
   </div>
 </template>
+
 <script lang="ts">
-import { Options, Vue } from 'vue-class-component';
+import { computed, defineComponent, onMounted, reactive, ref } from 'vue';
 // import { useStudentStore } from '@/store';
 // import { StudentActionTypes } from '@/store/modules/student/action-types';
 import router from '@/router';
+import useVuelidate from '@vuelidate/core';
+import { minLength, helpers, required } from '@vuelidate/validators';
 
-@Options({})
-export default class Login extends Vue {
-  private appElement: HTMLElement | null = null;
+export default defineComponent({
+  setup() {
+    const windowHeight = ref(window.innerHeight);
+    const model = reactive({
+      username: '',
+      password: ''
+    } as any);
 
-  public email = '';
-  public password = '';
-  public error = '';
-  public windowHeight = window.innerHeight;
+    const login = () => {
+      console.log(model);
+      v$.value.$touch();
 
-  public mounted(): void {
-    this.$nextTick(() => {
-      window.addEventListener('resize', this.onResize);
+      if (!v$.value.$invalid) {
+        router.push({
+          name: 'StudentAuthentication',
+          params: { model: JSON.stringify(model) }
+        });
+      }
+    };
+
+    const rules = computed(() => ({
+      username: {
+        required: helpers.withMessage(
+          'لطفا نام کاربری خود را وارد کنید',
+          required
+        ),
+        minLength: helpers.withMessage(
+          'نام کاربری باید حداقل 6 رقم باشد',
+          minLength(8)
+        )
+      },
+      password: {
+        required: helpers.withMessage('لطفا رمز خود را وارد کنید', required),
+        minLength: helpers.withMessage(
+          'رمز عبور باید حداقل 6 رقم باشد',
+          minLength(8)
+        )
+      }
+    }));
+
+    const v$ = useVuelidate(rules, model);
+    const moveToSignUp = () => {
+      router.push({ name: 'StudentSignup' });
+    };
+    const moveToPasswordRecover = () => {
+      router.push({ name: 'StudentPasswordRecover' });
+    };
+
+    const onResize = (): void => {
+      (this as any).windowHeight = window.innerHeight;
+    };
+
+    const getMainStyle = (): { height: string } => {
+      return { height: `${(this as any).windowHeight - 1}px` };
+    };
+
+    onMounted(() => {
+      window.addEventListener('resize', onResize);
     });
-  }
 
-  public async login(): Promise<any> {
-    this.error = ' ';
-    // console.log(this.email, this.password);
-    // const res = await useStudentStore().dispatch(
-    //   StudentActionTypes.AUTH_REQUEST_STUDENT,
-    //   {
-    //     username: this.email,
-    //     password: this.password
-    //   }
-    // );
-    // if (res) {
-    //   await useStudentStore().dispatch(
-    //     StudentActionTypes.CURRENT_STUDENT,
-    //     undefined
-    //   );
-    //   router.push('/student');
-    // }
-    if (this.email && this.password) {
-      router.push({
-        name: 'StudentAuthentication',
-        // Change This To The Model Phone Later
-        params: { phone: '09102361154' }
-      });
-    } else {
-      this.error = 'لطفا اطلاعات صحیح را وارد کنید';
-    }
+    return {
+      windowHeight,
+      model,
+      v$,
+      moveToPasswordRecover,
+      moveToSignUp,
+      onResize,
+      getMainStyle,
+      login
+    };
   }
-  moveToSignUp() {
-    router.push({ name: 'StudentSignup' });
-  }
-  moveToPasswordRecover() {
-    router.push({ name: 'StudentPasswordRecover' });
-  }
-  onResize(): void {
-    (this as any).windowHeight = window.innerHeight;
-  }
-
-  getMainStyle(): { height: string } {
-    return { height: `${(this as any).windowHeight - 1}px` };
-  }
-}
+});
 </script>
 <style lang="scss" scoped>
 .desktop {

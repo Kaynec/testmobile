@@ -350,239 +350,285 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'home',
         name: 'Home',
-        component: Home
-        // beforeEnter: ifStudentAuthenticated
+        component: Home,
+        beforeEnter: ifStudentAuthenticated
       },
       {
         path: 'setting',
         name: 'StudentSetting',
-        component: StudentSetting
+        component: StudentSetting,
+        beforeEnter: ifStudentAuthenticated
       },
       {
         path: 'shop',
         name: 'studentShop',
-        component: StudentShop
-        // beforeEnter: ifStudentAuthenticated
+        component: StudentShop,
+        beforeEnter: ifStudentAuthenticated
       },
       {
         path: 'group',
         name: 'StudentGroupPage',
-        component: StudentGroupPage
+        component: StudentGroupPage,
+        beforeEnter: ifStudentAuthenticated
       },
       {
         path: 'self-test',
         name: 'SelfTest',
-        component: SelfTest
+        component: SelfTest,
+        beforeEnter: ifStudentAuthenticated
       },
       {
         path: 'self-test-questions',
         name: 'SelfTestQuestions',
         component: SelfTestQuestions,
+        beforeEnter: ifStudentAuthenticated,
         props: true
       },
       {
         path: 'self-test-questions-main',
         name: 'SelfTestQuestionsMain',
         component: SelfTestQuestionsMain,
-        props: true
+        props: true,
+        beforeEnter: ifStudentAuthenticated
       },
 
       {
         path: 'self-test-questions-choosen',
         name: 'SelfTestQuestionsChoosen',
         component: SelfTestQuestionsChoosen,
-        props: true
+        props: true,
+        beforeEnter: ifStudentAuthenticated
       },
       {
         path: 'choosen-number',
         name: 'QuestionsChoosenNumbers',
-        component: QuestionsChoosenNumbers
+        component: QuestionsChoosenNumbers,
+        beforeEnter: ifStudentAuthenticated
       },
       {
         path: 'self-test-answers',
         name: 'SelfTestQuestionsAnswers',
         component: SelfTestQuestionsAnswers,
-        props: true
+        props: true,
+        beforeEnter: ifStudentAuthenticated
       },
       {
         path: 'list-of-exams',
         name: 'ListOfExams',
         component: ListOfExams,
-        props: true
+        props: true,
+        beforeEnter: ifStudentAuthenticated
       },
       {
         path: 'comp-test',
         name: 'compTest',
-        component: CompTest
+        component: CompTest,
+        beforeEnter: ifStudentAuthenticated
       },
       {
         path: 'comp-test-start',
         name: 'compTestStart',
-        component: CompTestStart
+        props: true,
+        component: CompTestStart,
+        beforeEnter: ifStudentAuthenticated
       },
       {
         path: 'comp-test-questions',
         name: 'CompTestQuestions',
-        component: CompTestQuestions
+        component: CompTestQuestions,
+        beforeEnter: ifStudentAuthenticated
       },
 
       {
         path: 'duel',
         name: 'Duel',
-        component: Duel
+        component: Duel,
+        beforeEnter: ifStudentAuthenticated
       },
 
       {
         path: 'duel-start',
         name: 'DuelStart',
-        component: DuelStart
+        component: DuelStart,
+        beforeEnter: ifStudentAuthenticated
       },
 
       {
         path: 'duel-report-card',
         name: 'DuelReportCard',
+        beforeEnter: ifStudentAuthenticated,
         component: DuelReportCard
       },
 
       {
         path: 'duel-all',
         name: 'DuelAll',
-        component: DuelAll
+        component: DuelAll,
+        beforeEnter: ifStudentAuthenticated
       },
       {
         path: 'report-card',
         name: 'ReportCard',
-        component: ReportCard
+        component: ReportCard,
+        beforeEnter: ifStudentAuthenticated
       },
       {
         path: 'hamnavard',
         name: 'Hamnavard',
-        component: Hamnavard
+        component: Hamnavard,
+        beforeEnter: ifStudentAuthenticated
       },
       {
         path: 'contact-us',
         name: 'contactUs',
-        component: ContactUs
+        component: ContactUs,
+        beforeEnter: ifStudentAuthenticated
       },
       {
         path: 'shop-basket',
         name: 'ShopBasket',
-        component: ShopBasket
+        component: ShopBasket,
+        beforeEnter: ifStudentAuthenticated
       },
       {
         path: 'shop-book-list',
         name: 'ShopBookList',
         component: ShopBookList,
-        props: true
+        props: true,
+        beforeEnter: ifStudentAuthenticated
       },
       {
         path: 'shop-single-book',
         name: 'SingleBookInfo',
         component: SingleBookInfo,
+        beforeEnter: ifStudentAuthenticated,
         props: true
       },
       {
         path: 'shop-failure',
         name: 'ShopFailure',
         component: ShopFailure,
+        beforeEnter: ifStudentAuthenticated,
         props: true
       },
       {
         path: 'shop-success',
         name: 'ShopSuccess',
         component: ShopSuccess,
-        props: true
+        props: true,
+        beforeEnter: ifStudentAuthenticated
       },
       {
         path: 'shop-address',
         name: 'ShopAddress',
-        component: ShopAddress
+        component: ShopAddress,
+        props: true,
+        beforeEnter: ifStudentAuthenticated
       },
       {
         path: 'shop-message',
         name: 'ShopMessage',
-        component: ShopMessage
+        component: ShopMessage,
+        beforeEnter: ifStudentAuthenticated,
+        props: true
       },
       {
         path: 'contact-backup',
         name: 'ContactBackup',
-        component: ContactBackup
+        component: ContactBackup,
+        beforeEnter: ifStudentAuthenticated,
+        props: true
       },
       {
         path: 'contact-backup-info',
         name: 'ContactBackupInfo',
         component: ContactBackupInfo,
+        beforeEnter: ifStudentAuthenticated,
         props: true
       },
       {
         path: 'contact-backup-chat',
         name: 'ContactBackupChat',
         component: ContactBackupChat,
+        beforeEnter: ifStudentAuthenticated,
         props: true
       },
       {
         path: 'class-room',
         name: 'ClassRoom',
         component: ClassRoom,
+        beforeEnter: ifStudentAuthenticated,
         props: true
       },
       {
         path: 'class-adobe',
         name: 'ClassAdobe',
-        component: ClassAdobe
+        component: ClassAdobe,
+        beforeEnter: ifStudentAuthenticated,
+        props: true
       },
       {
         path: 'class-room-note',
         name: 'ClassRoomNote',
         component: ClassRoomNote,
+        beforeEnter: ifStudentAuthenticated,
         props: true
       },
       {
         path: 'roadmap',
         name: 'RoadMap',
         component: RoadMap,
+        beforeEnter: ifStudentAuthenticated,
         props: true
       },
       {
         path: 'my-profile',
         name: 'MyProfile',
         component: MyProfile,
+        beforeEnter: ifStudentAuthenticated,
         props: true
       },
       {
         path: 'profile-points',
         name: 'ProfilePoints',
         component: ProfilePoints,
+        beforeEnter: ifStudentAuthenticated,
         props: true
       },
       {
         path: 'profile-inbox',
         name: 'Inbox',
         component: Inbox,
+        beforeEnter: ifStudentAuthenticated,
         props: true
       },
       {
         path: 'purchase-history',
         name: 'PurchaseHistory',
         component: PurchaseHistory,
+        beforeEnter: ifStudentAuthenticated,
         props: true
       },
       {
         path: 'edit-profile',
         name: 'EditProfile',
         component: EditProfile,
+        beforeEnter: ifStudentAuthenticated,
         props: true
       },
       {
         path: 'profile-invite',
         name: 'InviteFriends',
         component: InviteFriends,
+        beforeEnter: ifStudentAuthenticated,
         props: true
       },
       {
         path: 'calendar',
         name: 'Calendar',
-        component: Calendar
+        component: Calendar,
+        beforeEnter: ifStudentAuthenticated,
+        props: true
       }
     ]
   },

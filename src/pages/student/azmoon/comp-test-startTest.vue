@@ -2,29 +2,40 @@
   <div class="desktop" v-if="!isMobile()"></div>
   <div class="start" v-else :style="styles">
     <nav class="nav">
-      <span> کارنامه </span>
+      <span> آزمون های جامع </span>
       <img src="../../../assets/img/arrow-left.png" @click="goOnePageBack" />
     </nav>
     <!--  -->
     <div class="label">
       <!-- Count -->
-      <p>آزمون شماره ۱۰</p>
+      <p>{{ timeInformation.title }}</p>
       <!-- Info -->
-      <h6>عمومی ۱۴۰۰ - ۱۴۰۱</h6>
-      <h6 class="second-h6">پایه کنکور ریاضی فیزیک</h6>
+      <h6>
+        عمومی {{ toPersianNumbers(timeInformation.texts.year) }} -
+        {{ toPersianNumbers(+timeInformation.texts.year + 1) }}
+      </h6>
+      <h6 class="second-h6">پایه {{ timeInformation.grade.title }}</h6>
     </div>
     <!--  -->
     <div class="time">
       <div>
-        <p>۲۰ آبان ۱۴۰۰</p>
+        <p>
+          {{ timeInformation.texts.dayInText }}
+          {{ timeInformation.texts.monthInText }}
+          {{ toPersianNumbers(timeInformation.texts.year) }}
+        </p>
         <h5>تاریخ آزمون</h5>
       </div>
       <div>
-        <p>۱۳:۰۰</p>
+        <p>{{ toPersianNumbers(timeInformation.time) }}</p>
         <h5>ساعت شروع آزمون</h5>
       </div>
       <div>
-        <p>۱۶:۰۰</p>
+        <p>
+          {{
+            addMinutes(`${timeInformation.time}:00`, timeInformation.duration)
+          }}
+        </p>
         <h5>ساعت پایان آزمون</h5>
       </div>
     </div>
@@ -35,25 +46,16 @@
         <img src="../../../assets/img/start-test.png" />
       </div>
 
-      <div class="budget-label">
-        <p class="budget-label-first-p">درس هوش مصنوعی</p>
-        <p class="budget-label-second-p">از درس ۱ تا ۱۱</p>
-      </div>
-
-      <div class="budget-label">
-        <p class="budget-label-first-p">درس شبکه پیشرفته</p>
-        <p class="budget-label-second-p">از درس ۴ تا ۱۳</p>
-      </div>
-
-      <div class="budget-label">
-        <p class="budget-label-first-p">درس برنامه نویس فانکشنال پیشرفته</p>
-        <p class="budget-label-second-p">
-          از مبحث مربوط به تابع map تا مبحث مربوط به تابع filter
-        </p>
+      <div
+        class="budget-label"
+        v-for="item in orientationTitleInformation"
+        :key="item"
+      >
+        <p class="budget-label-first-p">{{ item.orientation }}</p>
+        <p class="budget-label-second-p">{{ item.title }}</p>
       </div>
     </div>
 
-    <!--  -->
     <button @click="goToquestions">
       شروع آزمون
       <i class="fas fa-arrow-right"></i>
@@ -61,12 +63,73 @@
   </div>
 </template>
 
-<script>
-import { defineComponent, computed } from 'vue';
+<script lang="ts">
+import { defineComponent, computed, reactive, ref } from 'vue';
+import { StudentExamApi } from '@/api/services/student/student-exam-service';
 import router from '@/router';
+import { toPersianNumbers } from '@/utilities/to-persian-numbers';
+import { store } from '@/store';
+import { StudentMutationTypes } from '@/store/modules/student/mutation-types';
+const moment = require('moment-jalaali');
 
 export default defineComponent({
-  setup() {
+  props: {
+    id: { type: String }
+  },
+  setup(props) {
+    const orientationTitleInformation = reactive([] as any),
+      timeInformation = ref({} as any);
+
+    const addMinutes = (time, minsToAdd) => {
+      function D(J) {
+        return (J < 10 ? '0' : '') + J;
+      }
+      let piece = time.split(':');
+      let mins = piece[0] * 60 + +piece[1] + +minsToAdd;
+
+      return D(((mins % (24 * 60)) / 60) | 0) + ':' + D(mins % 60);
+    };
+    //
+    if (props.id)
+      store.commit(StudentMutationTypes.SET_CURRENT_ID_OF_EXAM, props.id);
+    StudentExamApi.get(props.id || store.getters.getCurrentIdOfExam).then(
+      (res) => {
+        console.log(res.data.data);
+        timeInformation.value = res.data.data;
+        // addMinutes(timeInformation.value.time, timeInformation.value.duration);
+        // console.log(timeInformation.value.time, timeInformation.value.duration);
+        let mDate = moment(timeInformation.value.date, 'jYYYY/jM/jD');
+        let currentDate = new Date(mDate.format('YYYY/M/D')).toLocaleDateString(
+          'fa-FA',
+          {
+            weekday: 'long',
+            month: 'long',
+            day: 'numeric'
+          }
+        ) as any;
+
+        currentDate = currentDate.split(',');
+        let monthInText = currentDate[0].split(' ')[0],
+          dayInText = currentDate[0].split(' ')[1],
+          weekDay = currentDate[1];
+
+        timeInformation.value.texts = {
+          monthInText,
+          weekDay,
+          dayInText,
+          year: timeInformation.value.date.split('/')[0]
+        };
+
+        console.log(timeInformation.value.texts);
+
+        res.data.data.budgeting.forEach((item: any) => {
+          orientationTitleInformation.push({
+            orientation: item.course.orientation,
+            title: item.course.title
+          });
+        });
+      }
+    );
     const goOnePageBack = () => router.go(-1);
 
     const goToquestions = () =>
@@ -83,7 +146,11 @@ export default defineComponent({
     return {
       styles,
       goOnePageBack,
-      goToquestions
+      goToquestions,
+      orientationTitleInformation,
+      timeInformation,
+      toPersianNumbers,
+      addMinutes
     };
   }
 });

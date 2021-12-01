@@ -9,6 +9,7 @@
     "experimentalDecorators": true,
     "skipLibCheck": true,
     "esModuleInterop": true,
+    "noImplicitAny": false,
     "allowSyntheticDefaultImports": true,
     "downlevelIteration": true,
     "sourceMap": true,
@@ -27,7 +28,8 @@
     "tests/**/*.ts",
     "tests/**/*.tsx",
     "src/assets/alertifyjs/alertify.js",
-    "src/assets/alertifyjs/alertify.min.js"
+    "src/assets/alertifyjs/alertify.min.js",
+    "src/utilities/to-persian-numbers.js"
   ],
   "exclude": ["node_modules", "src/assets/alertifyjs/alertify.js"]
 }

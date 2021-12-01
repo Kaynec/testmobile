@@ -1,7 +1,7 @@
 import { studentInstance as instance } from './student-api-client';
-class Orientation {
+class Exam {
   async get(id: string) {
-    return instance.get(`orientation/${id}`, {
+    return instance.get(`exam/getOne/${id}`, {
       headers: {
         // Overwrite Axios's automatically set Content-Type
         'Content-Type': 'application/json'
@@ -9,7 +9,15 @@ class Orientation {
     });
   }
   async getAll() {
-    return instance.get(`orientation`, {
+    return instance.get('exam/GetAll', {
+      headers: {
+        // Overwrite Axios's automatically set Content-Type
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+  async getResult(id: string) {
+    return instance.get(`take-exam/result/${id}`, {
       headers: {
         // Overwrite Axios's automatically set Content-Type
         'Content-Type': 'application/json'
@@ -18,4 +26,4 @@ class Orientation {
   }
 }
 
-export const StudentOrientationApi = new Orientation();
+export const StudentExamApi = new Exam();

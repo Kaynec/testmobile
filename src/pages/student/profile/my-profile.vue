@@ -4,7 +4,7 @@
     <nav class="nav">
       <span> پروفایل من </span>
       <!-- <img src="../../../assets/img/arrow-left.png" @click="goOnePageBack" /> -->
-      <span class="red"> خروج از حساب کاربری</span>
+      <span class="red" @click="logout"> خروج از حساب کاربری</span>
     </nav>
     <!-- Red Div -->
     <div class="info">
@@ -20,17 +20,17 @@
       </div>
       <div class="left">
         <!-- Change This Info Later -->
-        <h4>احسان امینی</h4>
-        <h6>۳۹۸۴ امتیاز</h6>
+        <h4>{{ currentUser.username }}</h4>
+        <h6>{{ currentUser.point }} امتیاز</h6>
         <div class="left-info">
           <span>
-            پايه دوازدهم :
+            {{ gradeName }} :
             <br />
             شماره همراه :
           </span>
           <span>
-            ریاضی فیزیک<br />
-            ۰۹۲۰۲۲۲۵۰۶۰
+            {{ orientationName }} <br />
+            {{ toPersianNumbers(currentUser.phone) }}
           </span>
         </div>
       </div>
@@ -55,20 +55,32 @@
   </div>
 </template>
 <script lang="ts">
-import { computed, defineComponent, reactive } from 'vue';
+import { computed, defineComponent, reactive, ref } from 'vue';
 import Footer from '@/modules/student-modules/footer/footer.vue';
 import router from '@/router';
-
+import { store } from '@/store';
+import { StudentOrientationApi } from '@/api/services/student/student-orientation-service';
+import { StudentGradeApi } from '@/api/services/student/student-grade-service';
+import { StudentActionTypes } from '@/store/modules/student/action-types';
 export default defineComponent({
-  components: {
-    Footer
-  },
+  components: { Footer },
   setup() {
+    const currentUser = reactive(store.getters.getCurrentStudent);
+    const orientationName = ref(store.getters.getStudentOriantationName) as any;
+    const gradeName = ref(store.getters.getStudentGradeName);
+    //     return state.UserOrientationName;
     const styles = computed(() => {
       return {
         'min-height': `calc( 1vh * 100) `
       };
     });
+
+    const toPersianNumbers = (number: any) => {
+      var id = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
+      return number.toString().replace(/[0-9]/g, function (w: any) {
+        return id[+w];
+      });
+    };
 
     const goOnePageBack = () => router.go(-1);
 
@@ -97,14 +109,30 @@ export default defineComponent({
 
     const touchend = (component: string, e: any) => {
       e.target.classList.remove('active');
-      if (component) {
+      if (component)
         router.push({
           name: component
         });
-      }
     };
 
-    return { styles, data, touchstart, touchend, goOnePageBack };
+    const logout = () => {
+      store.dispatch(StudentActionTypes.LOG_OUT_STUDENT).then((res) => {
+        if (res) router.push({ name: 'StudentLogin' });
+      });
+    };
+
+    return {
+      styles,
+      data,
+      touchstart,
+      touchend,
+      goOnePageBack,
+      currentUser,
+      logout,
+      toPersianNumbers,
+      orientationName,
+      gradeName
+    };
   }
 });
 </script>

@@ -14,18 +14,22 @@
         customDiv
         warning
       "
-      v-for="item in data"
+      v-for="item in azmoonData"
       v-bind:key="item"
     >
       <div class="d-flex flex-column mt-1 p-0 m-0">
         <span class="label text-dark text-right mb-2 text-bold">
-          {{ !item.passed ? 'تعداد آزمون' : 'رتبه شما' }} : {{ item.count }}
+          <!-- {{ !item.passed ? 'تعداد آزمون' : 'رتبه شما' }} : {{ item.count }} -->
+          {{ item.title }}
         </span>
         <span class="text-detail text-right">
           <i class="far fa-clock"></i>
-          {{ item.detail }}
+          {{ item.date['weekDay'] }}
+          {{ item.date['day'] }}
+          {{ item.date['month'] }}
+
           <strong> | </strong>
-          {{ `ساعت ${item.timeLeft}` }}
+          {{ `ساعت ${toPersianNumbers(item.time)}` }}
         </span>
       </div>
       <div class="img position-absolute top-50 start-0 ml-5 translate-middle">
@@ -48,49 +52,49 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, reactive, ref } from 'vue';
 import CompTestDetail from '@/modules/student-modules/azmoon/comp-test-detail.vue';
-
-// TODO
-// SEND THE NEEDED DATA TO THE ROADMAPDETAIL COMPONENT
-
+// import { StudentExamApi } from '@/api/services/student/student-exam-service';
+import { toPersianNumbers } from '@/utilities/to-persian-numbers';
+const moment = require('moment-jalaali');
 export default defineComponent({
   components: {
     CompTestDetail
   },
-  setup() {
-    const data = [
-      {
-        count: '33',
-        detail: ' پنجشنبه بیست آبان ',
-        timeLeft: '۱۵:۳۰',
-        passed: true
-      },
-      {
-        count: '33',
-        detail: ' پنجشنبه بیست آبان ',
-        timeLeft: '۱۵:۳۰',
-        passed: true
-      },
-      {
-        count: '33',
-        detail: ' پنجشنبه بیست آبان ',
-        timeLeft: '۱۵:۳۰',
-        passed: false
-      },
-      {
-        count: '33',
-        detail: ' پنجشنبه بیست آبان ',
-        timeLeft: '۱۵:۳۰',
-        passed: false
-      }
-    ];
+  props: {
+    data: { type: String, default: '[]' }
+  },
+  setup(props) {
+    const azmoonData = reactive(JSON.parse(props.data));
+    azmoonData.forEach((child: any) => {
+      let mDate = moment(child.date, 'jYYYY/jM/jD');
+      let currentDate = new Date(mDate.format('YYYY/M/D')).toLocaleDateString(
+        'fa-FA',
+        {
+          weekday: 'long',
+          month: 'long',
+          day: 'numeric'
+        }
+      ) as any;
+      currentDate = currentDate.split(',');
+
+      let month = currentDate[0].split(' ')[0];
+      let day = currentDate[0].split(' ')[1];
+      let weekDay = currentDate[1];
+
+      child.date = {
+        ...child.date,
+        weekDay,
+        day,
+        month
+      };
+    });
 
     const showCompDetail = ref(false);
     const changeShowDetail = () =>
       (showCompDetail.value = !showCompDetail.value);
 
-    return { data, changeShowDetail, showCompDetail };
+    return { azmoonData, changeShowDetail, showCompDetail, toPersianNumbers };
   }
 });
 </script>

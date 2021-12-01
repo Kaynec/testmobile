@@ -78,6 +78,9 @@ import Footer from '@/modules/student-modules/footer/footer.vue';
 import Header from '@/modules/student-modules/header/header.vue';
 import RoadMap from '@/modules/student-modules/roadmap/roadmap.vue';
 import Azmoon from '@/modules/student-modules/azmoon/azmoon.vue';
+
+import { store } from '@/store';
+
 @Options({
   components: {
     Footer,

@@ -13,8 +13,8 @@
     <div class="container">
       <!-- Change The Data -->
       <div class="text-flex">
-        <span> شماره سفارش: ۰۷۳۵۴۱ </span>
-        <span> ۲ آبان ۱۴۰۰ </span>
+        <span> شماره سفارش: {{ toPersianNumbers(784596) }} </span>
+        <span> {{ faDate }} </span>
       </div>
       <!-- Card -->
       <div class="basket-card">
@@ -91,7 +91,7 @@
     <!--  -->
     <div class="payment" ref="payment">
       <ChapterList
-        text="پرداخت از امتیازات کسب شده: ۳۹۰۲ "
+        :text="`پرداخت از امتیازات کسب شده : ${point}`"
         :chapterContainer="payment"
       />
       <ChapterList
@@ -107,16 +107,30 @@
   </div>
 </template>
 
-<script lang="ts">
+<script language="ts">
 import { defineComponent, computed, ref } from 'vue';
 import ChapterList from '@/modules/student-modules/chapter-list.vue';
 import router from '@/router';
+import { StudentBasketApi } from '@/api/services/student/student-basket-service';
+import { store } from '@/store';
+import { toPersianNumbers } from '@/utilities/to-persian-numbers';
 
 export default defineComponent({
   components: {
     ChapterList
   },
   setup() {
+    const date = new Date();
+
+    const faDate = new Intl.DateTimeFormat('fa', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    }).format(date);
+
+    const point = ref(store.getters.getCurrentStudent.point);
+    StudentBasketApi.get().then((res) => console.log(res));
+    //
     const payment = ref();
 
     const goOnePageBack = () => router.go(-1);
@@ -128,7 +142,15 @@ export default defineComponent({
         'min-height': `calc( 1vh * 100) `
       };
     });
-    return { goOnePageBack, styles, payment, moveToAddress };
+    return {
+      goOnePageBack,
+      styles,
+      payment,
+      moveToAddress,
+      toPersianNumbers,
+      point,
+      faDate
+    };
   }
 });
 </script>

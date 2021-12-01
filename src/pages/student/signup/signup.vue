@@ -8,7 +8,7 @@
           placeholder="نام و نام خانوادگی"
           type="text"
           v-model="model.username"
-          @blur="v$.username.$touch()"
+          @blur="onBlur('username')"
         />
         <span> نام و نام خانوادگی</span>
       </label>
@@ -26,7 +26,7 @@
           placeholder="رمز عبور"
           type="password"
           v-model="model.password"
-          @blur="v$.password.$touch()"
+          @blur="onBlur('password')"
         />
         <span> رمز عبور</span>
       </label>
@@ -44,7 +44,7 @@
           placeholder="تکرار رمز عبور"
           type="password"
           v-model="model.repassword"
-          @blur="v$.repassword.$touch()"
+          @blur="onBlur('repassword')"
         />
         <span>تکرار رمز عبور </span>
       </label>
@@ -62,7 +62,7 @@
           type="text"
           placeholder="شماره همراه"
           v-model="model.phone"
-          @blur="v$.phone.$touch()"
+          @blur="onBlur('phone')"
           style="appearance: none"
         />
         <span> شماره همراه </span>
@@ -82,7 +82,7 @@
         <select
           v-model="model.province"
           class="select province"
-          @blur="v$.province.$touch()"
+          @blur="onBlur('province')"
         >
           <option
             v-for="province in provinces"
@@ -110,7 +110,7 @@
           type="text"
           placeholder=" کد ملی"
           v-model="model.nationalId"
-          @blur="v$.nationalId.$touch()"
+          @blur="onBlur('nationalId')"
           style="appearance: none"
         />
         <span> کد ملی </span>
@@ -131,7 +131,7 @@
           class="select grade"
           v-model="model.grade"
           placeholder=" مقطع تحصیلی"
-          @blur="v$.grade.$touch()"
+          @blur="onBlur('grade')"
         >
           <option
             v-for="grade in allGrades"
@@ -158,10 +158,10 @@
           class="select orientation"
           v-model="model.orientation"
           placeholder=" رشته تحصیلی"
-          @blur="v$.orientation.$touch()"
+          @blur="onBlur('orientation')"
         >
           <option
-            v-for="orientation in allOrientations"
+            v-for="orientation in allOrientationsComputed"
             :key="orientation.__id"
             :value="{ _id: orientation._id }"
           >
@@ -207,43 +207,18 @@ import { computed, defineComponent, reactive, ref } from 'vue';
 import useVuelidate from '@vuelidate/core';
 import { helpers, minLength, required, sameAs } from '@vuelidate/validators';
 import { store } from '@/store';
-import { StudentMutationTypes } from '@/store/modules/student/mutation-types';
+// import { StudentMutationTypes } from '@/store/modules/student/mutation-types';
+// import { StudentActionTypes } from '@/store/modules/student/action-types';
 import { StudentOrientationApi } from '@/api/services/student/student-orientation-service';
 import { StudentGradeApi } from '@/api/services/student/student-grade-service';
 import { StudentAuthServiceApi } from '@/api/services/student/student-auth-service';
-
-interface Student {
-  username: string;
-  pasword: string;
-  repassword: string;
-  phone: string;
-  province: string;
-  nationalId: string;
-  grade: {
-    _id: string;
-  };
-  orientation: {
-    _id: string;
-  };
-}
+// import { StudentServiceApi } from '@/api/services/admin/student-service';
 
 export default defineComponent({
   setup() {
     const allGrades = reactive([]) as any;
     const allOrientations = reactive([]) as any;
     const errorMessage = ref('');
-    // Filling The Grades And Orientations
-    StudentOrientationApi.getAll().then((res) => {
-      res.data.data.forEach((orientation: any) => {
-        allOrientations.push(orientation);
-      });
-    });
-
-    StudentGradeApi.getAll().then((res) => {
-      res.data.data.forEach((grade: any) => {
-        allGrades.push(grade);
-      });
-    });
     const model = reactive({
       username: '',
       password: '',
@@ -254,22 +229,49 @@ export default defineComponent({
       grade: {},
       orientation: {}
     } as any);
+    // Filling The Grades And Orientations
+
+    StudentGradeApi.getAll().then((res) => {
+      res.data.data.forEach((grade: any) => {
+        allGrades.push(grade);
+      });
+    });
+
+    StudentOrientationApi.getAll().then((res) => {
+      res.data.data.forEach((orientation: any) => {
+        allOrientations.push(orientation);
+      });
+    });
+
+    const allOrientationsComputed = computed(() => {
+      return allOrientations.filter((orientation: any) => {
+        console.log(orientation, model.grade);
+        return orientation.grade == model.grade._id;
+      });
+    });
+
+    // Submit The Information
     const register = async () => {
       v$.value.$touch();
 
       if (!v$.value.$invalid) {
         // Copy Every Element Of Model Except repassword
         let { repassword, ...temp } = model;
+
         StudentAuthServiceApi.signUp(temp).then((res) => {
-          // Everything Okay
-          if (res.data.status === 200) {
+          if (res.data && res.data.token)
             router.push({
               name: 'StudentAuthentication',
-              params: { model: model }
+              params: { model: JSON.stringify(temp) }
             });
-          } else errorMessage.value = res.data.statusText;
+          else errorMessage.value = 'خطایی در فرآیند ثبت نام رخ داده است';
         });
       }
+    };
+
+    const onBlur = (prop: any) => {
+      if (errorMessage.value) errorMessage.value = '';
+      v$.value[prop].$touch();
     };
 
     const styles = computed(() => {
@@ -289,9 +291,8 @@ export default defineComponent({
 
     const mustBeNumber = (value: string) => {
       let allAreNumbers = true;
-      for (let i = 0; i < value.length; i++) {
+      for (let i = 0; i < value.length; i++)
         if (isNaN(+value[i])) allAreNumbers = false;
-      }
       return allAreNumbers;
     };
 
@@ -360,7 +361,7 @@ export default defineComponent({
       }
     }));
 
-    const v$ = useVuelidate(rules, model);
+    const v$ = useVuelidate(rules, model) as any;
     const citiesOfCurrentprovince = computed(() => {
       const tmp: any = provinces.find((el: any) => el.name === model.province);
       return tmp && tmp.cities;
@@ -375,7 +376,9 @@ export default defineComponent({
       styles,
       allGrades,
       allOrientations,
-      errorMessage
+      errorMessage,
+      onBlur,
+      allOrientationsComputed
     };
   }
 });
