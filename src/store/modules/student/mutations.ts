@@ -11,12 +11,11 @@ export type Mutations<S = State> = {
     state: S,
     payload: UserDocuments | null
   ): void;
-  [StudentMutationTypes.SET_GRADE_NAME](state: S, payload: string | null): void;
-  [StudentMutationTypes.SET_ORIENTATION_NAME](
+  [StudentMutationTypes.SET_CURRENT_ID_OF_EXAM](
     state: S,
     payload: string | null
   ): void;
-  [StudentMutationTypes.SET_CURRENT_ID_OF_EXAM](
+  [StudentMutationTypes.SET_CURRENT_ID_OF_SHOP](
     state: S,
     payload: string | null
   ): void;
@@ -29,13 +28,10 @@ export const mutations: MutationTree<State> & Mutations = {
   [StudentMutationTypes.SET_USER](state: State, user: UserDocuments | null) {
     state.user = user;
   },
-  [StudentMutationTypes.SET_ORIENTATION_NAME](state: State, payload: string) {
-    state.UserOrientationName = payload;
-  },
-  [StudentMutationTypes.SET_GRADE_NAME](state: State, payload: string) {
-    state.UserGradeName = payload;
-  },
   [StudentMutationTypes.SET_CURRENT_ID_OF_EXAM](state: State, payload: string) {
     state.CurrentIdOfExam = payload;
+  },
+  [StudentMutationTypes.SET_CURRENT_ID_OF_SHOP](state: State, payload: string) {
+    state.CurrentIdOfShop = payload;
   }
 };

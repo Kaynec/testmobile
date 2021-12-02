@@ -32,8 +32,8 @@ class product {
       }
     });
   }
-  async getAllProducts() {
-    return instance.get(`product`, {
+  async getAllProducts(id) {
+    return instance.get(`/product/getbycategory/${id}`, {
       headers: {
         // Overwrite Axios's automatically set Content-Type
         'Content-Type': 'application/json'

@@ -50,14 +50,6 @@ export const actions: ActionTree<State, RootState> & Actions = {
     if (result.data) {
       const temp = result.data;
       commit(StudentMutationTypes.SET_USER, temp);
-
-      await StudentOrientationApi.get(temp.orientation).then((res) => {
-        commit(StudentMutationTypes.SET_ORIENTATION_NAME, res.data.data.title);
-      });
-      await StudentGradeApi.get(temp.grade).then((res) => {
-        commit(StudentMutationTypes.SET_GRADE_NAME, res.data.data.title);
-      });
-
       return true;
     } else return false;
   }

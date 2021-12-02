@@ -247,7 +247,7 @@ export default defineComponent({
       border-top: dotted 2px #959fba;
       grid-area: user-info;
       display: flex;
-      justify-content: start;
+      justify-content: flex-start;
       padding: 1rem 0.5rem;
 
       .info-div {

@@ -1,5 +1,13 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
+  <!-- Spinner -->
+  <div
+    class="loader-parent"
+    v-else-if="!orientationTitleInformation.length || !timeInformation"
+  >
+    <div class="loading1"></div>
+  </div>
+  <!--  -->
   <div class="start" v-else :style="styles">
     <nav class="nav">
       <span> آزمون های جامع </span>
@@ -61,6 +69,8 @@
       <i class="fas fa-arrow-right"></i>
     </button>
   </div>
+
+  <!--  -->
 </template>
 
 <script lang="ts">

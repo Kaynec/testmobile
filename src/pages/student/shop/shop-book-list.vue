@@ -1,8 +1,18 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
+  <!-- Spinner -->
+  <div
+    class="loader-parent"
+    v-else-if="JSON.stringify(data) === JSON.stringify({})"
+  >
+    <div class="loading1"></div>
+  </div>
+  <!--  -->
   <div class="shop-book-list" :style="styles" v-else>
     <nav class="nav">
-      <span>لیست محصولات کتاب (۱۸۴)</span>
+      <span
+        >لیست محصولات کتاب ({{ toPersianNumbers(`${data.data.length}`) }})</span
+      >
       <img
         @click="goOnePageBack"
         src="../../../assets/img/arrow-left.png"
@@ -13,11 +23,14 @@
     <div class="card-container">
       <div
         class="card"
-        v-for="product in data"
+        v-for="product in data.data"
         :key="product"
-        @click="openSingleBookPage"
+        @click="openSingleBookPage(product._id)"
       >
-        <img :src="product.img" alt="book img" />
+        <img
+          src="../../../assets/img/shop/noun-cart-1844738.png"
+          alt="book img"
+        />
         <div class="text">
           <p class="name">{{ product.name || 'کارشناسی ارشد حقوق' }}</p>
           <p class="text-detail">
@@ -47,39 +60,30 @@
 
 <script lang="ts">
 // Get All The Books The Relate To This Genre And List It In The Template
-import { defineComponent, computed } from 'vue';
+import { defineComponent, computed, ref } from 'vue';
+import { StudentproductApi } from '@/api/services/student/student-product';
+import { toPersianNumbers } from '@/utilities/to-persian-numbers';
+import { store } from '@/store';
 import router from '@/router';
+import { StudentMutationTypes } from '@/store/modules/student/mutation-types';
 
 export default defineComponent({
-  setup() {
-    const data = [
-      {
-        name: '1 کارشناسی ارشد حقوق',
-        img: 'https://www.mahan.ac.ir/images/ProductCategory/sampleProductCat.gif'
-      },
-      {
-        name: '2 کارشناسی ارشد حقوق',
-        img: 'https://www.mahan.ac.ir/images/ProductCategory/sampleProductCat.gif'
-      },
-      {
-        name: '3 کارشناسی ارشد حقوق',
-        img: 'https://www.mahan.ac.ir/images/ProductCategory/sampleProductCat.gif'
-      },
-      {
-        name: '4 کارشناسی ارشد حقوق',
-        img: 'https://www.mahan.ac.ir/images/ProductCategory/sampleProductCat.gif'
-      },
-      {
-        name: '5 کارشناسی ارشد حقوق',
-        img: 'https://www.mahan.ac.ir/images/ProductCategory/sampleProductCat.gif'
-      },
-      {
-        name: '6 کارشناسی ارشد حقوق',
-        img: 'https://www.mahan.ac.ir/images/ProductCategory/sampleProductCat.gif'
-      }
-    ];
-    const openSingleBookPage = () =>
-      router.push({ name: 'SingleBookInfo', params: {} });
+  props: {
+    id: { type: String }
+  },
+  setup(props) {
+    const data = ref({} as any),
+      id = ref(props.id);
+
+    if (props.id)
+      store.commit(StudentMutationTypes.SET_CURRENT_ID_OF_SHOP, id.value);
+    id.value = store.getters.getCurrentIdOfShop;
+    StudentproductApi.getAllProducts(id.value).then(
+      (res) => (data.value = res.data)
+    );
+
+    const openSingleBookPage = (id) =>
+      router.push({ name: 'SingleBookInfo', params: { id } });
     const goOnePageBack = () => router.go(-1);
 
     let styles = computed(() => {
@@ -94,7 +98,14 @@ export default defineComponent({
       });
     };
 
-    return { data, openSingleBookPage, goOnePageBack, styles, moveToBasket };
+    return {
+      data,
+      openSingleBookPage,
+      goOnePageBack,
+      styles,
+      moveToBasket,
+      toPersianNumbers
+    };
   }
 });
 </script>

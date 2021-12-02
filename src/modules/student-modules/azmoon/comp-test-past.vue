@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" v-if="azmoonData.length">
     <div
       class="
         card
@@ -49,6 +49,10 @@
     <!--  -->
     <CompTestDetail v-if="showCompDetail" @convertBoolean="changeShowDetail" />
   </div>
+  <!--  -->
+  <div class="loader-parent" v-else>
+    <div class="loading1"></div>
+  </div>
 </template>
 
 <script lang="ts">
@@ -56,16 +60,24 @@ import { defineComponent, reactive, ref } from 'vue';
 import CompTestDetail from '@/modules/student-modules/azmoon/comp-test-detail.vue';
 // import { StudentExamApi } from '@/api/services/student/student-exam-service';
 import { toPersianNumbers } from '@/utilities/to-persian-numbers';
+import { StudentExamApi } from '@/api/services/student/student-exam-service';
+import { compareAsc } from 'date-fns';
 const moment = require('moment-jalaali');
 export default defineComponent({
   components: {
     CompTestDetail
   },
-  props: {
-    data: { type: String, default: '[]' }
-  },
-  setup(props) {
-    const azmoonData = reactive(JSON.parse(props.data));
+  setup() {
+    const azmoonData = reactive([] as any);
+
+    StudentExamApi.getAll().then((res) => {
+      res.data.data.forEach((date: any) => {
+        let mDate = moment(date.date, 'jYYYY/jM/jD');
+        if (compareAsc(new Date(mDate.format('YYYY/M/D')), new Date()) === 1)
+          azmoonData.push(date);
+      });
+    });
+
     azmoonData.forEach((child: any) => {
       let mDate = moment(child.date, 'jYYYY/jM/jD');
       let currentDate = new Date(mDate.format('YYYY/M/D')).toLocaleDateString(

@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" v-if="azmoonData.length">
     <div
       v-for="item in azmoonData"
       :key="item"
@@ -16,17 +16,15 @@
         customDiv
       "
     >
-      <!-- Todo
-    Change Class Based On The Day
-     -->
       <div class="d-flex flex-column mt-1 p-0 m-0">
         <span class="label text-dark text-right mb-2 text-bold">
-          <!-- تعداد آزمون : ۱۰ -->
           {{ item.title }}
         </span>
         <span
           class="text-detail text-right danger"
-          v-if="item.date.isLessThanAminuteAway"
+          v-if="
+            item.date.isLessThanAminuteAway && timeLeft(`${item.time}:00`) >= 0
+          "
         >
           <i class="far fa-clock"></i>
           <span> لحظاتی دیگر </span>
@@ -37,7 +35,10 @@
 
         <span
           class="text-detail text-right warning"
-          v-else-if="item.date.isLessThanFiveMinutesAway"
+          v-else-if="
+            item.date.isLessThanFiveMinutesAway &&
+            timeLeft(`${item.time}:00`) >= 0
+          "
         >
           <i class="far fa-clock"></i>
           <span> امروز </span>
@@ -72,9 +73,12 @@
         alt="angle left icon"
       />
     </div>
-
-    <!--  -->
   </div>
+  <!--  -->
+  <div class="loader-parent" v-else>
+    <div class="loading1"></div>
+  </div>
+  <!--  -->
 </template>
 
 <script lang="ts">
@@ -88,24 +92,31 @@ import {
   minsToStr,
   secondsToTimeString
 } from '@/utilities/to-persian-numbers';
+import { StudentExamApi } from '@/api/services/student/student-exam-service';
+import { compareAsc } from 'date-fns';
 const moment = require('moment-jalaali');
 
 export default defineComponent({
-  props: {
-    data: { type: String, default: '[]' }
-  },
-  setup(props) {
+  setup() {
     const currentHMS = ref(
       toEnglishNumbers(new Date().toLocaleTimeString('fa-FA'))
     );
-
     setInterval(() => {
       currentHMS.value = toEnglishNumbers(
         new Date().toLocaleTimeString('fa-FA')
       );
     }, 1000);
 
-    const azmoonData = reactive(JSON.parse(props.data));
+    const azmoonData = reactive([] as any);
+
+    StudentExamApi.getAll().then((res) => {
+      res.data.data.forEach((date: any) => {
+        let mDate = moment(date.date, 'jYYYY/jM/jD');
+        if (compareAsc(new Date(mDate.format('YYYY/M/D')), new Date()) <= 0)
+          azmoonData.push(date);
+      });
+    });
+
     const currentDate = new Date();
     const faDate = new Intl.DateTimeFormat('fa', {
       year: 'numeric',

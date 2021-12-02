@@ -18,14 +18,15 @@
       </button>
     </div>
 
-    <CompTestFuture
-      v-if="currentState == 'future'"
-      :data="JSON.stringify(futureExams)"
-    />
-    <CompTestPast
-      v-if="currentState == 'past'"
-      :data="JSON.stringify(pastExams)"
-    />
+    <keep-alive>
+      <CompTestFuture v-if="currentState == 'future'" />
+    </keep-alive>
+    <keep-alive>
+      <CompTestPast
+        v-if="currentState == 'past'"
+        :data="JSON.stringify(pastExams)"
+      />
+    </keep-alive>
   </div>
 </template>
 
@@ -44,20 +45,20 @@ export default defineComponent({
     CompTestFuture
   },
   setup() {
-    const pastExams = ref([]) as any;
-    const futureExams = ref([]) as any;
+    let pastExams = [] as any;
+    let futureExams = [] as any;
     // if the past has been done than move it to the past section
     StudentExamApi.getAll().then((res) => {
       res.data.data.forEach((date: any) => {
         let mDate = moment(date.date, 'jYYYY/jM/jD');
-
         if (
           compareAsc(new Date(mDate.format('YYYY/M/D')), new Date()) === 1 ||
           compareAsc(new Date(mDate.format('YYYY/M/D')), new Date()) === 0
         )
-          pastExams.value.push(date);
-        else futureExams.value.push(date);
+          pastExams.push(date);
+        else futureExams.push(date);
       });
+      console.log(res);
     });
     const currentState = ref('past');
     let styles = computed(() => {

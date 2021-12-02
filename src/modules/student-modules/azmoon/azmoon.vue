@@ -35,9 +35,10 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent } from 'vue';
 import Dialog from '@/modules/student-modules/dialog.vue';
+// import { StudentExamApi } from '@/api/services/student/student-exam-service';
 export default defineComponent({
   components: {
     Dialog

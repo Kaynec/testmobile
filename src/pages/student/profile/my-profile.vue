@@ -65,10 +65,10 @@ import { StudentActionTypes } from '@/store/modules/student/action-types';
 export default defineComponent({
   components: { Footer },
   setup() {
-    const currentUser = reactive(store.getters.getCurrentStudent);
-    const orientationName = ref(store.getters.getStudentOriantationName) as any;
-    const gradeName = ref(store.getters.getStudentGradeName);
-    //     return state.UserOrientationName;
+    let currentUser = reactive(store.getters.getCurrentStudent);
+    let orientationName = ref(currentUser.orientation.title);
+    let gradeName = ref(currentUser.grade.title);
+
     const styles = computed(() => {
       return {
         'min-height': `calc( 1vh * 100) `

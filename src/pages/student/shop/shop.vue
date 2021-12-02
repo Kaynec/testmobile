@@ -1,21 +1,20 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
+  <!-- Spinner -->
+  <div class="loader-parent" v-else-if="!productCategories.length">
+    <div class="loading1"></div>
+  </div>
+  <!--  -->
   <div class="shop" v-else :style="styles">
     <SmallHeader />
     <div class="grid">
-      <img :src="maybeSrc" alt="JUST WORK PLEASE JUST WORK NOW" />
       <img
-        :src="
-          async () => {
-            const result = await StudentproductApi.getCategoryPicture(item._id);
-            return result;
-          }
-        "
+        src="../../../assets/img/shop/book.png"
         v-for="item in productCategories"
-        alt="WHY YOU DO THIS"
         :key="item._id"
+        @click="sendToBookShopList(item._id)"
       />
-      <img src="../../../assets/img/shop/book.png" alt="book img" />
+      <!-- <img src="../../../assets/img/shop/book.png" alt="book img" />
       <img
         src="../../../assets/img/shop/online-classes.png"
         alt="online classes icon"
@@ -24,7 +23,7 @@
         src="../../../assets/img/shop/eduaction-package.png"
         alt="education package icon"
       />
-      <img src="../../../assets/img/shop/azmoons.png" alt="azmoons icon " />
+      <img src="../../../assets/img/shop/azmoons.png" alt="azmoons icon " /> -->
     </div>
     <!--  -->
     <div class="btns">
@@ -45,24 +44,14 @@
     <div class="Cards">
       <template v-if="currentState == 'yourProduct'">
         <!-- Empty Right Now But We Will Fill It Later With Database Data -->
-        <div
-          class="Card"
-          @click="sendToBookShopList"
-          v-for="product in newsetData"
-          :key="product"
-        >
+        <div class="Card" v-for="product in newsetData" :key="product">
           <img :src="product.img" alt="Card img" />
           <p>{{ product.name }}</p>
         </div>
       </template>
 
       <template v-if="currentState == 'newsetProduct'">
-        <div
-          class="Card"
-          @click="sendToBookShopList"
-          v-for="product in newsetData"
-          :key="product"
-        >
+        <div class="Card" v-for="product in newsetData" :key="product">
           <img :src="product.img" alt="Card img" />
           <p>{{ product.name }}</p>
         </div>
@@ -84,7 +73,7 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import { defineComponent, ref, computed, reactive } from 'vue';
 import SmallHeader from '@/modules/student-modules/header/small-header.vue';
 import { StudentproductApi } from '@/api/services/student/student-product';
@@ -94,35 +83,14 @@ import { store } from '@/store';
 export default defineComponent({
   components: { SmallHeader },
   setup() {
-    const maybeSrc = ref();
-
-    //     //
-
-    //     const getImageData = (imageId) => {
-    //      StudentproductApi.getCategoryPicture(imageId).then((res) => {
-    //           console.log(res);
-    //           maybeSrc.value = res;
-    //         });
-
-    // },
-    //     //
-    const productCategories = reactive([]);
-    //     StudentproductApi.getAllCategories().then((res) => {
-    //       res.data.data.forEach(async (category) => {
-    //         productCategories.push(category);
-    //         StudentproductApi.getCategoryPicture(category._id).then((res) => {
-    //           console.log(res);
-    //           maybeSrc.value = res;
-    //         });
-    //       });
-    //     });
-
-    // setTimeout(() => console.log(productCategories), 1000);
-
-    // StudentproductApi.getAllProducts().then((res) => {
-    //   console.log(res);
-    // });
-
+    const productCategories = reactive([] as any);
+    StudentproductApi.getAllCategories().then((res) => {
+      res.data.data.forEach(async (category) => {
+        productCategories.push(category);
+        // StudentproductApi.getCategoryPicture(category._id).then((res) => {
+        // });
+      });
+    });
     const currentState = ref('yourProduct');
 
     const newsetData = [
@@ -151,10 +119,10 @@ export default defineComponent({
         img: '  https://arga-mag.com/file/img/2020/08/Book-profile-picture-38.jpg'
       }
     ];
-    const sendToBookShopList = () => {
+    const sendToBookShopList = (id: string) => {
       router.push({
         name: 'ShopBookList',
-        params: {}
+        params: { id }
       });
     };
 
@@ -177,8 +145,7 @@ export default defineComponent({
       styles,
       moveToBasket,
       StudentproductApi,
-      store,
-      maybeSrc
+      store
     };
   }
 });
