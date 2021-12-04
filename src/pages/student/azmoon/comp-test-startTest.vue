@@ -64,7 +64,7 @@
       </div>
     </div>
 
-    <button @click="goToquestions">
+    <button @click="goToquestions(timeInformation)">
       شروع آزمون
       <i class="fas fa-arrow-right"></i>
     </button>
@@ -130,8 +130,6 @@ export default defineComponent({
           year: timeInformation.value.date.split('/')[0]
         };
 
-        console.log(timeInformation.value.texts);
-
         res.data.data.budgeting.forEach((item: any) => {
           orientationTitleInformation.push({
             orientation: item.course.orientation,
@@ -142,9 +140,10 @@ export default defineComponent({
     );
     const goOnePageBack = () => router.go(-1);
 
-    const goToquestions = () =>
+    const goToquestions = (item) =>
       router.push({
-        name: 'CompTestQuestions'
+        name: 'CompTestQuestions',
+        params: { item: JSON.stringify(item) }
       });
 
     let styles = computed(() => {
@@ -246,7 +245,7 @@ export default defineComponent({
     .budget-img {
       width: 100%;
       align-items: center;
-      justify-content: start;
+      justify-content: flex-end;
       display: flex;
       flex-direction: row-reverse;
       position: relative;

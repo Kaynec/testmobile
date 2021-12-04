@@ -19,6 +19,10 @@ export type Mutations<S = State> = {
     state: S,
     payload: string | null
   ): void;
+  [StudentMutationTypes.SET_BASKET_COUNT](
+    state: S,
+    payload: number | null
+  ): void;
 };
 
 export const mutations: MutationTree<State> & Mutations = {
@@ -33,5 +37,8 @@ export const mutations: MutationTree<State> & Mutations = {
   },
   [StudentMutationTypes.SET_CURRENT_ID_OF_SHOP](state: State, payload: string) {
     state.CurrentIdOfShop = payload;
+  },
+  [StudentMutationTypes.SET_BASKET_COUNT](state: State, payload: number) {
+    state.BasketCount = payload;
   }
 };

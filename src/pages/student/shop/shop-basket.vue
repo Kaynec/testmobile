@@ -34,43 +34,6 @@
         </div>
       </div>
       <!--  -->
-
-      <!-- Card -->
-      <div class="basket-card">
-        <div class="right">
-          <img
-            src="../../../assets/img/shop/bitmap-copy-19.png"
-            alt="  book img  "
-          />
-          <div class="label">
-            <span>حقوق بین الملل خصوصی</span>
-            <span class="red">حذف محصول</span>
-          </div>
-        </div>
-        <div class="left">
-          <p>۹۳،۶۰۰ تومان</p>
-          <p class="red line-through">۹۳،۶۰۰ تومان</p>
-        </div>
-      </div>
-      <!--  -->
-
-      <!-- Card -->
-      <div class="basket-card">
-        <div class="right">
-          <img
-            src="../../../assets/img/shop/bitmap-copy-19.png"
-            alt="  book img  "
-          />
-          <div class="label">
-            <span>حقوق بین الملل خصوصی</span>
-            <span class="red">حذف محصول</span>
-          </div>
-        </div>
-        <div class="left">
-          <p>۹۳،۶۰۰ تومان</p>
-          <p class="red line-through">۹۳،۶۰۰ تومان</p>
-        </div>
-      </div>
       <!--  -->
       <div class="price">
         <div class="text">
@@ -129,8 +92,13 @@ export default defineComponent({
     }).format(date);
 
     const point = ref(store.getters.getCurrentStudent.point);
-    StudentBasketApi.get().then((res) => console.log(res));
-    //
+
+    const allPrice = ref(0);
+    const allSpecialPrice = ref(0);
+
+    if (store.getters.getBasketCount > 0) {
+      StudentBasketApi.get().then((res) => console.log(res));
+    }
     const payment = ref();
 
     const goOnePageBack = () => router.go(-1);
@@ -149,7 +117,8 @@ export default defineComponent({
       moveToAddress,
       toPersianNumbers,
       point,
-      faDate
+      faDate,
+      store
     };
   }
 });

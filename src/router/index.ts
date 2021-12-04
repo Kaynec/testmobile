@@ -435,6 +435,7 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'comp-test-questions',
         name: 'CompTestQuestions',
+        props: true,
         component: CompTestQuestions,
         beforeEnter: ifStudentAuthenticated
       },

@@ -4,7 +4,9 @@
     <nav class="sm-nav">
       <div>
         <span class="user-parts">
-          امتیازات کسب شده : ۴۹۸۴ &nbsp; | &nbsp; امتیاز این فصل : ۱۸۷
+          امتیازات کسب شده :
+          {{ toPersianNumbers(store.getters.getCurrentStudent.point) }} &nbsp; |
+          &nbsp; امتیاز این فصل : ۱۸۷
         </span>
       </div>
 
@@ -17,90 +19,120 @@
           {{ label }}
         </span>
         <!-- Change This And Width Of The Progress Bar Dynamically -->
-        <span> ۵۰/۱۰۰ </span>
+        <span> {{ AllQuestions.length }}/{{ currentQuestion + 1 }} </span>
       </div>
       <div class="progress-container">
         <div class="progressbar">
           <div
-            style="width: 50%"
+            :style="`width : ${
+              ((currentQuestion + 1) / AllQuestions.length) * 100
+            }%`"
             class="progressbar-child"
             ref="progressbarChild"
           ></div>
         </div>
       </div>
       <div class="timer">
-        <span>{{ timeForTemplate }}</span>
+        <span>{{ toPersianNumbers(timeForTemplate) }}</span>
         <img src="../../../assets/img/time@2x.png" alt="time icon" />
       </div>
     </div>
-
     <!-- Quiz Card -->
-
     <div class="quiz-card shadow">
-      <p class="number-of-question">سوال شماره <span> ۱۰ </span></p>
+      <p class="number-of-question">
+        سوال شماره <span> {{ currentQuestion + 1 }} </span>
+      </p>
 
       <h5>
         <!-- Change This With Real Data Of Question -->
-        چرا برای نوشتن یک بند، موضوع کلی را به موضوع های کوچک تر تقسیم می کنیم؟
+        {{
+          AllQuestions[currentQuestion].text ||
+          ' چرا برای نوشتن یک بند، موضوع کلی را به موضوع های کوچک تر تقسیم می کنیم؟'
+        }}
       </h5>
-      <div class="quiz-card-container">
-        <div class="card">
+      <div class="quiz-card-container" ref="container">
+        <div
+          class="card"
+          @click="submitAnswer(question, AllQuestions.indexOf(question))"
+          v-for="question in AllQuestions[currentQuestion].options"
+          :key="question._id"
+        >
           <span>
-            <!-- Answer Text -->
-            تا بتوانیم بند بلندتری بنویسیم
+            {{ question.text }}
           </span>
-          <img src="../../../assets/img/vpn-key-white.png" class="tick" />
-        </div>
-
-        <div class="card">
-          <span>
-            <!-- Answer Text -->
-            چون بند کوتاه است
-          </span>
-          <img src="../../../assets/img/vpn-key-white.png" class="tick" />
-        </div>
-
-        <div class="card">
-          <span>
-            <!-- Answer Text -->
-            تا از پراکندگی مطالب بند، جلوگیری کنیم
-          </span>
-          <img src="../../../assets/img/vpn-key-white.png" class="tick" />
-        </div>
-        <div class="card">
-          <span>
-            <!-- Answer Text -->
-            تا اطلاعات بیشتری درباره یک موضوع داشته باشیم
-          </span>
-          <img src="../../../assets/img/vpn-key-white.png" class="tick" />
+          <div class="tick">
+            <i class="fas fa-check"></i>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- Buttons -->
     <div class="btns">
-      <button class="red">بعدی <i class="fas fa-arrow-right"></i></button>
-      <button class="red">قبلی</button>
+      <button @click="endAzmoon" class="red end">
+        <span> اتمام آزمون </span>
+        <i class="fas fa-arrow-right"></i>
+      </button>
+      <button
+        @click="showNextQuestion"
+        :class="` ${AllQuestions[currentQuestion + 1] ? 'red' : 'grey'}  `"
+      >
+        بعدی
+      </button>
+      <button
+        @click="showPreviousQuestion"
+        :class="` ${AllQuestions[currentQuestion - 1] ? 'red' : 'grey'}  `"
+      >
+        قبلی
+      </button>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref, onMounted } from 'vue';
+import { defineComponent, computed, ref, onMounted, reactive } from 'vue';
 import router from '@/router';
+import { toPersianNumbers } from '@/utilities/to-persian-numbers';
+import { store } from '@/store';
+import { StudentExamApi } from '@/api/services/student/student-exam-service';
 
 export default defineComponent({
   props: {
-    label: { type: String, default: 'فصل دوم بهداشت' }
+    label: { type: String, default: 'فصل دوم بهداشت' },
+    item: { type: String, default: '{}' }
   },
-  setup() {
+  setup(props) {
+    const model = ref(JSON.parse(props.item));
+
+    const container = ref();
+
     const time = ref(7200);
 
-    let styles = computed(() => {
-      return {
-        'min-height': `calc( 1vh * 100) `
-      };
+    const currentQuestion = ref(0);
+    const AllQuestions = ref([] as any);
+
+    const userChoices = reactive({
+      exam: {
+        _id: model.value._id
+      },
+      answers: []
     });
+
+    model.value.budgeting.forEach((item: any) => {
+      item.questions.forEach((itemTwo: any) => {
+        StudentExamApi.getOneQuestion(itemTwo).then((res) => {
+          AllQuestions.value.push(res.data.data);
+        });
+      });
+    });
+
+    let styles = computed(() => ({
+      'min-height': `calc( 1vh * 100) `
+    }));
+
+    setTimeout(() => {
+      console.log(model.value);
+    }, 2000);
 
     const goOnePageBack = () => router.go(-1);
 
@@ -108,14 +140,46 @@ export default defineComponent({
       return new Date(time.value * 1000).toISOString().substr(11, 8);
     });
 
+    const submitAnswer = (e) => {
+      container.value.querySelectorAll('.card').forEach((element) => {
+        element.classList.remove('active');
+      });
+
+      e.target.classList.add('active');
+    };
+
+    const showPreviousQuestion = () => {
+      console.log('PREVIOUS QUESTION');
+    };
+
+    const showNextQuestion = () => {
+      console.log('NEXT Question');
+    };
+
+    const endAzmoon = () => {
+      console.log('END AZMOON');
+    };
     onMounted(() => {
-      // Time minus  1 each second
       setInterval(() => {
-        time.value = time.value - 1;
+        if (time.value >= 0) time.value = time.value - 1;
       }, 1000);
     });
 
-    return { styles, goOnePageBack, timeForTemplate };
+    return {
+      styles,
+      goOnePageBack,
+      timeForTemplate,
+      model,
+      toPersianNumbers,
+      store,
+      currentQuestion,
+      AllQuestions,
+      submitAnswer,
+      container,
+      showPreviousQuestion,
+      showNextQuestion,
+      endAzmoon
+    };
   }
 });
 </script>
@@ -270,11 +334,29 @@ export default defineComponent({
         }
 
         .tick {
-          width: 24px;
-          height: 24px;
-          object-fit: contain;
-          border: solid 1px #c1c1c1;
-          border-radius: 50px;
+          width: 27px;
+          height: 27px;
+          aspect-ratio: 1;
+          border-radius: 50%;
+          border: 1px solid #ccc;
+          text-align: center;
+          font-size: 14px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #fff;
+        }
+      }
+      .active {
+        border: 1px solid #3fca60;
+        color: #3fca60;
+
+        span {
+          color: #3fca60;
+        }
+
+        .tick {
+          background-color: #4ac367;
         }
       }
     }
@@ -289,8 +371,7 @@ export default defineComponent({
     gap: 0.5rem;
 
     button {
-      width: 50%;
-      padding: 0.9rem 1.5rem;
+      padding: 1.22rem 1.5rem;
       border-radius: 15px;
       border: none;
       font-family: IRANSans;
@@ -320,6 +401,10 @@ export default defineComponent({
         margin-right: 0.7rem;
         margin-left: 0.7rem;
       }
+    }
+
+    .end {
+      width: 50%;
     }
 
     .green {

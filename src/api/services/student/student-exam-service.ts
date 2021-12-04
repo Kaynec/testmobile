@@ -24,6 +24,14 @@ class Exam {
       }
     });
   }
+  async getOneQuestion(id: string) {
+    return instance.get(`question/${id}`, {
+      headers: {
+        // Overwrite Axios's automatically set Content-Type
+        'Content-Type': 'application/json'
+      }
+    });
+  }
 }
 
 export const StudentExamApi = new Exam();

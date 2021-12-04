@@ -12,7 +12,7 @@ class Basket {
     return instance.post('shopping-cart', product, {
       headers: {
         // Overwrite Axios's automatically set Content-Type
-        'Content-Type': 'application/json'
+        // 'Content-Type': 'application/json'
       }
     });
   }

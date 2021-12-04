@@ -48,31 +48,22 @@ class product {
       }
     });
   }
-  // async update(id: string, course: any) {
-  //   return instance.put(`product-category/${id}`, course, {
-  //     headers: {
-  //       // Overwrite Axios's automatically set Content-Type
-  //       'Content-Type': 'application/json'
-  //     }
-  //   });
-  // }
-  // async delete(id: string) {
-  //   return instance.delete(`product-category/${id}`, {
-  //     headers: {
-  //       // Overwrite Axios's automatically set Content-Type
-  //       'Content-Type': 'application/json'
-  //     }
-  //   });
-  // }
-
-  // async create(course: any) {
-  //   return instance.post(`product-category`, course, {
-  //     headers: {
-  //       // Overwrite Axios's automatically set Content-Type
-  //       'Content-Type': 'application/json'
-  //     }
-  //   });
-  // }
+  getDemoFile(id: string) {
+    return instance.get(`/product/coverImage/${id}`, {
+      headers: {
+        // Overwrite Axios's automatically set Content-Type
+        // 'Content-Type': 'application/json'
+      }
+    });
+  }
+  getOriginalFile(id: string) {
+    return instance.get(`/product/coverImage/${id}`, {
+      headers: {
+        // Overwrite Axios's automatically set Content-Type
+        // 'Content-Type': 'application/json'
+      }
+    });
+  }
 }
 
 export const StudentproductApi = new product();

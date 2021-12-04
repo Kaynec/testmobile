@@ -8,6 +8,7 @@ export type Getters = {
   getCurrentStudent(state: State): UserDocuments | null;
   getCurrentIdOfExam(state: State): string | null;
   getCurrentIdOfShop(state: State): string | null;
+  getBasketCount(state: State): number | null;
 };
 
 export const getters: GetterTree<State, RootState> & Getters = {
@@ -22,5 +23,8 @@ export const getters: GetterTree<State, RootState> & Getters = {
   },
   getCurrentIdOfShop: (state) => {
     return state.CurrentIdOfShop;
+  },
+  getBasketCount: (state) => {
+    return state.BasketCount;
   }
 };

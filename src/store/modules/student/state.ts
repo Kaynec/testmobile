@@ -6,6 +6,7 @@ export type State = {
   userProfileName: UserProfileName | null;
   CurrentIdOfExam: string | null;
   CurrentIdOfShop: string | null;
+  BasketCount: number | null;
 };
 
 export const state: State = {
@@ -13,5 +14,6 @@ export const state: State = {
   user: null,
   userProfileName: null,
   CurrentIdOfExam: null,
-  CurrentIdOfShop: null
+  CurrentIdOfShop: null,
+  BasketCount: 0
 };

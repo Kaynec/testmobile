@@ -12,7 +12,7 @@
         src="../../../assets/img/shop/book.png"
         v-for="item in productCategories"
         :key="item._id"
-        @click="sendToBookShopList(item._id)"
+        @click="sendToBookShopList(item._id, item.title)"
       />
       <!-- <img src="../../../assets/img/shop/book.png" alt="book img" />
       <img
@@ -59,17 +59,7 @@
     </div>
 
     <!-- Footer -->
-    <div class="footer">
-      <div>
-        <!-- Fix THis Later With The Real Count of The User -->
-        <img
-          src="../../../assets/img/shop/noun-cart-1844738.png"
-          alt="shop cart icon"
-        />
-        2 محصول
-      </div>
-      <span @touchstart="moveToBasket">مشاهده سبد خرید</span>
-    </div>
+    <ShopFooter />
   </div>
 </template>
 
@@ -78,17 +68,17 @@ import { defineComponent, ref, computed, reactive } from 'vue';
 import SmallHeader from '@/modules/student-modules/header/small-header.vue';
 import { StudentproductApi } from '@/api/services/student/student-product';
 import router from '@/router';
+import ShopFooter from '@/modules/student-modules/footer/shop-footer.vue';
 import { store } from '@/store';
 
 export default defineComponent({
-  components: { SmallHeader },
+  components: { SmallHeader, ShopFooter },
   setup() {
-    const productCategories = reactive([] as any);
+    let productCategories = reactive([] as any);
     StudentproductApi.getAllCategories().then((res) => {
+      if (!res.data.data.length) res.data.data[0] = 'No Product';
       res.data.data.forEach(async (category) => {
         productCategories.push(category);
-        // StudentproductApi.getCategoryPicture(category._id).then((res) => {
-        // });
       });
     });
     const currentState = ref('yourProduct');
@@ -119,10 +109,10 @@ export default defineComponent({
         img: '  https://arga-mag.com/file/img/2020/08/Book-profile-picture-38.jpg'
       }
     ];
-    const sendToBookShopList = (id: string) => {
+    const sendToBookShopList = (id: string, title: string) => {
       router.push({
         name: 'ShopBookList',
-        params: { id }
+        params: { id, title }
       });
     };
 
@@ -251,34 +241,6 @@ export default defineComponent({
         text-align: center;
         color: #171717;
       }
-    }
-  }
-  //
-  .footer {
-    width: 100%;
-    background-image: $redish-background;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.5rem;
-    position: fixed;
-    bottom: 0;
-
-    div {
-      font-family: IRANSans;
-      font-size: 14px;
-      text-align: right;
-      color: #fff;
-    }
-
-    span {
-      font-family: IRANSans;
-      font-size: 12px;
-      text-align: center;
-      color: #fff;
-      border-radius: 18px;
-      padding: 5px 10px;
-      border: solid 1px #fff;
     }
   }
 }

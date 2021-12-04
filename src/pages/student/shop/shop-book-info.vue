@@ -1,8 +1,16 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
+  <!-- Spinner -->
+  <div
+    class="loader-parent"
+    v-else-if="JSON.stringify(model) === JSON.stringify({})"
+  >
+    <div class="loading1"></div>
+  </div>
+  <!--  -->
   <div class="shop-book-list" v-else :style="styles">
     <nav class="nav">
-      <span>لیست محصولات کتاب (۱۸۴)</span>
+      <span> {{ title }} ({{ toPersianNumbers(`${length}`) }})</span>
       <img
         @touchstart="goOnePageBack"
         src="../../../assets/img/arrow-left.png"
@@ -15,22 +23,29 @@
         src="../../../assets/img/shop/bitmap-copy-19.png"
         alt="  book img  "
       />
-
       <div class="text">
         <!-- <p class="name">کارشناسی ارشد حقوق</p> -->
-        <p class="text-detail">حقوق بین الملل خصوصی</p>
-        <p class="price">قیمت : ۱۰۴،۰۰۰ تومان</p>
-        <p class="special-price">تخفیف ۱۰٪ : ۹۳،۶۰۰ تومان</p>
+        <p class="text-detail">{{ model.title }}</p>
+        <p class="price">قیمت : {{ toPersianNumbers(model.price) }} تومان</p>
+        <p class="special-price" v-if="model.specialPrice">
+          تخفیف %{{
+            toPersianNumbers(
+              Math.round(
+                ((model.price - model.specialPrice) / model.price) * 100
+              )
+            )
+          }}
+          : {{ toPersianNumbers(model.specialPrice) }} تومان
+        </p>
         <!-- Add This Item To List Of Sale -->
         <img
-          @touchstart="addToBasket"
+          @touchstart="addToBasket()"
           class="img-add"
           src="../../../assets/img/shop/pluss.png"
           alt="plus icon "
         />
       </div>
     </div>
-
     <!-- Preview -->
     <div class="preview">
       <img
@@ -74,29 +89,42 @@
       </p>
     </div>
 
-    <!--  -->
-    <div class="footer">
-      <div>
-        <!-- Fix THis Later With The Real Count of The User -->
-        <img
-          src="../../../assets/img/shop/noun-cart-1844738.png"
-          alt="shop cart icon"
-        />
-        2 محصول
-      </div>
-      <span @touchstart="moveToBasket">مشاهده سبد خرید</span>
-    </div>
+    <ShopFooter />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue';
+import { defineComponent, computed, ref } from 'vue';
 import router from '@/router';
 const alertify = require('../../../assets/alertifyjs/alertify');
+import ShopFooter from '@/modules/student-modules/footer/shop-footer.vue';
+import { toPersianNumbers } from '@/utilities/to-persian-numbers';
+import { store } from '@/store';
+import { StudentBasketApi } from '@/api/services/student/student-basket-service';
+import { StudentproductApi } from '@/api/services/student/student-product';
 
 export default defineComponent({
-  setup() {
+  components: { ShopFooter },
+  props: {
+    title: { type: String },
+    item: { type: String },
+    length: { type: String }
+  },
+  setup(props) {
+    const model = ref(JSON.parse(props.item as any));
+
     const goOnePageBack = () => router.go(-1);
+    StudentproductApi.getProductPicture(model.value._id).then((res) => {
+      console.log(res.data.toString('base64'));
+    });
+    // const removeFromBasket = () => {};
+
+    const isInBasket = () => {
+      if (store.getters.getBasketCount <= 0) {
+        return false;
+      } else {
+      }
+    };
 
     let styles = computed(() => {
       return {
@@ -104,16 +132,42 @@ export default defineComponent({
       };
     });
 
-    const moveToBasket = () =>
-      router.push({
-        name: 'ShopBasket'
-      });
-
     const addToBasket = () => {
-      alertify.success('محصول شما با موفقیت به سبد خرید اضافه شد');
+      const tmpObject = {
+        item: {
+          product: {
+            _id: model.value._id
+          },
+          quantity: 1
+        }
+      };
+      console.log(tmpObject);
+      // Means There Is not Any item in The Basket Yet
+      if (store.getters.getBasketCount <= 0) {
+        StudentBasketApi.add({
+          item: {
+            product: {
+              _id: 'sdawdadwd'
+            },
+            quantity: 1
+          }
+        }).then((res) => {
+          console.log(res);
+        });
+      }
+      // StudentBasketApi.add(tmpObject).then((res) => {
+      //   console.log(res);
+      // });
+      // alertify.success('محصول شما با موفقیت به سبد خرید اضافه شد');
     };
 
-    return { goOnePageBack, styles, addToBasket, moveToBasket };
+    return {
+      goOnePageBack,
+      styles,
+      addToBasket,
+      toPersianNumbers,
+      model
+    };
   }
 });
 </script>
@@ -263,34 +317,6 @@ export default defineComponent({
     font-size: 1rem;
     font-weight: bold;
     color: #171717;
-  }
-}
-
-.footer {
-  width: 100%;
-  background-image: $redish-background;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0.5rem;
-  position: fixed;
-  bottom: 0;
-
-  div {
-    font-family: IRANSans;
-    font-size: 14px;
-    text-align: right;
-    color: #fff;
-  }
-
-  span {
-    font-family: IRANSans;
-    font-size: 12px;
-    text-align: center;
-    color: #fff;
-    border-radius: 18px;
-    padding: 5px 10px;
-    border: solid 1px #fff;
   }
 }
 </style>

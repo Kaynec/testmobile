@@ -11,7 +11,9 @@
   <div class="shop-book-list" :style="styles" v-else>
     <nav class="nav">
       <span
-        >لیست محصولات کتاب ({{ toPersianNumbers(`${data.data.length}`) }})</span
+        >لیست محصولات {{ title }} ({{
+          toPersianNumbers(`${data.data.length}`)
+        }})</span
       >
       <img
         @click="goOnePageBack"
@@ -19,42 +21,43 @@
         alt="arrow left icon"
       />
     </nav>
-
     <div class="card-container">
       <div
         class="card"
         v-for="product in data.data"
         :key="product"
-        @click="openSingleBookPage(product._id)"
+        @click="
+          openSingleBookPage(JSON.stringify(product), title, data.data.length)
+        "
       >
         <img
           src="../../../assets/img/shop/noun-cart-1844738.png"
           alt="book img"
         />
         <div class="text">
-          <p class="name">{{ product.name || 'کارشناسی ارشد حقوق' }}</p>
+          <!-- <p class="name">{{ product.name || 'کارشناسی ارشد حقوق' }}</p> -->
           <p class="text-detail">
-            {{ product.description || ' حقوق بین الملل خصوصی' }}
+            {{ product.title }}
           </p>
-          <p class="price">قیمت : {{ product.price || '۱۰۴،۰۰۰' }} تومان</p>
-          <p class="special-price">
-            تخفیف ۱۰٪ : {{ product.specialPrice || '۹۳،۶۰۰' }} تومان
+          <p class="price line-t">
+            قیمت : {{ toPersianNumbers(product.price) }} تومان
+          </p>
+          <p class="special-price line-t" v-if="product.specialPrice">
+            تخفیف %{{
+              toPersianNumbers(
+                Math.round(
+                  ((product.price - product.specialPrice) / product.price) * 100
+                )
+              )
+            }}
+            : {{ toPersianNumbers(product.specialPrice) }} تومان
+            <span></span>
           </p>
         </div>
       </div>
     </div>
 
-    <div class="footer">
-      <div>
-        <!-- Fix THis Later With The Real Count of The User -->
-        <img
-          src="../../../assets/img/shop/noun-cart-1844738.png"
-          alt="shop cart icon"
-        />
-        2 محصول
-      </div>
-      <span @touchstart="moveToBasket">مشاهده سبد خرید</span>
-    </div>
+    <ShopFooter />
   </div>
 </template>
 
@@ -66,24 +69,26 @@ import { toPersianNumbers } from '@/utilities/to-persian-numbers';
 import { store } from '@/store';
 import router from '@/router';
 import { StudentMutationTypes } from '@/store/modules/student/mutation-types';
+import ShopFooter from '@/modules/student-modules/footer/shop-footer.vue';
 
 export default defineComponent({
   props: {
-    id: { type: String }
+    id: { type: String },
+    title: { type: String }
   },
+  components: { ShopFooter },
   setup(props) {
     const data = ref({} as any),
       id = ref(props.id);
-
     if (props.id)
       store.commit(StudentMutationTypes.SET_CURRENT_ID_OF_SHOP, id.value);
     id.value = store.getters.getCurrentIdOfShop;
-    StudentproductApi.getAllProducts(id.value).then(
-      (res) => (data.value = res.data)
-    );
+    StudentproductApi.getAllProducts(id.value).then((res) => {
+      data.value = res.data;
+    });
 
-    const openSingleBookPage = (id) =>
-      router.push({ name: 'SingleBookInfo', params: { id } });
+    const openSingleBookPage = (item, title, length) =>
+      router.push({ name: 'SingleBookInfo', params: { item, title, length } });
     const goOnePageBack = () => router.go(-1);
 
     let styles = computed(() => {
@@ -92,19 +97,13 @@ export default defineComponent({
       };
     });
 
-    const moveToBasket = () => {
-      router.push({
-        name: 'ShopBasket'
-      });
-    };
-
     return {
       data,
       openSingleBookPage,
       goOnePageBack,
       styles,
-      moveToBasket,
-      toPersianNumbers
+      toPersianNumbers,
+      StudentproductApi
     };
   }
 });
@@ -116,6 +115,7 @@ export default defineComponent({
   position: relative;
   overflow-x: hidden;
   background: #f4f4f4;
+  font-family: IRANSans;
   .nav {
     display: flex;
     align-items: center;
@@ -125,7 +125,6 @@ export default defineComponent({
       0 2px 4px 0 rgba(0, 0, 0, 0.19);
     background-color: #171717;
     color: white;
-    font-family: IRANSans;
     padding: 0.8rem;
 
     img {
@@ -151,6 +150,7 @@ export default defineComponent({
       justify-content: flex-start;
       width: 90%;
       padding: 0.3rem;
+      min-height: 8rem;
       border: 1px solid #fff;
       border-radius: 10px;
       box-shadow: 0 11px 17px 0 rgba(41, 94, 255, 0.05);
@@ -161,7 +161,7 @@ export default defineComponent({
       }
 
       img {
-        width: 25%;
+        width: 30%;
       }
 
       p {
@@ -169,13 +169,11 @@ export default defineComponent({
       }
 
       .name {
-        font-family: IRANSans;
         font-size: 10px;
         text-align: right;
         color: #646464;
       }
       .text-detail {
-        font-family: IRANSans;
         font-size: 14px;
         font-weight: bold;
         text-align: right;
@@ -183,48 +181,29 @@ export default defineComponent({
       }
 
       .price {
-        font-family: IRANSans;
         font-size: 12px;
         text-align: right;
         color: #d21921;
         font-weight: bold;
-        text-decoration: line-through;
       }
-
       .special-price {
-        font-family: IRANSans;
-        font-size: 14px;
         font-weight: bold;
-        text-align: right;
-        color: #ed1b24;
       }
     }
-  }
-  .footer {
-    width: 100%;
-    background-image: $redish-background;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.5rem;
-    position: fixed;
-    bottom: 0;
 
-    div {
-      font-family: IRANSans;
+    .line-t {
+      position: relative;
+      display: inline-block;
       font-size: 14px;
-      text-align: right;
-      color: #fff;
-    }
-
-    span {
-      font-family: IRANSans;
-      font-size: 12px;
-      text-align: center;
-      color: #fff;
-      border-radius: 18px;
-      padding: 5px 10px;
-      border: solid 1px #fff;
+      color: #ed1b24;
+      span {
+        position: absolute;
+        width: 100%;
+        border-top: 2px solid red;
+        left: 0;
+        top: 50%;
+        opacity: 0.2;
+      }
     }
   }
 }

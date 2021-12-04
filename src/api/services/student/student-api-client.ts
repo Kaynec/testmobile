@@ -11,9 +11,7 @@ export const studentInstance = axios.create({
 });
 studentInstance.interceptors.request.use((config) => {
   const token = useStudentStore().getters.getStudentToken;
-  if (token) {
-    config.headers.token = `${token}`;
-  }
+  if (token) config.headers.token = `${token}`;
   return config;
 });
 studentInstance.interceptors.response.use(
