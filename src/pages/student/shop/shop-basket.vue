@@ -16,24 +16,29 @@
         <span> شماره سفارش: {{ toPersianNumbers(784596) }} </span>
         <span> {{ faDate }} </span>
       </div>
-      <!-- Card -->
-      <div class="basket-card">
+
+      <div class="basket-card" v-for="item in basketItems" :key="item._id">
         <div class="right">
           <img
             src="../../../assets/img/shop/bitmap-copy-19.png"
-            alt="  book img  "
+            alt="book img"
           />
           <div class="label">
-            <span>حقوق بین الملل خصوصی</span>
-            <span class="red">حذف محصول</span>
+            <span> {{ item.product.title }} </span>
+            <span @click="removeItem(item)" style="display: block" class="red"
+              >حذف محصول</span
+            >
           </div>
         </div>
         <div class="left">
-          <p>۹۳،۶۰۰ تومان</p>
-          <p class="red line-through">۹۳،۶۰۰ تومان</p>
+          <p v-if="item.product.specialPrice">
+            {{ toPersianNumbers(`${item.product.specialPrice}`) }} تومان
+          </p>
+          <p :class="`${item.product.specialPrice ? 'red line-through' : ''}`">
+            {{ toPersianNumbers(`${item.product.price}`) }} تومان
+          </p>
         </div>
       </div>
-      <!--  -->
       <!--  -->
       <div class="price">
         <div class="text">
@@ -41,14 +46,14 @@
           <p>تخفیف</p>
         </div>
         <div class="number">
-          <p>۴۵۶،۰۰۰ تومان</p>
-          <p>۴۰،۰۰۰ تومان</p>
+          <p>{{ toPersianNumbers(`${allPrice}`) }} تومان</p>
+          <p>{{ toPersianNumbers(`${discount}`) }} تومان</p>
         </div>
       </div>
       <!--  -->
       <div class="paid-price">
         <span> مبلغ پرداختی شما </span>
-        <span> ۴۱۶،۰۰۰ تومان </span>
+        <span> {{ toPersianNumbers(paidPrice) }} تومان </span>
       </div>
     </div>
     <!--  -->
@@ -84,7 +89,6 @@ export default defineComponent({
   },
   setup() {
     const date = new Date();
-
     const faDate = new Intl.DateTimeFormat('fa', {
       year: 'numeric',
       month: 'long',
@@ -92,18 +96,97 @@ export default defineComponent({
     }).format(date);
 
     const point = ref(store.getters.getCurrentStudent.point);
-
     const allPrice = ref(0);
     const allSpecialPrice = ref(0);
+    const basketItems = ref([]);
 
-    if (store.getters.getBasketCount > 0) {
-      StudentBasketApi.get().then((res) => console.log(res));
-    }
+    StudentBasketApi.get().then((res) => {
+      console.log(res);
+      res.data.data.items.forEach((item) => {
+        if (item.product != null) {
+          allPrice.value += item.product.price;
+          basketItems.value.push(item);
+          if (item.product.specialPrice)
+            allSpecialPrice.value += item.product.specialPrice;
+        }
+      });
+    });
+
     const payment = ref();
+
+    const paidPrice = computed(() => {
+      let discountedPrice = basketItems.value.reduce((acc, item) => {
+        let discount = item.product.price - item.product.specialPrice || 0;
+        acc += discount;
+        return acc;
+      }, 0);
+
+      return allPrice.value - discountedPrice;
+    });
+
+    const discount = computed(() => {
+      return basketItems.value.reduce((acc, item) => {
+        let discount = item.product.price - item.product.specialPrice || 0;
+        acc += discount;
+        return acc;
+      }, 0);
+    });
 
     const goOnePageBack = () => router.go(-1);
 
     const moveToAddress = () => router.push({ name: 'ShopAddress' });
+
+    // const removeItem = (item) => {
+    //   const tmpObject = {
+    //     item: {
+    //       product: { _id: item._id },
+    //       quantity: -1
+    //     }
+    //   };
+    //   console.log(item, tmpObject);
+    //   StudentBasketApi.add(tmpObject).then((res) => {
+    //     if (res.data.status == 0 || res.data.status == 200) {
+    //       // Update Basket
+    // StudentBasketApi.get().then((res) => {
+    //   console.log(res);
+    //   basketItems.value = [];
+    //   allPrice.value = 0;
+    //   allSpecialPrice.value = 0;
+    //   res.data.data.items.forEach((item) => {
+    //     if (!item.product) return;
+    //     allPrice.value += item.product.price;
+    //     basketItems.value.push(item);
+    //     if (item.product.specialPrice)
+    //       allSpecialPrice.value += item.product.specialPrice;
+    //   });
+    // });
+    //     }
+    //   });
+    // };
+    const removeItem = (item) => {
+      const tmpObject = {
+        item: {
+          product: { _id: item.product._id },
+          quantity: item.quantity - item.quantity * 2
+        }
+      };
+      StudentBasketApi.add(tmpObject).then((res) => {
+        if (res.data.status == 0 || res.data.status == 200) {
+          StudentBasketApi.get().then((res) => {
+            (basketItems.value = []), (allPrice.value = 0);
+
+            allSpecialPrice.value = 0;
+            res.data.data.items.forEach((item) => {
+              if (!item.product) return;
+              allPrice.value += item.product.price;
+              basketItems.value.push(item);
+              if (item.product.specialPrice)
+                allSpecialPrice.value += item.product.specialPrice;
+            });
+          });
+        }
+      });
+    };
 
     let styles = computed(() => {
       return {
@@ -118,7 +201,13 @@ export default defineComponent({
       toPersianNumbers,
       point,
       faDate,
-      store
+      store,
+      basketItems,
+      allPrice,
+      allSpecialPrice,
+      paidPrice,
+      discount,
+      removeItem
     };
   }
 });

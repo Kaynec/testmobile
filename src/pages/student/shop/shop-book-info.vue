@@ -10,7 +10,6 @@
 
   <!--  -->
   <div class="shop-book-list" v-else :style="styles">
-    <img id="imageID" />
     <nav class="nav">
       <span> {{ model.title }} </span>
       <img
@@ -24,7 +23,9 @@
       <div class="text">
         <!-- <p class="name">کارشناسی ارشد حقوق</p> -->
         <p class="text-detail">{{ model.title }}</p>
-        <p class="price">قیمت : {{ toPersianNumbers(model.price) }} تومان</p>
+        <p :class="`${model.specialPrice ? 'price line-through' : 'price'}`">
+          قیمت : {{ toPersianNumbers(model.price) }} تومان
+        </p>
         <p class="special-price" v-if="model.specialPrice">
           تخفیف %{{
             toPersianNumbers(
@@ -36,19 +37,19 @@
           : {{ toPersianNumbers(model.specialPrice) }} تومان
         </p>
         <!-- Add This Item To List Of Sale -->
-        <div
-          @touchstart="addToBasket(1)"
-          class="img-add"
-          v-if="itemExistsInBasket"
-        >
-          <h1>SALAM</h1>
+        <div class="img-add-div" v-if="itemExistsInBasket">
+          <span @touchstart="addToBasket(1)">➕ </span>
+          <strong style="color: #fff">
+            {{ toPersianNumbers(itemExistsInBasket.quantity) }}
+          </strong>
+          <span @touchstart="addToBasket(-1)"> ➖ </span>
         </div>
         <img
+          v-else-if="!itemExistsInBasket"
           @touchstart="addToBasket(1)"
           class="img-add"
           src="../../../assets/img/shop/pluss.png"
           alt="plus icon "
-          v-else
         />
       </div>
     </div>
@@ -81,13 +82,6 @@
         تحلیل گردیده که با عنوان تحلیل کنکور کارشناسی ارشد در کتاب گنجانده شده
         است.
       </p>
-
-      <p>
-        در بخش دوم، مجموعه سوالات آزمون‎های ورودی دوره‎های کارشناسی ارشد در 9
-        ساله اخیر ـ از سال 90 تا 98 ـ به همراه پاسخنامه تشریحی اساتید و مولفین
-        محترم ماهان به این سوالات تدوین گردیده است.
-      </p>
-
       <p>
         بخش سوم شامل 3 دوره آزمون‎های شبیه‎سازی شده ماهان می‎باشد که براساس
         تغییرات سال 98 کنکور تالیف شده است تا داوطلبین محترم نمونه سوالات بیشتری
@@ -109,7 +103,7 @@ import { StudentBasketApi } from '@/api/services/student/student-basket-service'
 import { StudentproductApi } from '@/api/services/student/student-product';
 import { StudentMutationTypes } from '@/store/modules/student/mutation-types';
 import displayProtectedImage from '@/utilities/get-image-from-url';
-const alertify = require('../../../assets/alertifyjs/alertify');
+// const alertify = require('../../../assets/alertifyjs/alertify');
 
 export default defineComponent({
   components: { ShopFooter },
@@ -123,26 +117,28 @@ export default defineComponent({
     const shopBasket = ref();
     const img = ref();
 
+    console.log(model.value);
+
     const itemExistsInBasket = computed(() => {
-      return shopBasket.value.items.find(
-        (el: any) => el.product._id === model.value._id
-      );
+      if (shopBasket.value) {
+        return shopBasket.value.items.find((el: any) =>
+          el.product ? el.product._id === model.value._id : false
+        );
+      }
+      return false;
     });
 
-    setTimeout(() => {
-      console.log(itemExistsInBasket.value);
-    }, 2500);
+    StudentBasketApi.get().then((res) => (shopBasket.value = res.data.data));
 
-    if (props.item === '{}') {
-      model.value = store.getters.getCurrentShopInfo;
-    }
+    // store.commit(StudentMutationTypes.SET_BASKET_COUNT, 0);
+
+    if (props.item === '{}') model.value = store.getters.getCurrentShopInfo;
 
     if (model.value)
       store.commit(StudentMutationTypes.SET_CURRENT_SHOP_INFO, model.value);
 
     const goOnePageBack = () => router.go(-1);
 
-    StudentBasketApi.get().then((res) => (shopBasket.value = res.data.data));
     onMounted(() => {
       const imageUrl = `https://www.api.devnirone.ir/api/product/coverImage/${model.value._id}`;
       displayProtectedImage(imageUrl, img.value);
@@ -155,30 +151,35 @@ export default defineComponent({
     });
 
     const addToBasket = (quantity: number) => {
+      console.log(model.value);
       const tmpObject = {
-        item: {
-          product: {
-            _id: model.value._id
-          },
-          quantity: quantity
-        }
+        item: { product: { _id: model.value._id }, quantity }
       };
-      // Means There Is not Any item in The Basket Yet
-      if (!itemExistsInBasket.value) {
-        StudentBasketApi.add(tmpObject).then((res) => {
-          if (
-            res.data.status == 0 ||
-            res.data.status == 200 ||
-            res.data.message == 'messages.addToCart.success'
-          ) {
-            alertify.success('محصول شما با موفقیت به سبد خرید اضافه شد');
-            store.commit(
-              StudentMutationTypes.SET_BASKET_COUNT,
-              store.getters.getBasketCount + 1
+      StudentBasketApi.add(tmpObject).then((res) => {
+        if (res.data.status == 0 || res.data.status == 200) {
+          // count in the store
+          store.commit(
+            StudentMutationTypes.SET_BASKET_COUNT,
+            store.getters.getBasketCount + quantity
+          );
+          // mimic api call to reduce performance cost
+          // Index of CurrentItem
+          const idx = shopBasket.value.items.indexOf(itemExistsInBasket.value);
+          // if The item doeesn't exist get new data from api
+          if (idx < 0)
+            StudentBasketApi.get().then(
+              (res) => (shopBasket.value = res.data.data)
             );
-          }
-        });
-      }
+          // if item quantity is 1 check the quantity passed in
+          else if (shopBasket.value.items[idx].quantity == 1 && quantity < 0) {
+            StudentBasketApi.get().then(
+              (res) => (shopBasket.value = res.data.data)
+            );
+            // if quantity is bigger than zero
+          } else if (shopBasket.value.items[idx].quantity > 0)
+            shopBasket.value.items[idx].quantity += quantity;
+        }
+      });
     };
 
     return {
@@ -246,6 +247,21 @@ export default defineComponent({
       margin: 0 0 1px 10px;
       object-fit: contain;
     }
+    .img-add-div {
+      background: #d21921;
+      border-radius: 25px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 5px 0;
+      span {
+        color: #171717;
+        background-color: #fff;
+        padding: 7px;
+        border-radius: 15px;
+        margin-inline: 1.5rem;
+      }
+    }
 
     p {
       font-family: IRANSans;
@@ -270,6 +286,8 @@ export default defineComponent({
       text-align: right;
       color: #d21921;
       font-weight: bold;
+    }
+    .line-through {
       text-decoration: line-through;
     }
 
