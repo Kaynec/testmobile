@@ -32,6 +32,7 @@
       >
         <img
           src="../../../assets/img/shop/noun-cart-1844738.png"
+          :ref="setItemRef"
           alt="book img"
         />
         <div class="text">
@@ -63,13 +64,21 @@
 
 <script lang="ts">
 // Get All The Books The Relate To This Genre And List It In The Template
-import { defineComponent, computed, ref } from 'vue';
+import {
+  defineComponent,
+  computed,
+  ref,
+  onBeforeUpdate,
+  onUpdated,
+  onMounted
+} from 'vue';
 import { StudentproductApi } from '@/api/services/student/student-product';
 import { toPersianNumbers } from '@/utilities/to-persian-numbers';
 import { store } from '@/store';
 import router from '@/router';
 import { StudentMutationTypes } from '@/store/modules/student/mutation-types';
 import ShopFooter from '@/modules/student-modules/footer/shop-footer.vue';
+import displayProtectedImage from '@/utilities/get-image-from-url';
 
 export default defineComponent({
   props: {
@@ -91,6 +100,22 @@ export default defineComponent({
       router.push({ name: 'SingleBookInfo', params: { item, title, length } });
     const goOnePageBack = () => router.go(-1);
 
+    let itemRefs = [] as any;
+    const setItemRef = (el) => {
+      if (el) {
+        itemRefs.push(el);
+      }
+    };
+    onBeforeUpdate(() => {
+      itemRefs = [];
+    });
+    onUpdated(() => {
+      data.value.data.forEach((data, idx) => {
+        const imageUrl = `https://www.api.devnirone.ir/api/product/coverImage/${data._id}`;
+        displayProtectedImage(imageUrl, itemRefs[idx]);
+      });
+    });
+
     let styles = computed(() => {
       return {
         'min-height': `calc( 1vh * 100) `
@@ -103,7 +128,8 @@ export default defineComponent({
       goOnePageBack,
       styles,
       toPersianNumbers,
-      StudentproductApi
+      StudentproductApi,
+      setItemRef
     };
   }
 });

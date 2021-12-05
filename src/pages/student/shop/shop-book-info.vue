@@ -39,16 +39,16 @@
         <div
           @touchstart="addToBasket(1)"
           class="img-add"
-          v-if="shopBasket.items.indexOF(model)"
+          v-if="itemExistsInBasket"
         >
           <h1>SALAM</h1>
         </div>
         <img
-          v-else
           @touchstart="addToBasket(1)"
           class="img-add"
           src="../../../assets/img/shop/pluss.png"
           alt="plus icon "
+          v-else
         />
       </div>
     </div>
@@ -108,6 +108,7 @@ import { store } from '@/store';
 import { StudentBasketApi } from '@/api/services/student/student-basket-service';
 import { StudentproductApi } from '@/api/services/student/student-product';
 import { StudentMutationTypes } from '@/store/modules/student/mutation-types';
+import displayProtectedImage from '@/utilities/get-image-from-url';
 const alertify = require('../../../assets/alertifyjs/alertify');
 
 export default defineComponent({
@@ -119,6 +120,18 @@ export default defineComponent({
   },
   setup(props) {
     const model = ref(JSON.parse(props.item as any));
+    const shopBasket = ref();
+    const img = ref();
+
+    const itemExistsInBasket = computed(() => {
+      return shopBasket.value.items.find(
+        (el: any) => el.product._id === model.value._id
+      );
+    });
+
+    setTimeout(() => {
+      console.log(itemExistsInBasket.value);
+    }, 2500);
 
     if (props.item === '{}') {
       model.value = store.getters.getCurrentShopInfo;
@@ -127,48 +140,9 @@ export default defineComponent({
     if (model.value)
       store.commit(StudentMutationTypes.SET_CURRENT_SHOP_INFO, model.value);
 
-    const img = ref();
     const goOnePageBack = () => router.go(-1);
 
-    const shopBasket = ref();
-
     StudentBasketApi.get().then((res) => (shopBasket.value = res.data.data));
-
-    setTimeout(() => {
-      console.log(shopBasket.value);
-    }, 2000);
-
-    // const removeFromBasket = () => {};
-    const fetchWithAuthentication = (url) => {
-      const headers = new Headers();
-      headers.set('token', store.getters.getStudentToken);
-      return fetch(url, { headers });
-    };
-
-    const arrayBufferToBase64 = (buffer: ArrayBuffer) =>
-      btoa(String.fromCharCode(...new Uint8Array(buffer)));
-
-    const displayProtectedImage = async (imageUrl, imgRef) => {
-      // Fetch the image.
-      const response = await fetchWithAuthentication(imageUrl);
-      // Convert the data to Base64 and build a data URL.
-      const binaryData = await response.arrayBuffer();
-      const base64 = arrayBufferToBase64(binaryData);
-      const dataUrl = `data:image/png;base64,${base64}`;
-      imgRef.src = dataUrl;
-      return dataUrl;
-    };
-
-    const isInBasket = () => {
-      if (store.getters.getBasketCount <= 0) false;
-      else {
-        StudentBasketApi.get().then(
-          (res) => (shopBasket.value = res.data.data)
-        );
-        return false;
-      }
-    };
-
     onMounted(() => {
       const imageUrl = `https://www.api.devnirone.ir/api/product/coverImage/${model.value._id}`;
       displayProtectedImage(imageUrl, img.value);
@@ -190,7 +164,7 @@ export default defineComponent({
         }
       };
       // Means There Is not Any item in The Basket Yet
-      if (!isInBasket()) {
+      if (!itemExistsInBasket.value) {
         StudentBasketApi.add(tmpObject).then((res) => {
           if (
             res.data.status == 0 ||
@@ -202,7 +176,6 @@ export default defineComponent({
               StudentMutationTypes.SET_BASKET_COUNT,
               store.getters.getBasketCount + 1
             );
-            console.log(store.getters.getBasketCount);
           }
         });
       }
@@ -218,7 +191,7 @@ export default defineComponent({
       displayProtectedImage,
       store,
       img,
-      isInBasket,
+      itemExistsInBasket,
       shopBasket
     };
   }

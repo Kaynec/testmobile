@@ -9,21 +9,11 @@
     <SmallHeader />
     <div class="grid">
       <img
-        src="../../../assets/img/shop/book.png"
+        :ref="setItemRef"
         v-for="item in productCategories"
         :key="item._id"
         @click="sendToBookShopList(item._id, item.title)"
       />
-      <!-- <img src="../../../assets/img/shop/book.png" alt="book img" />
-      <img
-        src="../../../assets/img/shop/online-classes.png"
-        alt="online classes icon"
-      />
-      <img
-        src="../../../assets/img/shop/eduaction-package.png"
-        alt="education package icon"
-      />
-      <img src="../../../assets/img/shop/azmoons.png" alt="azmoons icon " /> -->
     </div>
     <!--  -->
     <div class="btns">
@@ -57,18 +47,25 @@
         </div>
       </template>
     </div>
-
     <!-- Footer -->
     <ShopFooter />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, reactive } from 'vue';
+import {
+  defineComponent,
+  ref,
+  computed,
+  reactive,
+  onBeforeUpdate,
+  onUpdated
+} from 'vue';
 import SmallHeader from '@/modules/student-modules/header/small-header.vue';
 import { StudentproductApi } from '@/api/services/student/student-product';
 import router from '@/router';
 import ShopFooter from '@/modules/student-modules/footer/shop-footer.vue';
+import displayProtectedImage from '@/utilities/get-image-from-url';
 import { store } from '@/store';
 
 export default defineComponent({
@@ -82,6 +79,22 @@ export default defineComponent({
       });
     });
     const currentState = ref('yourProduct');
+    // Images For The Categories
+    let itemRefs = [] as any;
+    const setItemRef = (el) => {
+      if (el) {
+        itemRefs.push(el);
+      }
+    };
+    onBeforeUpdate(() => {
+      itemRefs = [];
+    });
+    onUpdated(() => {
+      productCategories.forEach((data, idx) => {
+        const imageUrl = `https://www.api.devnirone.ir/api/product-category/coverImage/${data._id}`;
+        displayProtectedImage(imageUrl, itemRefs[idx]);
+      });
+    });
 
     const newsetData = [
       {
@@ -135,7 +148,8 @@ export default defineComponent({
       styles,
       moveToBasket,
       StudentproductApi,
-      store
+      store,
+      setItemRef
     };
   }
 });
