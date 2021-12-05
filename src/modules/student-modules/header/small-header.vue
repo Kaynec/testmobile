@@ -7,7 +7,7 @@
       />
       <span class="user-parts">
         {{ currentUser.username }} | امتیاز شما:
-        {{ toPersianNumbers(currentUser.point) || 0 }}
+        {{ toPersianNumbers(point) }}
       </span>
     </div>
 
@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, ref, onMounted } from 'vue';
 import router from '@/router';
 import { store } from '@/store';
 import { toPersianNumbers } from '@/utilities/to-persian-numbers';
@@ -27,7 +27,12 @@ export default defineComponent({
 
     const currentUser = ref(store.getters.getCurrentStudent);
 
-    return { router, goOnePageBack, toPersianNumbers, currentUser };
+    const point = ref(0);
+    onMounted(() => {
+      point.value = currentUser.value.point;
+    });
+
+    return { router, goOnePageBack, toPersianNumbers, currentUser, point };
   }
 });
 </script>

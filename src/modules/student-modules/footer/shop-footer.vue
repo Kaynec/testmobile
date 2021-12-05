@@ -6,7 +6,7 @@
         src="../../../assets/img/shop/noun-cart-1844738.png"
         alt="shop cart icon"
       />
-      {{ BasketCount }} محصول
+      {{ store.getters.getBasketCount }} محصول
     </div>
     <span @touchstart="moveToBasket">مشاهده سبد خرید</span>
   </div>
@@ -20,7 +20,6 @@ import router from '@/router';
 
 export default defineComponent({
   setup() {
-    const BasketCount = store.getters.getBasketCount;
     // StudentBasketApi.get().then((res) => console.log(res))
 
     const moveToBasket = () => {
@@ -29,7 +28,7 @@ export default defineComponent({
       });
     };
 
-    return { BasketCount, moveToBasket };
+    return { store, moveToBasket };
   }
 });
 </script>

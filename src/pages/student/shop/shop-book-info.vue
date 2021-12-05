@@ -7,22 +7,20 @@
   >
     <div class="loading1"></div>
   </div>
+
   <!--  -->
   <div class="shop-book-list" v-else :style="styles">
+    <img id="imageID" />
     <nav class="nav">
-      <span> {{ title }} ({{ toPersianNumbers(`${length}`) }})</span>
+      <span> {{ model.title }} </span>
       <img
         @touchstart="goOnePageBack"
         src="../../../assets/img/arrow-left.png"
         alt="arrow left icon"
       />
     </nav>
-
     <div class="card">
-      <img
-        src="../../../assets/img/shop/bitmap-copy-19.png"
-        alt="  book img  "
-      />
+      <img ref="img" />
       <div class="text">
         <!-- <p class="name">کارشناسی ارشد حقوق</p> -->
         <p class="text-detail">{{ model.title }}</p>
@@ -38,8 +36,16 @@
           : {{ toPersianNumbers(model.specialPrice) }} تومان
         </p>
         <!-- Add This Item To List Of Sale -->
+        <div
+          @touchstart="addToBasket(1)"
+          class="img-add"
+          v-if="shopBasket.items.indexOF(model)"
+        >
+          <h1>SALAM</h1>
+        </div>
         <img
-          @touchstart="addToBasket()"
+          v-else
+          @touchstart="addToBasket(1)"
           class="img-add"
           src="../../../assets/img/shop/pluss.png"
           alt="plus icon "
@@ -94,37 +100,79 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref } from 'vue';
+import { defineComponent, computed, ref, onMounted } from 'vue';
 import router from '@/router';
-const alertify = require('../../../assets/alertifyjs/alertify');
 import ShopFooter from '@/modules/student-modules/footer/shop-footer.vue';
 import { toPersianNumbers } from '@/utilities/to-persian-numbers';
 import { store } from '@/store';
 import { StudentBasketApi } from '@/api/services/student/student-basket-service';
 import { StudentproductApi } from '@/api/services/student/student-product';
+import { StudentMutationTypes } from '@/store/modules/student/mutation-types';
+const alertify = require('../../../assets/alertifyjs/alertify');
 
 export default defineComponent({
   components: { ShopFooter },
   props: {
     title: { type: String },
-    item: { type: String },
+    item: { type: String, default: '{}' },
     length: { type: String }
   },
   setup(props) {
     const model = ref(JSON.parse(props.item as any));
 
+    if (props.item === '{}') {
+      model.value = store.getters.getCurrentShopInfo;
+    }
+
+    if (model.value)
+      store.commit(StudentMutationTypes.SET_CURRENT_SHOP_INFO, model.value);
+
+    const img = ref();
     const goOnePageBack = () => router.go(-1);
-    StudentproductApi.getProductPicture(model.value._id).then((res) => {
-      console.log(res.data.toString('base64'));
-    });
+
+    const shopBasket = ref();
+
+    StudentBasketApi.get().then((res) => (shopBasket.value = res.data.data));
+
+    setTimeout(() => {
+      console.log(shopBasket.value);
+    }, 2000);
+
     // const removeFromBasket = () => {};
+    const fetchWithAuthentication = (url) => {
+      const headers = new Headers();
+      headers.set('token', store.getters.getStudentToken);
+      return fetch(url, { headers });
+    };
+
+    const arrayBufferToBase64 = (buffer: ArrayBuffer) =>
+      btoa(String.fromCharCode(...new Uint8Array(buffer)));
+
+    const displayProtectedImage = async (imageUrl, imgRef) => {
+      // Fetch the image.
+      const response = await fetchWithAuthentication(imageUrl);
+      // Convert the data to Base64 and build a data URL.
+      const binaryData = await response.arrayBuffer();
+      const base64 = arrayBufferToBase64(binaryData);
+      const dataUrl = `data:image/png;base64,${base64}`;
+      imgRef.src = dataUrl;
+      return dataUrl;
+    };
 
     const isInBasket = () => {
-      if (store.getters.getBasketCount <= 0) {
+      if (store.getters.getBasketCount <= 0) false;
+      else {
+        StudentBasketApi.get().then(
+          (res) => (shopBasket.value = res.data.data)
+        );
         return false;
-      } else {
       }
     };
+
+    onMounted(() => {
+      const imageUrl = `https://www.api.devnirone.ir/api/product/coverImage/${model.value._id}`;
+      displayProtectedImage(imageUrl, img.value);
+    });
 
     let styles = computed(() => {
       return {
@@ -132,33 +180,32 @@ export default defineComponent({
       };
     });
 
-    const addToBasket = () => {
+    const addToBasket = (quantity: number) => {
       const tmpObject = {
         item: {
           product: {
             _id: model.value._id
           },
-          quantity: 1
+          quantity: quantity
         }
       };
-      console.log(tmpObject);
       // Means There Is not Any item in The Basket Yet
-      if (store.getters.getBasketCount <= 0) {
-        StudentBasketApi.add({
-          item: {
-            product: {
-              _id: 'sdawdadwd'
-            },
-            quantity: 1
+      if (!isInBasket()) {
+        StudentBasketApi.add(tmpObject).then((res) => {
+          if (
+            res.data.status == 0 ||
+            res.data.status == 200 ||
+            res.data.message == 'messages.addToCart.success'
+          ) {
+            alertify.success('محصول شما با موفقیت به سبد خرید اضافه شد');
+            store.commit(
+              StudentMutationTypes.SET_BASKET_COUNT,
+              store.getters.getBasketCount + 1
+            );
+            console.log(store.getters.getBasketCount);
           }
-        }).then((res) => {
-          console.log(res);
         });
       }
-      // StudentBasketApi.add(tmpObject).then((res) => {
-      //   console.log(res);
-      // });
-      // alertify.success('محصول شما با موفقیت به سبد خرید اضافه شد');
     };
 
     return {
@@ -166,7 +213,13 @@ export default defineComponent({
       styles,
       addToBasket,
       toPersianNumbers,
-      model
+      StudentproductApi,
+      model,
+      displayProtectedImage,
+      store,
+      img,
+      isInBasket,
+      shopBasket
     };
   }
 });

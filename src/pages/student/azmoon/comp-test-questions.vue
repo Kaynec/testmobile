@@ -15,9 +15,7 @@
     <!-- Progress Bar And Count -->
     <div class="progress-count">
       <div class="count">
-        <span>
-          {{ label }}
-        </span>
+        <span> {{ model.orientation }} {{ model.session.title }} </span>
         <!-- Change This And Width Of The Progress Bar Dynamically -->
         <span> {{ AllQuestions.length }}/{{ currentQuestion + 1 }} </span>
       </div>
@@ -53,7 +51,7 @@
       <div class="quiz-card-container" ref="container">
         <div
           class="card"
-          @click="submitAnswer(question, AllQuestions.indexOf(question))"
+          @click.once="submitAnswer(question, $event)"
           v-for="question in AllQuestions[currentQuestion].options"
           :key="question._id"
         >
@@ -66,7 +64,6 @@
         </div>
       </div>
     </div>
-
     <!-- Buttons -->
     <div class="btns">
       <button @click="endAzmoon" class="red end">
@@ -118,11 +115,9 @@ export default defineComponent({
       answers: []
     });
 
-    model.value.budgeting.forEach((item: any) => {
-      item.questions.forEach((itemTwo: any) => {
-        StudentExamApi.getOneQuestion(itemTwo).then((res) => {
-          AllQuestions.value.push(res.data.data);
-        });
+    model.value.questions.forEach((item: any) => {
+      StudentExamApi.getOneQuestion(item).then((res) => {
+        AllQuestions.value.push(res.data.data);
       });
     });
 
@@ -140,10 +135,25 @@ export default defineComponent({
       return new Date(time.value * 1000).toISOString().substr(11, 8);
     });
 
-    const submitAnswer = (e) => {
+    const submitAnswer = (question, e) => {
+      console.log(question);
+      // if (questionIndex >= 0) {
+      // }
       container.value.querySelectorAll('.card').forEach((element) => {
         element.classList.remove('active');
       });
+
+      const tmp = {
+        question: {
+          _id: question._id
+        },
+        course: { _id: model.value.course._id }, //
+        session: {
+          _id: model.value.session._id
+        }
+      };
+
+      console.log(tmp);
 
       e.target.classList.add('active');
     };

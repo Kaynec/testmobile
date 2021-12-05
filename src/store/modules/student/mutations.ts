@@ -23,6 +23,10 @@ export type Mutations<S = State> = {
     state: S,
     payload: number | null
   ): void;
+  [StudentMutationTypes.SET_CURRENT_SHOP_INFO](
+    state: S,
+    payload: any | null
+  ): void;
 };
 
 export const mutations: MutationTree<State> & Mutations = {
@@ -40,5 +44,8 @@ export const mutations: MutationTree<State> & Mutations = {
   },
   [StudentMutationTypes.SET_BASKET_COUNT](state: State, payload: number) {
     state.BasketCount = payload;
+  },
+  [StudentMutationTypes.SET_CURRENT_SHOP_INFO](state: State, payload: any) {
+    state.CurrentShopInfo = payload;
   }
 };

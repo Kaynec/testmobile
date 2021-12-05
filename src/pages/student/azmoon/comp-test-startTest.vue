@@ -25,7 +25,7 @@
       <h6 class="second-h6">پایه {{ timeInformation.grade.title }}</h6>
     </div>
     <!--  -->
-    <div class="time">
+    <!-- <div class="time">
       <div>
         <p>
           {{ timeInformation.texts.dayInText }}
@@ -46,11 +46,11 @@
         </p>
         <h5>ساعت پایان آزمون</h5>
       </div>
-    </div>
+    </div> -->
     <!--  -->
     <div class="budget">
       <div class="budget-img">
-        <h5>بودجه بندی آزمون</h5>
+        <h5>درس مورد نظر را انتخاب کنید</h5>
         <img src="../../../assets/img/start-test.png" />
       </div>
 
@@ -58,16 +58,17 @@
         class="budget-label"
         v-for="item in orientationTitleInformation"
         :key="item"
+        @click="goToquestions(item)"
       >
         <p class="budget-label-first-p">{{ item.orientation }}</p>
         <p class="budget-label-second-p">{{ item.title }}</p>
       </div>
     </div>
 
-    <button @click="goToquestions(timeInformation)">
+    <!-- <button @click="goToquestions(timeInformation)">
       شروع آزمون
       <i class="fas fa-arrow-right"></i>
-    </button>
+    </button> -->
   </div>
 
   <!--  -->
@@ -104,7 +105,6 @@ export default defineComponent({
       store.commit(StudentMutationTypes.SET_CURRENT_ID_OF_EXAM, props.id);
     StudentExamApi.get(props.id || store.getters.getCurrentIdOfExam).then(
       (res) => {
-        console.log(res.data.data);
         timeInformation.value = res.data.data;
         // addMinutes(timeInformation.value.time, timeInformation.value.duration);
         // console.log(timeInformation.value.time, timeInformation.value.duration);
@@ -133,11 +133,17 @@ export default defineComponent({
         res.data.data.budgeting.forEach((item: any) => {
           orientationTitleInformation.push({
             orientation: item.course.orientation,
-            title: item.course.title
+            title: item.course.title,
+            ...item
           });
         });
       }
     );
+
+    setTimeout(() => {
+      console.log(orientationTitleInformation.value);
+    }, 5000);
+
     const goOnePageBack = () => router.go(-1);
 
     const goToquestions = (item) =>
