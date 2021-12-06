@@ -37,6 +37,7 @@
       @click="openNote"
     />
   </div>
+  <Alert />
 </template>
 
 <script lang="ts">
@@ -44,10 +45,14 @@ import { defineComponent, ref, computed } from 'vue';
 import SmallHeader from '@/modules/student-modules/header/small-header.vue';
 import router from '@/router';
 import ClassInfo from '@/modules/student-modules/class/class-info.vue';
+import { StudentExamApi } from '@/api/services/student/student-exam-service';
 
 export default defineComponent({
   components: { SmallHeader, ClassInfo },
   setup() {
+    // Change THis With The Current Data
+    StudentExamApi.getClass().then((res) => console.log(res));
+
     const classInfo = ref(false);
     const toggleClassInfo = () => (classInfo.value = !classInfo.value);
 

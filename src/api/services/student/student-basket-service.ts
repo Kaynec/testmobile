@@ -16,6 +16,14 @@ class Basket {
       }
     });
   }
+  async finalizeOrder() {
+    return instance.post('order', {
+      headers: {
+        // Overwrite Axios's automatically set Content-Type
+        'Content-Type': 'application/json'
+      }
+    });
+  }
 }
 
 export const StudentBasketApi = new Basket();

@@ -8,20 +8,20 @@ export const toPersianNumbers = (number) => {
 export const toEnglishNumbers = (number) => {
   let tmp = '';
   for (let i = 0; i < number.length; i++) {
-    if ((number[i] === '۰' || number[i] === '0') && number[i - 1] !== '/')
+    if ((number[i] == '۰' || number[i] == '0') && number[i - 1] != '/')
       tmp += 0;
-    if (number[i] === '۱') tmp += 1;
-    if (number[i] === '۲') tmp += 2;
-    if (number[i] === '۳') tmp += 3;
-    if (number[i] === '۴') tmp += 4;
-    if (number[i] === '۵') tmp += 5;
-    if (number[i] === '۶') tmp += 6;
-    if (number[i] === '۷') tmp += 7;
-    if (number[i] === '۸') tmp += 8;
-    if (number[i] === '۹') tmp += 9;
-    if (number[i] === '/') tmp += '/';
-    if (number[i] === ':') tmp += ':';
-    if (number[i] === '-') tmp += '-';
+    if (number[i] == '۱') tmp += 1;
+    if (number[i] == '۲') tmp += 2;
+    if (number[i] == '۳') tmp += 3;
+    if (number[i] == '۴') tmp += 4;
+    if (number[i] == '۵') tmp += 5;
+    if (number[i] == '۶') tmp += 6;
+    if (number[i] == '۷') tmp += 7;
+    if (number[i] == '۸') tmp += 8;
+    if (number[i] == '۹') tmp += 9;
+    if (number[i] == '/') tmp += '/';
+    if (number[i] == ':') tmp += ':';
+    if (number[i] == '-') tmp += '-';
   }
   return tmp;
 };

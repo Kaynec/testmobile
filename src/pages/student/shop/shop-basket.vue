@@ -13,7 +13,7 @@
     <div class="container">
       <!-- Change The Data -->
       <div class="text-flex">
-        <span> شماره سفارش: {{ toPersianNumbers(784596) }} </span>
+        <span> شماره سفارش: {{ toPersianNumbers(`${purchaseId}`) }} </span>
         <span> {{ faDate }} </span>
       </div>
 
@@ -68,7 +68,7 @@
       />
     </div>
     <!-- Btn  -->
-    <div class="continue" @click="moveToAddress">
+    <div class="continue" @click="submitOrder">
       <i class="fas fa-arrow-right"></i>
       <span> ثبت و پرداخت نهایی </span>
     </div>
@@ -99,9 +99,11 @@ export default defineComponent({
     const allPrice = ref(0);
     const allSpecialPrice = ref(0);
     const basketItems = ref([]);
+    const purchaseId = ref(0);
 
     StudentBasketApi.get().then((res) => {
-      console.log(res);
+      purchaseId.value = res.data.data._id;
+      //
       res.data.data.items.forEach((item) => {
         if (item.product != null) {
           allPrice.value += item.product.price;
@@ -134,35 +136,13 @@ export default defineComponent({
 
     const goOnePageBack = () => router.go(-1);
 
-    const moveToAddress = () => router.push({ name: 'ShopAddress' });
-
-    // const removeItem = (item) => {
-    //   const tmpObject = {
-    //     item: {
-    //       product: { _id: item._id },
-    //       quantity: -1
-    //     }
-    //   };
-    //   console.log(item, tmpObject);
-    //   StudentBasketApi.add(tmpObject).then((res) => {
-    //     if (res.data.status == 0 || res.data.status == 200) {
-    //       // Update Basket
-    // StudentBasketApi.get().then((res) => {
-    //   console.log(res);
-    //   basketItems.value = [];
-    //   allPrice.value = 0;
-    //   allSpecialPrice.value = 0;
-    //   res.data.data.items.forEach((item) => {
-    //     if (!item.product) return;
-    //     allPrice.value += item.product.price;
-    //     basketItems.value.push(item);
-    //     if (item.product.specialPrice)
-    //       allSpecialPrice.value += item.product.specialPrice;
-    //   });
-    // });
-    //     }
-    //   });
-    // };
+    const submitOrder = () => {
+      StudentBasketApi.finalizeOrder().then((res) => {
+        if (res.data || res.data.status == 0) {
+          router.push({ name: 'ShopAddress' });
+        }
+      });
+    };
     const removeItem = (item) => {
       const tmpObject = {
         item: {
@@ -174,7 +154,6 @@ export default defineComponent({
         if (res.data.status == 0 || res.data.status == 200) {
           StudentBasketApi.get().then((res) => {
             (basketItems.value = []), (allPrice.value = 0);
-
             allSpecialPrice.value = 0;
             res.data.data.items.forEach((item) => {
               if (!item.product) return;
@@ -197,7 +176,7 @@ export default defineComponent({
       goOnePageBack,
       styles,
       payment,
-      moveToAddress,
+      submitOrder,
       toPersianNumbers,
       point,
       faDate,
@@ -207,7 +186,8 @@ export default defineComponent({
       allSpecialPrice,
       paidPrice,
       discount,
-      removeItem
+      removeItem,
+      purchaseId
     };
   }
 });

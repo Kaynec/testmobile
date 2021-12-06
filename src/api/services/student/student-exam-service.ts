@@ -32,6 +32,15 @@ class Exam {
       }
     });
   }
+
+  async getClass() {
+    return instance.get('class', {
+      headers: {
+        // Overwrite Axios's automatically set Content-Type
+        'Content-Type': 'application/json'
+      }
+    });
+  }
 }
 
 export const StudentExamApi = new Exam();
