@@ -196,6 +196,8 @@
 import { computed, defineComponent, reactive } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required, minLength, helpers, maxLength } from '@vuelidate/validators';
+import { StudentAuthServiceApi } from '@/api/services/student/student-auth-service';
+import { store } from '@/store';
 import router from '@/router';
 
 export default defineComponent({
@@ -208,13 +210,13 @@ export default defineComponent({
 
     const goOnePageBack = () => router.go(-1);
 
+    console.log(store.getters.getCurrentStudent);
+
     const model = reactive({
-      name: 'احسان',
-      lastname: 'امینی',
-      phone: '۰۹۲۰۲۲۲۵۰۶۰',
-      estate: 'تهران',
-      city: 'تهران',
-      nationalId: '۰۳۳۸۴۸۴۸۴',
+      username: store.getters.getCurrentStudent.username,
+      phone: store.getters.getCurrentStudent.phone,
+      province: store.getters.getCurrentStudent.province,
+      nationalId: store.getters.getCurrentStudent.nationalId,
       grade: 'پایه دوازدهم',
       orientation: ' ریاضی فیزیک'
     });
@@ -273,7 +275,10 @@ export default defineComponent({
       // For Now Just Console.log The Data
 
       if (!v$.value.$invalid) {
-        console.log('Everything Working Correctly');
+        console.log(model);
+        StudentAuthServiceApi.editStudent(model).then((result) =>
+          console.log(result)
+        );
       } else {
         console.log('Something is Wrong');
       }

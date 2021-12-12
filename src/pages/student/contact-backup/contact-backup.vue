@@ -4,17 +4,22 @@
     <SmallHeader />
     <!-- Change THis With Real Data Coming From Some Server-->
     <div class="flex">
-      <div class="card">
+      <div class="card" v-for="item in data" :key="item._id">
         <img
           src="../../../assets/img/contact/PictureOfFirstGuy.png"
           alt="Picture of a supporot person"
           class="person-img"
-          @click="MoveToBackUpInfo('علیرضا خوش بیان', 'PictureOfFirstGuy')"
+          @click="
+            MoveToBackUpInfo(
+              `${item.firstname} ${item.lastname}`,
+              'PictureOfFirstGuy'
+            )
+          "
         />
 
         <div class="child-flex">
           <div>
-            <h5>پشتیبان علیرضا خوش بیان</h5>
+            <h5>پشتیبان {{ item.firstname }} {{ item.lastname }}</h5>
             <h6>مشاوره تحصیلی</h6>
           </div>
           <div>
@@ -31,39 +36,14 @@
           </div>
         </div>
       </div>
-
-      <div class="card">
-        <img
-          src="../../../assets/img/contact/PictureOfSecondGuy.png"
-          alt="Picture of a supporot person"
-          class="person-img"
-          @click="
-            MoveToBackUpInfo(
-              'احسان امینی',
-              'PictureOfFirstGuy',
-              'مشاوره تحصیلی'
-            )
-          "
-        />
-
-        <div class="child-flex">
-          <div>
-            <h5>پشتیبا احسان امینی</h5>
-            <h6>مشاوره تحصیلی</h6>
-          </div>
-          <div>
-            <img src="../../../assets/img/contact/Chaticon.png" alt="" />
-            <img src="../../../assets/img/contact/info.png" alt="" />
-          </div>
-        </div>
-      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue';
+import { defineComponent, computed, ref } from 'vue';
 import SmallHeader from '@/modules/student-modules/header/small-header.vue';
+import { StudentSupportApi } from '@/api/services/student/student-support-service';
 import router from '@/router';
 
 export default defineComponent({
@@ -71,6 +51,9 @@ export default defineComponent({
     SmallHeader
   },
   setup() {
+    let data = ref();
+    StudentSupportApi.getAll().then((res) => (data.value = res.data.data));
+
     const MoveToBackUpInfo = (
       name: string,
       img: string,
@@ -88,7 +71,7 @@ export default defineComponent({
         'min-height': `calc( 1vh * 100) `
       };
     });
-    return { MoveToBackUpInfo, styles, goToChatPage };
+    return { MoveToBackUpInfo, styles, goToChatPage, data };
   }
 });
 </script>

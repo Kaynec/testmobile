@@ -65,44 +65,51 @@ import router from '@/router';
 import { computed, defineComponent, reactive } from 'vue';
 import useVuelidate from '@vuelidate/core';
 import { required, helpers } from '@vuelidate/validators';
-
+import axios from 'axios';
 //
 import { store } from '@/store';
-// import { StudentMutationTypes } from '@/store/modules/student/mutation-types';
+import { StudentAuthServiceApi } from '@/api/services/student/student-auth-service';
+import { StudentMutationTypes } from '@/store/modules/student/mutation-types';
 import { StudentActionTypes } from '@/store/modules/student/action-types';
 
 export default defineComponent({
   props: {
-    model: { type: String, default: ' {} ' }
+    model: { type: String, default: ' {} ' },
+    token: { type: String, default: '' }
   },
   setup(props) {
     const model = reactive(JSON.parse(props.model) as any);
-    // const notModel = JSON.parse(props.model);
-    // console.log(props.model, JSON.parse(props.model), notModel, model);
     // If Entered Without Authentication
-    console.log(model);
-    // if (!model.phone) router.push({ name: 'StudentLogin' });
 
-    console.log(store.getters.getStudentToken, store.getters.getCurrentStudent);
-    //
+    // if (!model.phone) router.push({ name: 'StudentLogin' });
     const code = reactive({ code: '' });
 
     const sendToHome = async () => {
       v$.value.$touch();
 
       if (!v$.value.$invalid) {
-        console.log(`Everything Working As Expected ${model}`);
-        store
-          .dispatch(StudentActionTypes.AUTH_REQUEST_STUDENT, {
-            username: model.username,
-            password: model.password
-          })
-          .then((res) => {
-            if (res) {
-              store.dispatch(StudentActionTypes.CURRENT_STUDENT);
-              router.push({ name: 'Home' });
-            }
-          });
+        const sendCode = await axios({
+          method: 'post',
+          url: 'https://www.api.devnirone.ir/api/auth/verificationcode',
+          headers: {
+            token: props.token
+          },
+          data: {
+            code: code.code
+          }
+        });
+
+        if (
+          sendCode.data.status == 0 ||
+          sendCode.data.status == 0 ||
+          sendCode.data.message == 'messages.verification.success'
+        ) {
+          // Set The Token If All Working
+          store.commit(StudentMutationTypes.SET_TOKEN, props.token);
+          // Change Current Student To Then Created One
+          store.dispatch(StudentActionTypes.CURRENT_STUDENT);
+          router.push({ name: 'Home' });
+        }
       }
     };
     const sendToPasswordRecover = () =>

@@ -18,6 +18,24 @@ class StudentAuthService {
     });
   }
 
+  async sendVerificationCode(code) {
+    return instance.post('auth/verificationcode', code, {
+      headers: {
+        // Overwrite Axios's automatically set Content-Type
+        // 'Content-Type': 'application/json'
+      }
+    });
+  }
+
+  async editStudent(student) {
+    return instance.post('auth/student/profile', student, {
+      headers: {
+        // Overwrite Axios's automatically set Content-Type
+        // 'Content-Type': 'application/json'
+      }
+    });
+  }
+
   async currentUser() {
     return instance.get('auth/student/me', {
       headers: {

@@ -16,8 +16,13 @@
           class="select date"
           @blur="v$.date.$touch()"
         >
-          <option v-for="date in 30" :value="date" :key="date">
-            {{ date }} آبان
+          <option
+            v-for="date in model.days"
+            :value="formatNumber(date)"
+            :key="date"
+          >
+            {{ date }}
+            {{ model.name }}
           </option>
         </select>
         <span> تاریخ </span>
@@ -61,17 +66,17 @@
 <script lang="ts">
 import { defineComponent, reactive, computed } from 'vue';
 import useVuelidate from '@vuelidate/core';
+import { StudentEventApi } from '@/api/services/student/student-event-service';
 import { helpers, required } from '@vuelidate/validators';
+import { toEnglishNumbers } from '@/utilities/to-persian-numbers';
 const alertify = require('../../../assets/alertifyjs/alertify');
 
 export default defineComponent({
-  //   props: {
-  //   },
-  setup(_, { emit }) {
-    const model = reactive({
-      date: '12',
-      eventName: ''
-    });
+  props: {
+    data: { type: String }
+  },
+  setup(props, { emit }) {
+    const model = reactive({ ...JSON.parse(props.data as any), eventName: '' });
     //
     const touchstart = () => {
       setTimeout(() => {
@@ -91,17 +96,30 @@ export default defineComponent({
       }
     }));
 
+    const formatNumber = (number) => {
+      return number < 10 ? '0' + number : number;
+    };
+
     const onSubmit = () => {
       v$.value.$touch();
       if (!v$.value.$invalid) {
-        emit('convertBoolean', model);
-        alertify.success('رویداد با موفقیت اضافه شد');
+        StudentEventApi.create({
+          title: model.eventName,
+          date: `${toEnglishNumbers(model.currentYear)}/${model.monthNumber}/${
+            model.date
+          }`
+        }).then((res) => {
+          if (res.data) {
+            emit('convertBoolean', model);
+            alertify.success('رکورد با موفقیت اضافه شد');
+          }
+        });
       }
     };
 
     const v$ = useVuelidate(rules, model);
 
-    return { touchstart, v$, model, onSubmit };
+    return { touchstart, v$, model, onSubmit, formatNumber };
   }
 });
 </script>

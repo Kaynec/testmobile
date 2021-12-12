@@ -68,7 +68,7 @@
       />
     </div>
     <!-- Btn  -->
-    <div class="continue" @click="submitOrder">
+    <div class="continue" @touchstart="submitOrder">
       <i class="fas fa-arrow-right"></i>
       <span> ثبت و پرداخت نهایی </span>
     </div>
@@ -137,7 +137,9 @@ export default defineComponent({
     const goOnePageBack = () => router.go(-1);
 
     const submitOrder = () => {
+      console.log('SALAMSALAM');
       StudentBasketApi.finalizeOrder().then((res) => {
+        console.log(res);
         if (res.data || res.data.status == 0) {
           router.push({ name: 'ShopAddress' });
         }
@@ -153,12 +155,19 @@ export default defineComponent({
       StudentBasketApi.add(tmpObject).then((res) => {
         if (res.data.status == 0 || res.data.status == 200) {
           StudentBasketApi.get().then((res) => {
+            // Reset The data And fill Again
+
             (basketItems.value = []), (allPrice.value = 0);
+
             allSpecialPrice.value = 0;
+
             res.data.data.items.forEach((item) => {
+              // if product is null return
               if (!item.product) return;
+              // refill data
               allPrice.value += item.product.price;
               basketItems.value.push(item);
+              // if special price add it to special price number
               if (item.product.specialPrice)
                 allSpecialPrice.value += item.product.specialPrice;
             });

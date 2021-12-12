@@ -7,7 +7,7 @@
       />
       <span class="user-parts">
         {{ currentUser.username }} | امتیاز شما:
-        {{ toPersianNumbers(point) }}
+        {{ toPersianNumbers(`${point}`) }}
       </span>
     </div>
 
@@ -29,7 +29,8 @@ export default defineComponent({
 
     const point = ref(0);
     onMounted(() => {
-      point.value = currentUser.value.point;
+      if (store.getters.getCurrentStudent.point)
+        point.value = store.getters.getCurrentStudent.point;
     });
 
     return { router, goOnePageBack, toPersianNumbers, currentUser, point };

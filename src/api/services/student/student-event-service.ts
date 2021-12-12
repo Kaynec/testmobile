@@ -1,23 +1,7 @@
 import { studentInstance as instance } from './student-api-client';
-class Basket {
-  async get() {
-    return instance.get('shopping-cart/get', {
-      headers: {
-        // Overwrite Axios's automatically set Content-Type
-        'Content-Type': 'application/json'
-      }
-    });
-  }
-  async add(product: any) {
-    return instance.post('shopping-cart', product, {
-      headers: {
-        // Overwrite Axios's automatically set Content-Type
-        // 'Content-Type': 'application/json'
-      }
-    });
-  }
-  async finalizeOrder() {
-    return instance.post('order', {
+class Event {
+  async delete(id: string) {
+    return instance.get(`event/${id}`, {
       headers: {
         // Overwrite Axios's automatically set Content-Type
         'Content-Type': 'application/json'
@@ -25,8 +9,26 @@ class Basket {
     });
   }
 
-  async HistoryOfBoughtProducts() {
-    return instance.get('order/get', {
+  async getAll() {
+    return instance.get('event/GetForMonth', {
+      headers: {
+        // Overwrite Axios's automatically set Content-Type
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+
+  async get(date) {
+    return instance.post(`event/getForMonth`, date, {
+      headers: {
+        // Overwrite Axios's automatically set Content-Type
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+
+  async create(event) {
+    return instance.post(`event`, event, {
       headers: {
         // Overwrite Axios's automatically set Content-Type
         'Content-Type': 'application/json'
@@ -35,4 +37,4 @@ class Basket {
   }
 }
 
-export const StudentBasketApi = new Basket();
+export const StudentEventApi = new Event();

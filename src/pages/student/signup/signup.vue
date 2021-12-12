@@ -208,7 +208,7 @@ import useVuelidate from '@vuelidate/core';
 import { helpers, minLength, required, sameAs } from '@vuelidate/validators';
 import { store } from '@/store';
 // import { StudentMutationTypes } from '@/store/modules/student/mutation-types';
-// import { StudentActionTypes } from '@/store/modules/student/action-types';
+import { StudentActionTypes } from '@/store/modules/student/action-types';
 import { StudentOrientationApi } from '@/api/services/student/student-orientation-service';
 import { StudentGradeApi } from '@/api/services/student/student-grade-service';
 import { StudentAuthServiceApi } from '@/api/services/student/student-auth-service';
@@ -245,7 +245,6 @@ export default defineComponent({
 
     const allOrientationsComputed = computed(() => {
       return allOrientations.filter((orientation: any) => {
-        console.log(orientation, model.grade);
         return orientation.grade == model.grade._id;
       });
     });
@@ -253,19 +252,17 @@ export default defineComponent({
     // Submit The Information
     const register = async () => {
       v$.value.$touch();
-
       if (!v$.value.$invalid) {
         // Copy Every Element Of Model Except repassword
         let { repassword, ...temp } = model;
 
-        StudentAuthServiceApi.signUp(temp).then((res) => {
-          if (res.data && res.data.token)
-            router.push({
-              name: 'StudentAuthentication',
-              params: { model: JSON.stringify(temp) }
-            });
-          else errorMessage.value = 'خطایی در فرآیند ثبت نام رخ داده است';
-        });
+        const signUp = await StudentAuthServiceApi.signUp(temp);
+
+        if (signUp)
+          router.push({
+            name: 'StudentAuthentication',
+            params: { model: JSON.stringify(temp), token: signUp.data.token }
+          });
       }
     };
 

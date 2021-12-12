@@ -86,8 +86,8 @@
 
 <script lang="ts">
 import { computed, defineComponent, onMounted, reactive, ref } from 'vue';
-// import { useStudentStore } from '@/store';
-// import { StudentActionTypes } from '@/store/modules/student/action-types';
+import { store } from '@/store';
+import { StudentActionTypes } from '@/store/modules/student/action-types';
 import router from '@/router';
 import useVuelidate from '@vuelidate/core';
 import { minLength, helpers, required } from '@vuelidate/validators';
@@ -100,15 +100,19 @@ export default defineComponent({
       password: ''
     } as any);
 
-    const login = () => {
-      console.log(model);
+    const login = async () => {
       v$.value.$touch();
 
       if (!v$.value.$invalid) {
-        router.push({
-          name: 'StudentAuthentication',
-          params: { model: JSON.stringify(model) }
-        });
+        const authCheck = await store.dispatch(
+          StudentActionTypes.AUTH_REQUEST_STUDENT,
+          model
+        );
+
+        if (authCheck) {
+          store.dispatch(StudentActionTypes.CURRENT_STUDENT);
+          router.push({ name: 'Home' });
+        }
       }
     };
 

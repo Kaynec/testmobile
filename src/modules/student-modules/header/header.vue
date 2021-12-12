@@ -22,9 +22,10 @@ import { toPersianNumbers } from '@/utilities/to-persian-numbers';
 export default defineComponent({
   setup() {
     const currentUser = ref(store.getters.getCurrentStudent);
-    const point = ref(0);
+    const point = ref('0');
     onMounted(() => {
-      point.value = currentUser.value.point;
+      if (store.getters.getCurrentStudent.point != null)
+        point.value = store.getters.getCurrentStudent.point;
     });
     return { currentUser, toPersianNumbers, point };
   }
