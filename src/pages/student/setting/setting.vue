@@ -19,6 +19,7 @@
         label=" تقویم آموزشی"
         TextDetail="رویدادها و وقایع مهم را ثبت کنید"
         iconSrc="calendar"
+        componentName="Calendar"
       />
       <Card
         label="ارتباط با پشتیبان"

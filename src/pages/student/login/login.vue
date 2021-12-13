@@ -110,7 +110,7 @@ export default defineComponent({
         );
 
         if (authCheck) {
-          store.dispatch(StudentActionTypes.CURRENT_STUDENT);
+          await store.dispatch(StudentActionTypes.CURRENT_STUDENT);
           router.push({ name: 'Home' });
         }
       }

@@ -23,16 +23,16 @@
     <!-- Form -->
     <form @submit.prevent="onSubmit">
       <div class="input">
-        <span> نام </span>
+        <span style="white-space: nowrap; padding: 0"> نام </span>
         <input
           type="text"
-          @blur="v$.name.$touch()"
-          v-model="model.name"
+          @blur="v$.firstname.$touch()"
+          v-model="model.firstname"
           maxlength="20"
         />
       </div>
       <p
-        v-for="error in v$.name.$errors"
+        v-for="error in v$.firstname.$errors"
         :key="error.id"
         class="small text-bold text-danger text-center"
       >
@@ -40,7 +40,7 @@
       </p>
       <!--  -->
       <div class="input">
-        <span> نام خانوادگی </span>
+        <span style="white-space: nowrap; padding: 0"> نام خانوادگی </span>
         <input
           type="text"
           @blur="v$.lastname.$touch()"
@@ -56,7 +56,32 @@
         {{ error.$message }}
       </p>
       <!--  -->
-
+      <div class="input radio">
+        <span>جنسیت </span>
+        <input
+          type="radio"
+          id="male"
+          value="male"
+          v-model="model.gender"
+          @blur="v$.gender.$touch()"
+        />
+        <label for="male">مرد</label>
+        <input
+          type="radio"
+          id="female"
+          value="female"
+          v-model="model.gender"
+          @blur="v$.gender.$touch()"
+        />
+        <label for="female">زن</label>
+      </div>
+      <p
+        v-for="error in v$.gender.$errors"
+        :key="error.id"
+        class="small text-bold text-danger text-center"
+      >
+        {{ error.$message }}
+      </p>
       <!--  -->
       <div class="input">
         <span> شماره همراه </span>
@@ -75,53 +100,23 @@
         {{ error.$message }}
       </p>
       <!--  -->
-
-      <!--  -->
-      <div class="select">
-        <select
+      <div class="input">
+        <span>تاریخ تولد </span>
+        <input
           type="text"
-          @blur="v$.estate.$touch()"
-          v-model="model.estate"
-          maxlength="35"
-        >
-          <option value="تهران">تهران</option>
-          <option value="خراسان رضوی">خراسان رضوی</option>
-          <option value="اصفهان">اصفهان</option>
-          <option value="آذربایجان">آذربایجان</option>
-        </select>
+          @blur="v$.birthdate.$touch()"
+          v-model="model.birthdate"
+          data-jdp
+        />
       </div>
       <p
-        v-for="error in v$.estate.$errors"
+        v-for="error in v$.birthdate.$errors"
         :key="error.id"
         class="small text-bold text-danger text-center"
       >
         {{ error.$message }}
       </p>
       <!--  -->
-
-      <!--  -->
-      <div class="select">
-        <select
-          type="text"
-          @blur="v$.city.$touch()"
-          v-model="model.city"
-          maxlength="35"
-        >
-          <option value="تهران">تهران</option>
-          <option value=" مشهد">مشهد</option>
-          <option value="ساری">ساری</option>
-          <option value="یزد">یزد</option>
-        </select>
-      </div>
-      <p
-        v-for="error in v$.city.$errors"
-        :key="error.id"
-        class="small text-bold text-danger text-center"
-      >
-        {{ error.$message }}
-      </p>
-      <!--  -->
-
       <!--  -->
       <div class="input">
         <span> کد ملی </span>
@@ -140,46 +135,6 @@
         {{ error.$message }}
       </p>
       <!--  -->
-
-      <!--  -->
-      <div class="input">
-        <span> مقطع تحصیلی</span>
-        <input
-          type="text"
-          @blur="v$.grade.$touch()"
-          v-model="model.grade"
-          maxlength="25"
-        />
-      </div>
-      <p
-        v-for="error in v$.grade.$errors"
-        :key="error.id"
-        class="small text-bold text-danger text-center"
-      >
-        {{ error.$message }}
-      </p>
-      <!--  -->
-
-      <!--  -->
-      <div class="input">
-        <span> رشته تحصیلی </span>
-        <input
-          type="text"
-          @blur="v$.orientation.$touch()"
-          v-model="model.orientation"
-          maxlength="25"
-        />
-      </div>
-      <p
-        v-for="error in v$.orientation.$errors"
-        :key="error.id"
-        class="small text-bold text-danger text-center"
-      >
-        {{ error.$message }}
-      </p>
-      <!--  -->
-
-      <!--  -->
       <button
         type="submit"
         class="button-linear"
@@ -197,11 +152,20 @@ import { computed, defineComponent, reactive } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required, minLength, helpers, maxLength } from '@vuelidate/validators';
 import { StudentAuthServiceApi } from '@/api/services/student/student-auth-service';
+import { StudentActionTypes } from '@/store/modules/student/action-types';
 import { store } from '@/store';
 import router from '@/router';
+import '@majidh1/jalalidatepicker/dist/jalaliDatepicker.css';
+import '@majidh1/jalalidatepicker/dist/jalaliDatepicker.js';
+const alertify = require('@/assets/alertifyjs/alertify');
 
 export default defineComponent({
   setup() {
+    // start watch
+    (window as any).jalaliDatepicker.startWatch({
+      initDate: '1379/09/16'
+    });
+    //
     const styles = computed(() => {
       return {
         'min-height': `calc( 1vh * 100) `
@@ -210,24 +174,22 @@ export default defineComponent({
 
     const goOnePageBack = () => router.go(-1);
 
-    console.log(store.getters.getCurrentStudent);
-
     const model = reactive({
-      username: store.getters.getCurrentStudent.username,
+      firstname: store.getters.getCurrentStudent.firstname || '',
+      lastname: store.getters.getCurrentStudent.lastname || '',
+      birthdate: store.getters.getCurrentStudent.birthdate || '',
       phone: store.getters.getCurrentStudent.phone,
-      province: store.getters.getCurrentStudent.province,
-      nationalId: store.getters.getCurrentStudent.nationalId,
-      grade: 'پایه دوازدهم',
-      orientation: ' ریاضی فیزیک'
+      gender: store.getters.getCurrentStudent.gender || 'male',
+      nationalId: `${store.getters.getCurrentStudent.nationalId}` || ''
     });
 
     const rules = {
-      name: {
-        required: helpers.withMessage('لطفا نام خود را وارد کنید', required)
+      firstname: {
+        required: helpers.withMessage('لطفا  نام خود را وارد کنید', required)
       },
       lastname: {
         required: helpers.withMessage(
-          'لطفا نام خانوادگی خود را وارد کنید',
+          'لطفا  نام خانوادگی خود را وارد کنید',
           required
         )
       },
@@ -245,10 +207,9 @@ export default defineComponent({
           maxLength(11)
         )
       },
-      estate: {
-        required: helpers.withMessage('استان را انتخاب کنید', required)
+      gender: {
+        required: helpers.withMessage('لطفا  جنسیت خود را وارد کنید', required)
       },
-      city: { required: helpers.withMessage('شهر را انتخاب کنید', required) },
       nationalId: {
         required: helpers.withMessage('کد ملی خود را وارد کنید', required),
         minLength: helpers.withMessage(
@@ -257,30 +218,24 @@ export default defineComponent({
         ),
         maxLength: helpers.withMessage('کد ملی باید 10 رقم باشد', maxLength(10))
       },
-      grade: {
-        required: helpers.withMessage(
-          'لطفا مفطع تحصیلی خود را وارد کنید',
-          required
-        )
-      },
-      orientation: {
-        required: helpers.withMessage(
-          'لطفا رشته تحصیلی خود را وارد کنید',
-          required
-        )
+      birthdate: {
+        required: helpers.withMessage('تاریخ تولد خود را وارد کنید', required)
       }
     };
 
     const onSubmit = () => {
-      // For Now Just Console.log The Data
+      v$.value.$touch();
 
       if (!v$.value.$invalid) {
-        console.log(model);
-        StudentAuthServiceApi.editStudent(model).then((result) =>
-          console.log(result)
-        );
-      } else {
-        console.log('Something is Wrong');
+        StudentAuthServiceApi.editStudent(model).then((res) => {
+          console.log(res);
+          if (res.data || res.data.status == 0 || res.data.status == 200) {
+            alertify.success('کاربر با موفقیت ویرایش شد');
+
+            // Update The Current user
+            store.dispatch(StudentActionTypes.CURRENT_STUDENT);
+          }
+        });
       }
     };
     const v$ = useVuelidate(rules, model);
@@ -351,7 +306,6 @@ export default defineComponent({
     }
   }
 
-  //
   form {
     width: 80%;
     max-width: 500px;
@@ -368,9 +322,10 @@ export default defineComponent({
       align-items: center;
       padding: 0.5rem;
       span {
+        display: inline-block;
         text-align: right;
         color: #949494;
-        font-size: 14px;
+        font-size: 10px;
         grid-area: Span;
         min-width: 5rem;
       }
@@ -380,6 +335,15 @@ export default defineComponent({
         outline: none;
         padding-right: 0.5rem;
         grid-area: input;
+      }
+    }
+
+    .radio {
+      display: flex;
+      align-items: center;
+
+      input {
+        margin-inline: 1rem;
       }
     }
 
@@ -395,8 +359,13 @@ export default defineComponent({
         outline: none;
         width: 100%;
         height: 100%;
+        font-size: 11px;
         color: #949494;
         background: transparent;
+      }
+
+      option {
+        font-size: 14px;
       }
     }
   }

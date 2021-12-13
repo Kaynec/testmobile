@@ -15,10 +15,10 @@
     <div class="progress-count">
       <div class="count">
         <span>
-          {{ label }}
+          {{ model.title }}
         </span>
         <!-- Change This And Width Of The Progress Bar Dynamically -->
-        <span> ۱۰۰/۱۰۰ </span>
+        <span> ۱۰/{{ toPersianNumbers(`${model.questions.length}`) }} </span>
       </div>
       <div class="progress" style="height: 5px">
         <div
@@ -35,11 +35,13 @@
     <!-- Quiz Card -->
 
     <div class="quiz-card shadow">
-      <p class="number-of-question">سوال شماره <span> ۱۰ </span></p>
+      <p class="number-of-question">
+        سوال شماره <span> {{ currentQuestion }} </span>
+      </p>
 
       <h5>
         <!-- Change This With Real Data Of Question -->
-        چرا برای نوشتن یک بند، موضوع کلی را به موضوع های کوچک تر تقسیم می کنیم؟
+        {{ currentQuestion }}
       </h5>
       <div class="quiz-card-container">
         <div class="card">
@@ -88,14 +90,58 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue';
+import { defineComponent, computed, ref } from 'vue';
+import { StudentSelfTestApi } from '@/api/services/student/student-selftest-service';
+import { StudentExamApi } from '@/api/services/student/student-exam-service';
 import router from '@/router';
+import { toPersianNumbers } from '@/utilities/to-persian-numbers';
 
 export default defineComponent({
   props: {
-    label: { type: String, default: 'فصل دوم بهداشت' }
+    item: { type: String, default: '{}' }
   },
-  setup() {
+  setup(props) {
+    const model = ref(JSON.parse(props.item));
+
+    const questions = ref([] as any);
+
+    // Get The Detail Of All Questions Inside of That Session
+    const tmpArray = [] as any;
+
+    model.value.questions.forEach((question) => {
+      StudentExamApi.getOneQuestion(question).then((res) => {
+        tmpArray.push(res.data.data);
+      });
+    });
+
+    let requests = model.value.questions.map((question) => {
+      return new Promise((resolve) => {
+        StudentExamApi.getOneQuestion(question).then((res) => {
+          resolve(tmpArray.push(res.data.data));
+        });
+      });
+    });
+
+    Promise.all(requests).then(() => console.log('done'));
+
+    //  Split The Questions to array of 10
+
+    for (let i = 0, j = tmpArray.length; i < j; i += 10) {
+      // questions.value.push(tmpArray.slice(i, i + 10));
+      questions.value.push('Salam');
+    }
+
+    // StudentSelfTestApi.selfTestResult({
+    //   course: {
+    //     _id: model.value.course
+    //   },
+    //   session: {
+    //     _id: model.value._id
+    //   }
+    // }).then((res) => {
+    //   console.log(res);
+    // });
+
     let styles = computed(() => {
       return {
         'min-height': `calc( 1vh * 100) `
@@ -109,7 +155,13 @@ export default defineComponent({
 
     const goOnePageBack = () => router.go(-1);
 
-    return { styles, goOnePageBack, openSelfTestQuestionsAnswers };
+    return {
+      styles,
+      goOnePageBack,
+      openSelfTestQuestionsAnswers,
+      model,
+      toPersianNumbers
+    };
   }
 });
 </script>

@@ -16,7 +16,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from 'vue';
+import { defineComponent, ref } from 'vue';
 import router from '@/router';
 import { store } from '@/store';
 import { toPersianNumbers } from '@/utilities/to-persian-numbers';
@@ -28,10 +28,9 @@ export default defineComponent({
     const currentUser = ref(store.getters.getCurrentStudent);
 
     const point = ref(0);
-    onMounted(() => {
-      if (store.getters.getCurrentStudent.point)
-        point.value = store.getters.getCurrentStudent.point;
-    });
+
+    if (currentUser.value && currentUser.value.point)
+      point.value = currentUser.value.point;
 
     return { router, goOnePageBack, toPersianNumbers, currentUser, point };
   }

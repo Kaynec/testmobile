@@ -4,8 +4,14 @@
     :class="`${showContent ? 'active details' : 'details'}`"
   >
     <div class="label">
-      <span v-for="item in label" :key="item">
-        {{ item.text }}
+      <span>
+        {{ model._id.substr(0, 10) }}
+      </span>
+      <span>{{ toPersianNumbers(model.totalIncludingTax) }} تومان</span>
+      <span>
+        {{ formatDate(model.createdAt)[3] }}
+        {{ formatDate(model.createdAt)[1] }}
+        {{ formatDate(model.createdAt)[0] }}
       </span>
       <!-- Arrow Up or Down -->
       <i
@@ -16,30 +22,57 @@
     </div>
 
     <div class="content" v-if="showContent">
-      <p v-for="item in content" :key="item">
+      <p v-for="item in model.items" :key="item">
         <i class="fas fa-check img"></i>
-        {{ item.text }}
+        {{ item.product.title }}
       </p>
     </div>
   </div>
-  <!-- IMG -->
-
-  <!-- IMG -->
 </template>
 
 <script lang="ts">
 import { defineComponent, ref } from 'vue';
+import { toPersianNumbers } from '@/utilities/to-persian-numbers';
 
 export default defineComponent({
   props: {
-    label: { type: Array },
-    content: { type: Array }
+    data: { type: String, default: '{}' }
   },
-  setup() {
+  setup(props) {
+    const model = JSON.parse(props.data);
+
     const showContent = ref(false);
     const changeShowContent = () => (showContent.value = !showContent.value);
 
-    return { showContent, changeShowContent };
+    const formatDate = (date) => {
+      let myDate = new Date(date)
+        .toLocaleDateString('fa-Fa', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          weekday: 'long'
+        })
+        .split(' ');
+
+      let year = myDate[0],
+        month = myDate[1],
+        weekday = myDate[3],
+        day = myDate[2].split(',')[0];
+
+      console.log([year, month, weekday, day]);
+
+      return [year, month, weekday, day];
+    };
+
+    formatDate('2021-11-29T09:01:41.688Z');
+
+    return {
+      showContent,
+      changeShowContent,
+      model,
+      toPersianNumbers,
+      formatDate
+    };
   }
 });
 </script>

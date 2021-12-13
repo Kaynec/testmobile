@@ -3,8 +3,7 @@
   <div class="my-profile" v-else :style="styles">
     <nav class="nav">
       <span> پروفایل من </span>
-      <!-- <img src="../../../assets/img/arrow-left.png" @click="goOnePageBack" /> -->
-      <span class="red" @click="logout"> خروج از حساب کاربری</span>
+      <img src="../../../assets/img/arrow-left.png" @click="goOnePageBack" />
     </nav>
     <!-- Red Div -->
     <div class="info">
@@ -59,8 +58,8 @@ import { computed, defineComponent, reactive, ref } from 'vue';
 import Footer from '@/modules/student-modules/footer/footer.vue';
 import router from '@/router';
 import { store } from '@/store';
-import { StudentOrientationApi } from '@/api/services/student/student-orientation-service';
-import { StudentGradeApi } from '@/api/services/student/student-grade-service';
+// import { StudentOrientationApi } from '@/api/services/student/student-orientation-service';
+// import { StudentGradeApi } from '@/api/services/student/student-grade-service';
 import { StudentActionTypes } from '@/store/modules/student/action-types';
 export default defineComponent({
   components: { Footer },
@@ -100,6 +99,14 @@ export default defineComponent({
       {
         label: ' پیام های دریافتی ',
         component: 'Inbox'
+      },
+      {
+        label: 'تازه های کنکور',
+        component: 'News'
+      },
+      {
+        label: 'خروج از پنل کاربری',
+        component: 'logOut'
       }
     ]);
 
@@ -109,10 +116,11 @@ export default defineComponent({
 
     const touchend = (component: string, e: any) => {
       e.target.classList.remove('active');
-      if (component)
+      if (component != 'logOut')
         router.push({
           name: component
         });
+      else logout();
     };
 
     const logout = () => {

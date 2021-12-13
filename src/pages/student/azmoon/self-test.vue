@@ -3,41 +3,21 @@
   <div class="self-test" :style="styles" v-else>
     <SmallHeader />
     <div class="lessons">
-      <LessonCard label="فارسی" imgSrc="farsi" />
-      <LessonCard label="فیزیک" imgSrc="Physic" />
-      <LessonCard label="ریاضی" imgSrc="math" />
+      <LessonCard
+        :label="course.title"
+        @click="changeCurrentCourse(course)"
+        v-for="course in allCourses"
+        :key="course._id"
+        imgSrc="farsi"
+      />
     </div>
     <div class="chapters-list w-100" ref="chapterContainer">
       <LessionList
         :chapterContainer="chapterContainer"
-        @changeCurrentItem="toggleCurrentItem"
-        text="فصل اول :نهاد ها"
-      />
-      <LessionList
-        :chapterContainer="chapterContainer"
-        @changeCurrentItem="toggleCurrentItem"
-        text="فصل دوم : بهداشت"
-      />
-      <LessionList
-        :chapterContainer="chapterContainer"
-        @changeCurrentItem="toggleCurrentItem"
-        text="فصل سوم : اخلاق فردی و اجتماعی"
-      />
-
-      <LessionList
-        :chapterContainer="chapterContainer"
-        @changeCurrentItem="toggleCurrentItem"
-        text="فصل اول :نهاد ها"
-      />
-      <LessionList
-        :chapterContainer="chapterContainer"
-        @changeCurrentItem="toggleCurrentItem"
-        text="فصل دوم : بهداشت"
-      />
-      <LessionList
-        :chapterContainer="chapterContainer"
-        @changeCurrentItem="toggleCurrentItem"
-        text="فصل سوم : اخلاق فردی و اجتماعی"
+        v-for="session in currentSessions"
+        @changeCurrentItem="toggleCurrentItem(session)"
+        :key="session._id"
+        :text="session.title"
       />
     </div>
     <div class="continue-wrapper">
@@ -53,6 +33,7 @@ import { defineComponent, ref, computed } from 'vue';
 import SmallHeader from '@/modules/student-modules/header/small-header.vue';
 import LessonCard from '@/modules/student-modules/azmoon/lesson-card.vue';
 import LessionList from '@/modules/student-modules/chapter-list.vue';
+import { StudentSelfTestApi } from '@/api/services/student/student-selftest-service';
 import router from '@/router';
 export default defineComponent({
   components: {
@@ -62,10 +43,26 @@ export default defineComponent({
   },
   setup() {
     const currentItem = ref(null) as any;
+
     const chapterContainer = ref(null) as any;
-    const toggleCurrentItem = (e: any) => {
+
+    const allCourses = ref([] as any);
+    const currentCourse = ref({} as any);
+
+    StudentSelfTestApi.AllCourses().then((res) => {
+      // Push Every Item to The Courses Array
+      res.data.data.forEach((el) => allCourses.value.push(el));
+      // Change the default current course to the first child of array
+      currentCourse.value = allCourses.value[0];
+    });
+
+    const currentSessions = computed(() => {
+      return currentCourse.value.sessions;
+    });
+
+    const toggleCurrentItem = (session) => {
       // Changing The CurrentItem To Send To Next Page
-      currentItem.value = e;
+      currentItem.value = session;
     };
 
     let styles = computed(() => {
@@ -74,16 +71,28 @@ export default defineComponent({
       };
     });
 
+    const changeCurrentCourse = (el) => {
+      currentCourse.value = el;
+    };
+
     const moveToQuestions = () => {
       if (currentItem.value) {
         router.push({
           name: 'SelfTestQuestions',
-          params: { label: currentItem.value }
+          params: { item: JSON.stringify(currentItem.value) }
         });
       }
     };
 
-    return { toggleCurrentItem, chapterContainer, styles, moveToQuestions };
+    return {
+      toggleCurrentItem,
+      chapterContainer,
+      styles,
+      moveToQuestions,
+      allCourses,
+      changeCurrentCourse,
+      currentSessions
+    };
   }
 });
 </script>

@@ -91,6 +91,8 @@ import PurchaseHistory from '@/pages/student/profile/history.vue';
 import EditProfile from '@/pages/student/profile/edit-profile.vue';
 import InviteFriends from '@/pages/student/profile/invite.vue';
 
+import News from '@/pages/student/news/news.vue';
+
 import Calendar from '@/pages/student/calendar/calendar.vue';
 
 import { useAdminStore, useStudentStore } from '@/store';
@@ -628,6 +630,14 @@ const routes: Array<RouteRecordRaw> = [
         path: 'calendar',
         name: 'Calendar',
         component: Calendar,
+        beforeEnter: ifStudentAuthenticated,
+        props: true
+      },
+
+      {
+        path: 'news',
+        name: 'News',
+        component: News,
         beforeEnter: ifStudentAuthenticated,
         props: true
       }
