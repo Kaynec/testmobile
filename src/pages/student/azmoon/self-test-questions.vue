@@ -4,7 +4,9 @@
     <nav class="sm-nav">
       <div>
         <span class="user-parts">
-          امتیازات کسب شده : ۴۹۸۴ &nbsp; | &nbsp; امتیاز این فصل : ۱۸۷
+          امتیازات کسب شده :
+          {{ toPersianNumbers(store.getters.getCurrentStudent.point) }} &nbsp; |
+          &nbsp; امتیاز این فصل : {{ toPersianNumbers(0) }}
         </span>
       </div>
 
@@ -18,7 +20,11 @@
           {{ model.title }}
         </span>
         <!-- Change This And Width Of The Progress Bar Dynamically -->
-        <span> ۱۰/{{ toPersianNumbers(`${model.questions.length}`) }} </span>
+        <span>
+          {{ toPersianNumbers(`${currentQuestionIndex + 1}`) }}/{{
+            toPersianNumbers(`${questions[currentChunk].length}`)
+          }}</span
+        >
       </div>
       <div class="progress" style="height: 5px">
         <div
@@ -36,41 +42,29 @@
 
     <div class="quiz-card shadow">
       <p class="number-of-question">
-        سوال شماره <span> {{ currentQuestion }} </span>
+        سوال شماره <span> {{ currentQuestionIndex + 1 || '' }} </span>
       </p>
 
       <h5>
         <!-- Change This With Real Data Of Question -->
-        {{ currentQuestion }}
+        {{ questions[currentChunk][currentQuestionIndex].text || '' }}
       </h5>
       <div class="quiz-card-container">
-        <div class="card">
+        <div
+          :class="`${
+            questions[currentChunk][currentQuestionIndex].answer - 1 === index
+              ? 'card success'
+              : 'card'
+          }`"
+          v-for="(option, index) in questions[currentChunk][
+            currentQuestionIndex
+          ].options"
+          :key="option._id"
+          @click="changeQuestionsAnswer(index)"
+        >
           <span>
             <!-- Answer Text -->
-            تا بتوانیم بند بلندتری بنویسیم
-          </span>
-          <img src="../../../assets/img/vpn-key-white.png" class="tick" />
-        </div>
-
-        <div class="card">
-          <span>
-            <!-- Answer Text -->
-            چون بند کوتاه است
-          </span>
-          <img src="../../../assets/img/vpn-key-white.png" class="tick" />
-        </div>
-
-        <div class="card">
-          <span>
-            <!-- Answer Text -->
-            تا از پراکندگی مطالب بند، جلوگیری کنیم
-          </span>
-          <img src="../../../assets/img/vpn-key-white.png" class="tick" />
-        </div>
-        <div class="card">
-          <span>
-            <!-- Answer Text -->
-            تا اطلاعات بیشتری درباره یک موضوع داشته باشیم
+            {{ option.text }}
           </span>
           <img src="../../../assets/img/vpn-key-white.png" class="tick" />
         </div>
@@ -79,10 +73,24 @@
 
     <!-- Buttons -->
     <div class="btns">
-      <button class="red">
+      <button
+        class="red"
+        @click="currentQuestionIndex + 1 ? currentQuestionIndex++ : null"
+        v-if="currentQuestionIndex <= 8"
+      >
+        سوال بعدی
+      </button>
+      <button class="red" v-else @click="submitSelfTest">
         سوالات بیشتر <i class="fas fa-arrow-right"></i>
       </button>
-      <button class="green" @click="openSelfTestQuestionsAnswers">
+      <button
+        class="red"
+        @click="currentQuestionIndex - 1 >= 0 ? currentQuestionIndex-- : null"
+        v-if="currentQuestionIndex - 1 >= 0"
+      >
+        سوال قبلی
+      </button>
+      <button class="green" v-else @click="openSelfTestQuestionsAnswers">
         پاسخنامه تشریحی
       </button>
     </div>
@@ -93,8 +101,9 @@
 import { defineComponent, computed, ref } from 'vue';
 import { StudentSelfTestApi } from '@/api/services/student/student-selftest-service';
 import { StudentExamApi } from '@/api/services/student/student-exam-service';
-import router from '@/router';
 import { toPersianNumbers } from '@/utilities/to-persian-numbers';
+import { store } from '@/store';
+import router from '@/router';
 
 export default defineComponent({
   props: {
@@ -104,43 +113,66 @@ export default defineComponent({
     const model = ref(JSON.parse(props.item));
 
     const questions = ref([] as any);
+    // const currentQuestion = ref({} as any)
+    const currentQuestionIndex = ref(0);
+
+    const currentChunk = ref(0);
+
+    // Check For Duplicate Exam And increase currentChunk if true
+    StudentSelfTestApi.selfTestResult({
+      course: model.value.course,
+      session: model.value._id
+    }).then((res) => {
+      console.log(res);
+    });
 
     // Get The Detail Of All Questions Inside of That Session
     const tmpArray = [] as any;
 
-    model.value.questions.forEach((question) => {
-      StudentExamApi.getOneQuestion(question).then((res) => {
-        tmpArray.push(res.data.data);
-      });
-    });
-
-    let requests = model.value.questions.map((question) => {
+    const requests = model.value.questions.map((question) => {
       return new Promise((resolve) => {
         StudentExamApi.getOneQuestion(question).then((res) => {
-          resolve(tmpArray.push(res.data.data));
+          // Change The Correct Idx
+          let index = null;
+          res.data.data.options.forEach((option, idx) => {
+            if (option.isAnswer) index = idx + 1;
+          });
+          resolve(
+            tmpArray.push({ ...res.data.data, answer: null, correct: index })
+          );
         });
       });
     });
 
-    Promise.all(requests).then(() => console.log('done'));
+    Promise.all(requests).then(() => {
+      //  Split The Questions to array of 10
+      for (let i = 0, j = tmpArray.length; i < j; i += 10)
+        questions.value.push(tmpArray.slice(i, i + 10));
+      console.log(questions.value);
+    });
 
-    //  Split The Questions to array of 10
+    const submitSelfTest = () => {
+      const arrayToSend = questions.value[currentChunk.value].map(
+        (question) => {
+          return {
+            question: { _id: question._id },
+            answer: question.answer,
+            correct: question.correct
+          };
+        }
+      );
 
-    for (let i = 0, j = tmpArray.length; i < j; i += 10) {
-      // questions.value.push(tmpArray.slice(i, i + 10));
-      questions.value.push('Salam');
-    }
-
-    // StudentSelfTestApi.selfTestResult({
-    //   course: {
-    //     _id: model.value.course
-    //   },
-    //   session: {
-    //     _id: model.value._id
-    //   }
-    // }).then((res) => {
-    //   console.log(res);
-    // });
+      StudentSelfTestApi.registerSelfTest({
+        course: { _id: model.value.course },
+        session: { _id: model.value._id },
+        answers: arrayToSend
+      }).then((res) => {
+        if (res.data.status == 0 || res.data.status == 200 || res.data) {
+          currentQuestionIndex.value = 0;
+          currentChunk.value = 0;
+        }
+      });
+    };
 
     let styles = computed(() => {
       return {
@@ -153,6 +185,12 @@ export default defineComponent({
         name: 'SelfTestQuestionsAnswers'
       });
 
+    // Make The Answer the clicked one 1 based instead of zero
+
+    const changeQuestionsAnswer = (idx: number) =>
+      (questions.value[currentChunk.value][currentQuestionIndex.value].answer =
+        idx + 1);
+
     const goOnePageBack = () => router.go(-1);
 
     return {
@@ -160,7 +198,13 @@ export default defineComponent({
       goOnePageBack,
       openSelfTestQuestionsAnswers,
       model,
-      toPersianNumbers
+      toPersianNumbers,
+      currentQuestionIndex,
+      currentChunk,
+      questions,
+      submitSelfTest,
+      changeQuestionsAnswer,
+      store
     };
   }
 });
@@ -292,6 +336,17 @@ export default defineComponent({
           object-fit: contain;
           border: solid 1px #c1c1c1;
           border-radius: 50px;
+        }
+      }
+      // Success Class
+      .success {
+        border: solid 1px #3fca60;
+
+        span {
+          color: #3fca60;
+        }
+        .tick {
+          background: #3fca60;
         }
       }
     }
