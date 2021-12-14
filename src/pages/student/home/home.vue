@@ -7,7 +7,7 @@
     <!-- Main Container -->
     <div class="cart-container">
       <div class="cart long">
-        <img src="../../../assets/img/home-icons/time-exam.png" />
+        <img src="../../../assets/img/home-icons/time-exam.svg" />
         <h4>آزمون بازی</h4>
       </div>
 
@@ -20,26 +20,26 @@
       </div>
 
       <div class="cart">
-        <img src="../../../assets/img/home-icons/bitmap.png" />
+        <img src="../../../assets/img/home-icons/bitmap.svg" />
         <h4>کتب درسی</h4>
       </div>
 
       <div class="cart">
         <img
-          src="../../../assets/img/home-icons/pencil.png"
+          src="../../../assets/img/home-icons/pencil.svg"
           @touchstart="MoveToCLassRoom"
         />
         <h4>کلاس ها</h4>
       </div>
 
       <div class="cart">
-        <img src="../../../assets/img/home-icons/archive.png" />
+        <img src="../../../assets/img/home-icons/archive.svg" />
         <h4>بسته پشتیبانی</h4>
       </div>
 
       <div class="cart">
         <img
-          src="../../../assets/img/home-icons/bill-of-document.png"
+          src="../../../assets/img/home-icons/bill-of-document.svg"
           @touchstart="changeShowAzmoon(true)"
         />
         <h4>آزمون ها</h4>
@@ -47,7 +47,7 @@
 
       <div class="cart">
         <img
-          src="../../../assets/img/home-icons/google-maps-icon-256.png"
+          src="../../../assets/img/home-icons/google-maps-icon-256.svg"
           @touchstart="changeShowRoadMap(true)"
         />
         <h4>نقشه راه</h4>
@@ -56,7 +56,7 @@
       <div class="cart">
         <img
           @touchstart="MoveToCalendar"
-          src="../../../assets/img/home-icons/system-calendar-icon-256.png"
+          src="../../../assets/img/home-icons/system-calendar-icon-256.svg"
         />
         <h4>تقویم آموزشی</h4>
       </div>

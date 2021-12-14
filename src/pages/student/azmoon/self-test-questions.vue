@@ -1,5 +1,12 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
+
+  <!-- Spinner -->
+  <div class="loader-parent" v-else-if="!questions.length">
+    <div class="loading1"></div>
+  </div>
+  <!--  -->
+
   <div v-else class="self-test-questions" :style="styles">
     <nav class="sm-nav">
       <div>
@@ -30,7 +37,9 @@
         <div
           class="progress-bar bg-success"
           role="progressbar"
-          style="width: 100%"
+          :style="` width : ${
+            (currentQuestionIndex / questions[currentChunk].length) * 100 + 10
+          }% `"
           aria-valuenow="25"
           aria-valuemin="0"
           aria-valuemax="100"
@@ -66,7 +75,14 @@
             <!-- Answer Text -->
             {{ option.text }}
           </span>
-          <img src="../../../assets/img/vpn-key-white.png" class="tick" />
+
+          <div class="img">
+            <img
+              src="../../../assets/img/accept-path-light.png"
+              @click="changeShowDetail"
+              alt="active"
+            />
+          </div>
         </div>
       </div>
     </div>
@@ -75,8 +91,8 @@
     <div class="btns">
       <button
         class="red"
-        @click="currentQuestionIndex + 1 ? currentQuestionIndex++ : null"
-        v-if="currentQuestionIndex <= 8"
+        @click="showNextQuestion"
+        v-if="currentQuestionIndex + 1 < questions[currentChunk].length"
       >
         سوال بعدی
       </button>
@@ -85,7 +101,7 @@
       </button>
       <button
         class="red"
-        @click="currentQuestionIndex - 1 >= 0 ? currentQuestionIndex-- : null"
+        @click="showPreviousQuestion"
         v-if="currentQuestionIndex - 1 >= 0"
       >
         سوال قبلی
@@ -104,6 +120,7 @@ import { StudentExamApi } from '@/api/services/student/student-exam-service';
 import { toPersianNumbers } from '@/utilities/to-persian-numbers';
 import { store } from '@/store';
 import router from '@/router';
+const alertify = require('@/assets/alertifyjs/alertify');
 
 export default defineComponent({
   props: {
@@ -118,38 +135,51 @@ export default defineComponent({
 
     const currentChunk = ref(0);
 
-    // Check For Duplicate Exam And increase currentChunk if true
-    StudentSelfTestApi.selfTestResult({
-      course: model.value.course,
-      session: model.value._id
-    }).then((res) => {
-      console.log(res);
-    });
+    (async () => {
+      // Check For Duplicate Exam And increase currentChunk if true
+      const res = await StudentSelfTestApi.selfTestResult({
+        course: model.value.course,
+        session: model.value._id
+      });
+      const amountToslice = res.data.data.totalQuestion;
+      model.value.questions.splice(0, amountToslice);
 
-    // Get The Detail Of All Questions Inside of That Session
-    const tmpArray = [] as any;
+      if (model.value.questions.length <= 0) {
+        alertify.alert('شما قبلا این فصل را امتحان داده اید');
+        router.push({
+          name: 'SelfTest'
+        });
+      }
 
-    const requests = model.value.questions.map((question) => {
-      return new Promise((resolve) => {
-        StudentExamApi.getOneQuestion(question).then((res) => {
-          // Change The Correct Idx
-          let index = null;
-          res.data.data.options.forEach((option, idx) => {
-            if (option.isAnswer) index = idx + 1;
+      // Get The Detail Of All Questions Inside of That Session
+      const tmpArray = [] as any;
+
+      const requests = model.value.questions.map(async (question) => {
+        return new Promise((resolve) => {
+          StudentExamApi.getOneQuestion(question).then((res) => {
+            // Change The Correct Idx
+            let index = null;
+            res.data.data.options.forEach((option, idx) => {
+              if (option.isAnswer) index = idx + 1;
+            });
+
+            resolve(
+              tmpArray.push({
+                ...res.data.data,
+                answer: null,
+                correct: index
+              })
+            );
           });
-          resolve(
-            tmpArray.push({ ...res.data.data, answer: null, correct: index })
-          );
         });
       });
-    });
 
-    Promise.all(requests).then(() => {
       //  Split The Questions to array of 10
-      for (let i = 0, j = tmpArray.length; i < j; i += 10)
-        questions.value.push(tmpArray.slice(i, i + 10));
-      console.log(questions.value);
-    });
+      Promise.all(requests).then(() => {
+        for (let i = 0, j = tmpArray.length; i < j; i += 10)
+          questions.value.push(tmpArray.slice(i, i + 10));
+      });
+    })();
 
     const submitSelfTest = () => {
       const arrayToSend = questions.value[currentChunk.value].map(
@@ -170,6 +200,11 @@ export default defineComponent({
         if (res.data.status == 0 || res.data.status == 200 || res.data) {
           currentQuestionIndex.value = 0;
           currentChunk.value = 0;
+
+          alertify.success(res.data.message);
+          router.push({
+            name: 'Home'
+          });
         }
       });
     };
@@ -193,6 +228,18 @@ export default defineComponent({
 
     const goOnePageBack = () => router.go(-1);
 
+    const showNextQuestion = () => {
+      if (
+        currentQuestionIndex.value + 1 <
+        questions.value[currentChunk.value].length
+      )
+        currentQuestionIndex.value++;
+    };
+
+    const showPreviousQuestion = () => {
+      if (currentQuestionIndex.value - 1 >= 0) currentQuestionIndex.value--;
+    };
+
     return {
       styles,
       goOnePageBack,
@@ -204,7 +251,9 @@ export default defineComponent({
       questions,
       submitSelfTest,
       changeQuestionsAnswer,
-      store
+      store,
+      showNextQuestion,
+      showPreviousQuestion
     };
   }
 });
@@ -323,19 +372,27 @@ export default defineComponent({
         height: 4rem;
         max-height: 5.5rem;
 
+        .img {
+          width: 27px;
+          height: 27px;
+          padding: 7px;
+          border-radius: 50%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          background: #fff;
+          border: solid 1px #c1c1c193;
+
+          img {
+            object-fit: contain;
+          }
+        }
+
         span {
           font-family: IRANSans;
           font-size: 13px;
           font-weight: bold;
           color: #646464;
-        }
-
-        .tick {
-          width: 24px;
-          height: 24px;
-          object-fit: contain;
-          border: solid 1px #c1c1c1;
-          border-radius: 50px;
         }
       }
       // Success Class
@@ -345,7 +402,7 @@ export default defineComponent({
         span {
           color: #3fca60;
         }
-        .tick {
+        .img {
           background: #3fca60;
         }
       }

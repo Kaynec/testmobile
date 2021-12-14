@@ -1,0 +1,35 @@
+<svg width="96" height="95" viewBox="0 0 96 95" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <filter x="-72.8%" y="-62%" width="245.7%" height="224%" filterUnits="objectBoundingBox" id="a">
+            <feGaussianBlur stdDeviation="12" in="SourceGraphic"/>
+        </filter>
+        <filter x="-3.9%" y="-2.8%" width="107.8%" height="107.8%" filterUnits="objectBoundingBox" id="b">
+            <feOffset dy="1" in="SourceAlpha" result="shadowOffsetOuter1"/>
+            <feGaussianBlur stdDeviation="1" in="shadowOffsetOuter1" result="shadowBlurOuter1"/>
+            <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.3 0" in="shadowBlurOuter1"/>
+        </filter>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="99.544%" id="d">
+            <stop stop-color="#FFF" offset="0%"/>
+            <stop stop-color="#DFDFDF" offset="100%"/>
+        </linearGradient>
+        <rect id="c" x="2.644" y="2.5" width="90" height="90" rx="45"/>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <path d="M28.249 36.944h33.43a8 8 0 0 1 8 8V87a8 8 0 0 1-8 8H28.25a8 8 0 0 1-8-8V44.944a8 8 0 0 1 8-8z" fill="#ACACAD" opacity=".75" filter="url(#a)"/>
+        <g>
+            <g>
+                <use fill="#000" filter="url(#b)" xlink:href="#c"/>
+                <use fill="url(#d)" xlink:href="#c"/>
+            </g>
+            <ellipse fill="#B1B1B1" opacity=".08" cx="66.702" cy="76" rx="42.88" ry="76"/>
+            <ellipse fill="#B1B1B1" opacity=".08" cx="23.524" cy="140.917" rx="43.178" ry="76.528"/>
+        </g>
+        <text font-family="IRANSans-Bold, IRANSans" font-size="11.7" font-weight="bold" fill="#171717">
+                    <tspan x="29.064" y="67.155">تقویم</tspan>
+                </text>
+        <g stroke="#D21921" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="0,0">
+            <path stroke-width="2.362" d="M41.422 22.278v4.667M53.867 22.278v4.667M34.422 33.307h26.445M61.644 45.611c0 4.667-2.333 7.778-7.777 7.778H41.422c-5.444 0-7.778-3.111-7.778-7.778V32.39c0-4.667 2.334-7.778 7.778-7.778h12.445c5.444 0 7.777 3.111 7.777 7.778V45.61z"/>
+            <path stroke-width="3.15" d="M53.392 40.478h.014M53.392 45.145h.014M47.638 40.478h.014M47.638 45.145h.014M41.88 40.478h.014M41.88 45.145h.014"/>
+        </g>
+    </g>
+</svg>

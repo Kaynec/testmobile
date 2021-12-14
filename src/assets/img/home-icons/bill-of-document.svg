@@ -1,0 +1,35 @@
+<svg width="97" height="95" viewBox="0 0 97 95" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <filter x="-72.8%" y="-62%" width="245.7%" height="224%" filterUnits="objectBoundingBox" id="a">
+            <feGaussianBlur stdDeviation="12" in="SourceGraphic"/>
+        </filter>
+        <filter x="-3.9%" y="-2.8%" width="107.8%" height="107.8%" filterUnits="objectBoundingBox" id="b">
+            <feOffset dy="1" in="SourceAlpha" result="shadowOffsetOuter1"/>
+            <feGaussianBlur stdDeviation="1" in="shadowOffsetOuter1" result="shadowBlurOuter1"/>
+            <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.3 0" in="shadowBlurOuter1"/>
+        </filter>
+        <linearGradient x1="50%" y1="0%" x2="50%" y2="99.544%" id="d">
+            <stop stop-color="#FFF" offset="0%"/>
+            <stop stop-color="#DFDFDF" offset="100%"/>
+        </linearGradient>
+        <rect id="c" x="2.644" y="2.5" width="90" height="90" rx="45"/>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <path d="M28.249 36.944h33.43a8 8 0 0 1 8 8V87a8 8 0 0 1-8 8H28.25a8 8 0 0 1-8-8V44.944a8 8 0 0 1 8-8z" fill="#ACACAD" opacity=".75" filter="url(#a)" transform="translate(.718)"/>
+        <g transform="translate(.718)">
+            <g>
+                <use fill="#000" filter="url(#b)" xlink:href="#c"/>
+                <use fill="url(#d)" xlink:href="#c"/>
+            </g>
+            <ellipse fill="#B1B1B1" opacity=".08" cx="66.702" cy="76" rx="42.88" ry="76"/>
+            <ellipse fill="#B1B1B1" opacity=".08" cx="23.524" cy="140.917" rx="43.178" ry="76.528"/>
+        </g>
+        <text font-family="IRANSans-Bold, IRANSans" font-size="11.7" font-weight="bold" fill="#171717" transform="translate(.718)">
+                    <tspan x="21.007" y="67.155">آزمون ها</tspan>
+                </text>
+        <g stroke="#D21921" stroke-width="2.362" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="0,0">
+            <path d="m49.917 47.836-6.922 4.604c-1.026.684-2.41-.047-2.41-1.291v-3.313c-4.668 0-7.779-3.111-7.779-7.778v-9.334c0-4.666 3.111-7.777 7.778-7.777H56.14c4.666 0 7.777 3.11 7.777 7.777v9.334c0 4.667-3.11 7.778-7.777 7.778h-6.223z"/>
+            <path d="M48.362 36.838v-.327c0-1.058.653-1.618 1.307-2.069.637-.435 1.275-.995 1.275-2.022a2.576 2.576 0 0 0-2.582-2.582 2.576 2.576 0 0 0-2.582 2.582M48.355 40.556h.014"/>
+        </g>
+    </g>
+</svg>

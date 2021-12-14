@@ -67,10 +67,10 @@ header {
       font-weight: bold;
     }
     .profile-image {
-      width: 29px;
-      height: 28px;
+      width: 2.6rem;
+      height: 2.6rem;
       margin: 0 10px 0 0;
-      border-radius: 8px;
+      border-radius: 50%;
       border: solid 2px #ddd;
     }
   }

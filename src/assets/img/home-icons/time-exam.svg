@@ -1,0 +1,39 @@
+<svg width="160" height="90" viewBox="0 0 160 90" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <defs>
+        <linearGradient x1="96.274%" y1="28.045%" x2="-5.952%" y2="76.149%" id="a">
+            <stop stop-color="#FFCEAB" offset="0%"/>
+            <stop stop-color="#FF7A72" offset="100%"/>
+        </linearGradient>
+        <linearGradient x1="0%" y1="34.18%" x2="100%" y2="65.82%" id="e">
+            <stop stop-color="#72DBDF" offset="0%"/>
+            <stop stop-color="#4EA5A9" offset="100%"/>
+        </linearGradient>
+        <filter x="-43.4%" y="-65.5%" width="186.7%" height="230.9%" filterUnits="objectBoundingBox" id="b">
+            <feGaussianBlur stdDeviation="12" in="SourceGraphic"/>
+        </filter>
+        <filter x="-2.2%" y="-2.8%" width="104.4%" height="107.8%" filterUnits="objectBoundingBox" id="c">
+            <feOffset dy="1" in="SourceAlpha" result="shadowOffsetOuter1"/>
+            <feGaussianBlur stdDeviation="1" in="shadowOffsetOuter1" result="shadowBlurOuter1"/>
+            <feColorMatrix values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.3 0" in="shadowBlurOuter1"/>
+        </filter>
+        <rect id="d" x="0" y="0" width="160" height="90" rx="8"/>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <path d="M42 35h67a8 8 0 0 1 8 8v39a8 8 0 0 1-8 8H42a8 8 0 0 1-8-8V43a8 8 0 0 1 8-8z" fill="url(#a)" opacity=".75" filter="url(#b)"/>
+        <g>
+            <use fill="#000" filter="url(#c)" xlink:href="#d"/>
+            <use fill="url(#e)" xlink:href="#d"/>
+            <circle fill="#FFF" opacity=".08" cx="112" cy="72" r="72"/>
+            <circle fill="#FFF" opacity=".08" cx="39.5" cy="133.5" r="72.5"/>
+        </g>
+        <text font-family="IRANSans-Bold, IRANSans" font-size="13" font-weight="bold" fill="#FFF">
+                    <tspan x="45.519" y="73.061">آزمون بازی</tspan>
+                </text>
+        <g fill="#FFF">
+            <path d="M69.482 39.07a1.32 1.32 0 0 1 0-1.855l5.338-5.338a1.32 1.32 0 0 1 1.855 0 1.32 1.32 0 0 1 0 1.855l-5.338 5.338a1.375 1.375 0 0 1-.927.385c-.333 0-.665-.123-.928-.385z" fill-rule="nonzero"/>
+            <path d="m74.873 39.122-5.338-5.337a1.32 1.32 0 0 1 0-1.855 1.32 1.32 0 0 1 1.855 0l5.338 5.337a1.32 1.32 0 0 1 0 1.855 1.298 1.298 0 0 1-.928.385c-.332 0-.665-.122-.927-.385zM80.928 35.5c0-.962.77-1.75 1.732-1.75h.035c.963 0 1.75.788 1.75 1.75s-.77 1.75-1.75 1.75c-.962 0-1.767-.788-1.767-1.75zM87.822 35.5c0-.962.77-1.75 1.733-1.75h.035c.962 0 1.75.788 1.75 1.75s-.788 1.75-1.75 1.75c-.963 0-1.768-.788-1.768-1.75zM84.375 38.965v-.035c0-.963.787-1.75 1.75-1.75s1.75.787 1.75 1.75c0 .962-.77 1.767-1.75 1.767a1.74 1.74 0 0 1-1.75-1.732zM84.375 32.07v-.035c0-.962.787-1.75 1.75-1.75s1.75.788 1.75 1.75c0 .963-.77 1.768-1.75 1.768a1.74 1.74 0 0 1-1.75-1.733z" fill-rule="nonzero"/>
+            <path d="M74.75 50.813c-9.502 0-13.563-4.06-13.563-13.563v-3.5c0-9.502 4.06-13.563 13.563-13.563h10.5c9.502 0 13.563 4.06 13.563 13.563v3.5c0 9.502-4.06 13.563-13.563 13.563h-10.5zM63.812 33.75v3.5c0 8.068 2.87 10.938 10.938 10.938h10.5c8.068 0 10.938-2.87 10.938-10.938v-3.5c0-8.068-2.87-10.938-10.938-10.938h-10.5c-8.068 0-10.938 2.87-10.938 10.938z"/>
+            <path d="M79.983 22.813a3.077 3.077 0 0 1-3.063-3.063c0-1.68 1.365-3.063 3.045-3.063.28 0 .473-.192.49-.437l.018-1.767a1.318 1.318 0 0 1 1.312-1.296h.018c.717.018 1.312.613 1.295 1.33l-.018 1.768c-.017 1.662-1.4 3.027-3.062 3.027-.28 0-.455.193-.455.438s.192.438.437.438h1.75c.718 0 1.313.595 1.313 1.312 0 .718-.613 1.313-1.33 1.313h-1.75z" fill-rule="nonzero"/>
+        </g>
+    </g>
+</svg>
