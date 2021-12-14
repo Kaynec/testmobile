@@ -59,7 +59,8 @@ import {
   computed,
   reactive,
   onBeforeUpdate,
-  onUpdated
+  onUpdated,
+  onMounted
 } from 'vue';
 import SmallHeader from '@/modules/student-modules/header/small-header.vue';
 import { StudentproductApi } from '@/api/services/student/student-product';

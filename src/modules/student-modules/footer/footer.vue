@@ -6,7 +6,7 @@
       exact
       exact-active-class="active"
     >
-      <img src="../../../assets/img/home.png" class="footer-icon" />
+      <img src="../../../assets/img/home@3x.png" class="footer-icon" />
     </router-link>
 
     <router-link
@@ -15,7 +15,7 @@
       exact
       exact-active-class="active"
     >
-      <img src="../../../assets/img/group.png" class="footer-icon" />
+      <img src="../../../assets/img/group@3x.png" class="footer-icon" />
     </router-link>
 
     <router-link
@@ -24,7 +24,7 @@
       exact
       exact-active-class="active"
     >
-      <img src="../../../assets/img/shop.png" class="footer-icon" />
+      <img src="../../../assets/img/shop@3x.png" class="footer-icon" />
     </router-link>
     <router-link
       :to="`setting`"
@@ -32,7 +32,7 @@
       exact
       exact-active-class="active"
     >
-      <img src="../../../assets/img/setting.png" class="footer-icon" />
+      <img src="../../../assets/img/setting@3x.png" class="footer-icon" />
     </router-link>
   </div>
 </template>
@@ -40,7 +40,7 @@
 // @import '@/css-variable/Global.scss';
 .footer {
   width: 100%;
-  height: clamp(3rem, 3.5rem, 4rem);
+  height: clamp(4rem, 4rem, 4rem);
   flex-basis: clamp(10%, 12.5%, 17.5%);
   position: fixed;
   bottom: 0;
@@ -50,11 +50,10 @@
   align-items: center;
   border-top-left-radius: 30px;
   border-top-right-radius: 30px;
-  background-image: linear-gradient(to right, #880e13 20%, #ec3538);
+  background-image: linear-gradient(to right, #880e13 7%, #ec3538);
   z-index: 4;
   .footer-icon {
     object-fit: contain;
-    // width: minmax(3.5rem, 5.2rem);
     width: 25vw;
     max-width: 5rem;
   }

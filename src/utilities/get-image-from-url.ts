@@ -20,4 +20,14 @@ const displayProtectedImage = async (imageUrl, imgRef) => {
   return dataUrl;
 };
 
+export const returnProtectedImage = async (imageUrl: string) => {
+  // Fetch the image.
+  const response = await fetchWithAuthentication(imageUrl);
+  // Convert the data to Base64 and build a data URL.
+  const binaryData = await response.arrayBuffer();
+  const base64 = arrayBufferToBase64(binaryData);
+  const dataUrl = `data:image/png;base64,${base64}`;
+  return dataUrl;
+};
+
 export default displayProtectedImage;

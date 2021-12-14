@@ -54,16 +54,31 @@
   </div>
 </template>
 <script lang="ts">
-import { computed, defineComponent, reactive, ref } from 'vue';
+import {
+  computed,
+  defineComponent,
+  onMounted,
+  onUpdated,
+  reactive,
+  ref
+} from 'vue';
 import Footer from '@/modules/student-modules/footer/footer.vue';
 import router from '@/router';
 import { store } from '@/store';
 // import { StudentOrientationApi } from '@/api/services/student/student-orientation-service';
 // import { StudentGradeApi } from '@/api/services/student/student-grade-service';
+import { returnProtectedImage } from '@/utilities/get-image-from-url';
 import { StudentActionTypes } from '@/store/modules/student/action-types';
 export default defineComponent({
   components: { Footer },
   setup() {
+    // Change The
+    onUpdated(() => {
+      console.log('salam');
+      const imageUrl = `https://www.api.devnirone.ir/api/student/getProfileImage/${store.getters.getCurrentStudent.profileImage}`;
+      console.log(returnProtectedImage(imageUrl));
+    });
+    //
     let currentUser = reactive(store.getters.getCurrentStudent);
     let orientationName = ref(currentUser.orientation.title);
     let gradeName = ref(currentUser.grade.title);

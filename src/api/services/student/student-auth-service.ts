@@ -13,7 +13,7 @@ class StudentAuthService {
     return instance.post('auth/student/login', user, {
       headers: {
         // Overwrite Axios's automatically set Content-Type
-        // 'Content-Type': 'application/json'
+        'Content-Type': 'application/json'
       }
     });
   }
@@ -22,7 +22,7 @@ class StudentAuthService {
     return instance.post('auth/verificationcode', code, {
       headers: {
         // Overwrite Axios's automatically set Content-Type
-        // 'Content-Type': 'application/json'
+        'Content-Type': 'application/json'
       }
     });
   }
@@ -31,7 +31,7 @@ class StudentAuthService {
     return instance.post('auth/student/profile', student, {
       headers: {
         // Overwrite Axios's automatically set Content-Type
-        // 'Content-Type': 'application/json'
+        'Content-Type': 'application/json'
       }
     });
   }
@@ -41,6 +41,21 @@ class StudentAuthService {
       headers: {
         // Overwrite Axios's automatically set Content-Type
         'Content-Type': 'application/json'
+      }
+    });
+  }
+  async getStudentImage(name: string) {
+    return instance.get(`student/getProfileImage/${name}`, {
+      headers: {
+        // Overwrite Axios's automatically set Content-Type
+      }
+    });
+  }
+  async uploadProfile(formDataPicture) {
+    return instance.post('student/uploadProfile', formDataPicture, {
+      headers: {
+        // Overwrite Axios's automatically set Content-Type
+        'Content-Type': 'multipart/form-data'
       }
     });
   }

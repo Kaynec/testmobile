@@ -427,9 +427,7 @@ export default defineComponent({
     };
     // cancel //
     const cancel = () => {
-      router.push({
-        name: 'question'
-      });
+      router.push({ name: 'question' });
       alertify.notify('cancelled action');
     };
 

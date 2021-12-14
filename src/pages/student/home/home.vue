@@ -3,12 +3,15 @@
   <div class="user-home" v-else :style="styles">
     <!-- Header -->
     <Header />
-    <img src="../../../assets/img/hero@2x.png" class="hero" alt="hero-img" />
+    <img
+      src="../../../assets/img/tech-training-purple@2x.png"
+      class="hero"
+      alt="hero-img"
+    />
     <!-- Main Container -->
     <div class="cart-container">
       <div class="cart long">
         <img src="../../../assets/img/home-icons/time-exam.svg" />
-        <h4>آزمون بازی</h4>
       </div>
 
       <div class="cart long">
@@ -16,12 +19,10 @@
           src="../../../assets/img/home-icons/duel.png"
           @touchstart="MoveToDoul"
         />
-        <h4>دوئل حرفه ای</h4>
       </div>
 
       <div class="cart">
-        <img src="../../../assets/img/home-icons/bitmap.svg" />
-        <h4>کتب درسی</h4>
+        <img src="../../../assets/img/home-icons/bill-of-document.svg" />
       </div>
 
       <div class="cart">
@@ -29,20 +30,17 @@
           src="../../../assets/img/home-icons/pencil.svg"
           @touchstart="MoveToCLassRoom"
         />
-        <h4>کلاس ها</h4>
       </div>
 
       <div class="cart">
         <img src="../../../assets/img/home-icons/archive.svg" />
-        <h4>بسته پشتیبانی</h4>
       </div>
 
       <div class="cart">
         <img
-          src="../../../assets/img/home-icons/bill-of-document.svg"
+          src="../../../assets/img/home-icons/azmoon.svg"
           @touchstart="changeShowAzmoon(true)"
         />
-        <h4>آزمون ها</h4>
       </div>
 
       <div class="cart">
@@ -50,7 +48,6 @@
           src="../../../assets/img/home-icons/google-maps-icon-256.svg"
           @touchstart="changeShowRoadMap(true)"
         />
-        <h4>نقشه راه</h4>
       </div>
 
       <div class="cart">
@@ -58,7 +55,6 @@
           @touchstart="MoveToCalendar"
           src="../../../assets/img/home-icons/system-calendar-icon-256.svg"
         />
-        <h4>تقویم آموزشی</h4>
       </div>
     </div>
     <Footer />
@@ -95,6 +91,7 @@ export default class Login extends Vue {
   public showAzmoon = false;
   public showRoadMap = false;
   public mounted(): void {
+    console.log(store.getters.getStudentToken);
     this.$nextTick(() => {
       window.addEventListener('resize', this.onResize);
     });
@@ -165,19 +162,22 @@ export default class Login extends Vue {
   position: relative;
 
   .hero {
-    width: 100%;
+    width: 95%;
     max-height: 40vh;
     object-fit: cover;
+    margin: 1rem auto 0;
   }
 }
 .cart-container {
-  width: 100%;
+  width: 95%;
+  margin-inline: auto;
   flex-grow: 1;
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  padding: 0.25rem;
   align-items: center;
+  max-height: 500px;
+
   .cart {
     display: flex;
     flex-direction: column;
@@ -186,37 +186,26 @@ export default class Login extends Vue {
     flex-basis: 33.33%;
     width: 33.33%;
 
+    img {
+      border-radius: 43%;
+      width: 80%;
+    }
+
     &:nth-of-type(7),
     &:nth-of-type(6),
     &:nth-of-type(8) {
       margin-bottom: 3.8rem;
     }
-    img {
-      width: 60%;
-      height: 60%;
-      aspect-ratio: 1;
-      padding: 10%;
-      background: linear-gradient(to bottom, white 30%, #ddd);
-      border-radius: 10px;
-      margin-bottom: 0.5rem;
-      object-fit: contain;
-    }
-    h4 {
-      font-family: IRANSans;
-      font-size: 12px;
-      font-weight: bold;
-    }
   }
   .long {
-    flex-basis: 42%;
+    flex-basis: 50%;
     height: 6.2rem;
     margin: 0.7rem auto 0 auto;
-    border-radius: 18px;
 
-    background: linear-gradient(to bottom, white 30%, #ddd);
     img {
-      background: none;
       padding: 3%;
+      border-radius: 0%;
+      width: 100%;
     }
   }
 }
