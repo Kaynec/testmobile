@@ -149,6 +149,8 @@ export default defineComponent({
       };
     });
 
+    console.log(store.getters.getCurrentStudent);
+
     const showThisWhileUplading = ref(false);
 
     const goOnePageBack = () => router.go(-1);
@@ -324,11 +326,9 @@ export default defineComponent({
     }
     .avatar {
       position: relative;
-      max-width: 104px;
-      max-height: 104px;
-      padding: 10px;
+      width: 6rem;
+      height: 6rem;
       border-radius: 50px;
-      padding: 2px;
       border: solid 4.4px white;
     }
   }

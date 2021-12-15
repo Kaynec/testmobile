@@ -9,6 +9,15 @@ class Support {
       }
     });
   }
+
+  async getpicture(name: string) {
+    return instance.get(`api/mentor/getProfileImage/${name}`, {
+      headers: {
+        // Overwrite Axios's automatically set Content-Type
+        // 'Content-Type': 'application/json'
+      }
+    });
+  }
 }
 
 export const StudentSupportApi = new Support();

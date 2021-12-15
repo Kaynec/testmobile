@@ -49,6 +49,14 @@
       </button>
 
       <p
+        @click="resendVerificationCode()"
+        class="text-custom text text-nowrap text-center text-secondary"
+        style="font-family: IRANSans; font-size: 0.75rem"
+      >
+        ارسال مجدد
+      </p>
+
+      <p
         @click="cancel()"
         class="text-custom text text-nowrap text-center"
         style="font-family: IRANSans; font-size: 0.75rem"
@@ -130,7 +138,25 @@ export default defineComponent({
       }
     }));
     const v$ = useVuelidate(rules, code);
-    return { cancel, code, v$, sendToHome, sendToPasswordRecover };
+
+    const resendVerificationCode = async () => {
+      const sendCode = await axios({
+        method: 'post',
+        url: 'https://www.api.devnirone.ir/api/auth/sendverificationcode',
+        headers: {
+          token: props.token
+        }
+      });
+    };
+
+    return {
+      cancel,
+      code,
+      v$,
+      sendToHome,
+      sendToPasswordRecover,
+      resendVerificationCode
+    };
   }
 });
 </script>

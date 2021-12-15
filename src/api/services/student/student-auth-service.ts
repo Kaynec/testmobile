@@ -27,6 +27,15 @@ class StudentAuthService {
     });
   }
 
+  async resendVerificationCode() {
+    return instance.post('auth/sendverificationcode', {
+      headers: {
+        // Overwrite Axios's automatically set Content-Type
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+
   async editStudent(student) {
     return instance.post('auth/student/profile', student, {
       headers: {
