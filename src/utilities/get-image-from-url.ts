@@ -7,7 +7,12 @@ const fetchWithAuthentication = (url) => {
 };
 
 const arrayBufferToBase64 = (buffer: ArrayBuffer) => {
-  return btoa(String.fromCharCode(...new Uint8Array(buffer)));
+  return btoa(
+    new Uint8Array(buffer).reduce(
+      (data, byte) => data + String.fromCharCode(byte),
+      ''
+    )
+  );
 };
 const displayProtectedImage = async (imageUrl, imgRef) => {
   // Fetch the image.

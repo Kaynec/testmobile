@@ -1,5 +1,10 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
+  <!-- Spinner -->
+  <div class="loader-parent" v-else-if="showThisWhileUplading">
+    <div class="loading1"></div>
+  </div>
+  <!--  -->
   <div class="edit" v-else :style="styles">
     <nav class="nav">
       <span> ویرایش اطلاعات </span>
@@ -130,8 +135,10 @@ import { required, minLength, helpers, maxLength } from '@vuelidate/validators';
 import { StudentAuthServiceApi } from '@/api/services/student/student-auth-service';
 import { StudentActionTypes } from '@/store/modules/student/action-types';
 import { store } from '@/store';
+import { returnProtectedImage } from '@/utilities/get-image-from-url';
 import router from '@/router';
 import { provinces } from '@/assets/provinces';
+import { StudentMutationTypes } from '@/store/modules/student/mutation-types';
 const alertify = require('@/assets/alertifyjs/alertify');
 
 export default defineComponent({
@@ -141,6 +148,8 @@ export default defineComponent({
         'min-height': `calc( 1vh * 100) `
       };
     });
+
+    const showThisWhileUplading = ref(false);
 
     const goOnePageBack = () => router.go(-1);
 
@@ -203,6 +212,8 @@ export default defineComponent({
       // If Something isn't filled return
       if (v$.value.$invalid) return;
       else {
+        showThisWhileUplading.value = true;
+
         const { img, ...restOfModel } = model as any;
 
         const temp = new FormData();
@@ -214,11 +225,19 @@ export default defineComponent({
         // if user selected a img
         if (img != '') {
           temp.append('profile', img);
-          await StudentAuthServiceApi.uploadProfile(temp);
+          const profileRes = await StudentAuthServiceApi.uploadProfile(temp);
+          if (profileRes.data) {
+            const imageUrl = `https://www.api.devnirone.ir/api/student/getProfileImage/${store.getters.getCurrentStudent.profileImage}`;
+            // Set The Img of User To This One
+            returnProtectedImage(imageUrl).then((res) => {
+              store.commit(StudentMutationTypes.SET_PROFILE_PICTURE, res);
+            });
+          }
         }
 
         // If The res is okay
         if (userEditedInfo.data) {
+          showThisWhileUplading.value = false;
           // / Update The Current user
           store.dispatch(StudentActionTypes.CURRENT_STUDENT);
           alertify.success('کاربر با موفقیت ویرایش شد');
@@ -245,7 +264,8 @@ export default defineComponent({
       openCamera,
       uploadImage,
       StudentAuthServiceApi,
-      store
+      store,
+      showThisWhileUplading
     };
   }
 });

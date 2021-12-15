@@ -53,15 +53,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  ref,
-  computed,
-  reactive,
-  onBeforeUpdate,
-  onUpdated,
-  onMounted
-} from 'vue';
+import { defineComponent, ref, computed, reactive, onUpdated } from 'vue';
 import SmallHeader from '@/modules/student-modules/header/small-header.vue';
 import { StudentproductApi } from '@/api/services/student/student-product';
 import router from '@/router';
@@ -83,13 +75,9 @@ export default defineComponent({
     // Images For The Categories
     let itemRefs = [] as any;
     const setItemRef = (el) => {
-      if (el) {
-        itemRefs.push(el);
-      }
+      if (el) itemRefs.push(el);
     };
-    onBeforeUpdate(() => {
-      itemRefs = [];
-    });
+
     onUpdated(() => {
       productCategories.forEach((data, idx) => {
         const imageUrl = `https://www.api.devnirone.ir/api/product-category/coverImage/${data._id}`;
