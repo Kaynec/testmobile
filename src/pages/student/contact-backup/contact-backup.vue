@@ -11,26 +11,27 @@
     <!-- Change THis With Real Data Coming From Some Server-->
     <div class="flex">
       <div class="card" v-for="item in data" :key="item._id">
-        <transition name="fade">
-          <img
-            data-toggle="tooltip"
-            data-placement="bottom"
-            title="goTop"
-            src="../../../assets/img/contact/PictureOfFirstGuy.png"
-            alt="Picture of a supporot person"
-            class="person-img"
-            @click="MoveToBackUpInfo(item)"
-            :ref="setImageRef"
-          />
-        </transition>
-        <!-- 
+        <div v-if="!item.img" class="loader">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+
+        <!-- Spinner -->
+        <!-- <div class="loader-parent" v-if="!item.img">
+          <div class="loading1"></div>
+        </div> -->
+        <!--  -->
+
         <img
-          src="../../../assets/img/contact/PictureOfFirstGuy.png"
+          :src="item.img"
           alt="Picture of a supporot person"
           class="person-img"
           @click="MoveToBackUpInfo(item)"
-          :ref="setImageRef"
-        /> -->
+          v-else
+        />
 
         <div class="child-flex">
           <div>
@@ -59,9 +60,7 @@
 import { defineComponent, computed, ref, onUpdated } from 'vue';
 import SmallHeader from '@/modules/student-modules/header/small-header.vue';
 import { StudentSupportApi } from '@/api/services/student/student-support-service';
-import displayProtectedImage, {
-  returnProtectedImage
-} from '@/utilities/get-image-from-url';
+import { returnProtectedImage } from '@/utilities/get-image-from-url';
 import router from '@/router';
 
 export default defineComponent({
@@ -90,7 +89,9 @@ export default defineComponent({
     onUpdated(() => {
       data.value.forEach((mentor, idx) => {
         const imageUrl = `https://www.api.devnirone.ir/api/mentor/getProfileImage/${mentor.profileImage}`;
-        displayProtectedImage(imageUrl, imageRefs[idx]);
+        returnProtectedImage(imageUrl).then((res) => {
+          mentor.img = res;
+        });
       });
     });
 
@@ -106,7 +107,8 @@ export default defineComponent({
       goToChatPage,
       data,
       setImageRef,
-      imageRefs
+      imageRefs,
+      returnProtectedImage
     };
   }
 });
