@@ -76,14 +76,7 @@
 
 <script lang="ts">
 // Get All The Books The Relate To This Genre And List It In The Template
-import {
-  defineComponent,
-  computed,
-  ref,
-  onBeforeUpdate,
-  onUpdated,
-  onMounted
-} from 'vue';
+import { defineComponent, computed, ref } from 'vue';
 import { StudentproductApi } from '@/api/services/student/student-product';
 import { toPersianNumbers } from '@/utilities/to-persian-numbers';
 import { store } from '@/store';
@@ -93,42 +86,34 @@ import ShopFooter from '@/modules/student-modules/footer/shop-footer.vue';
 import { returnProtectedImage } from '@/utilities/get-image-from-url';
 
 export default defineComponent({
-  props: {
-    id: { type: String },
-    title: { type: String }
-  },
+  props: { id: { type: String }, title: { type: String } },
   components: { ShopFooter },
   setup(props) {
     const data = ref({} as any),
       id = ref(props.id);
-    if (props.id)
-      store.commit(StudentMutationTypes.SET_CURRENT_ID_OF_SHOP, id.value);
-    id.value = store.getters.getCurrentIdOfShop;
-    StudentproductApi.getAllProducts(id.value).then((res) => {
-      data.value = res.data;
-    });
 
-    const openSingleBookPage = (item, title, length) =>
+    if (props.id) {
+      store.commit(StudentMutationTypes.SET_CURRENT_ID_OF_SHOP, id.value);
+    }
+
+    //
+    const openSingleBookPage = (item, title, length) => {
       router.push({ name: 'SingleBookInfo', params: { item, title, length } });
+    };
+
     const goOnePageBack = () => router.go(-1);
 
-    let itemRefs = [] as any;
-    const setItemRef = (el) => {
-      if (el) {
-        itemRefs.push(el);
-      }
-    };
-    onBeforeUpdate(() => {
-      itemRefs = [];
-    });
-    onUpdated(() => {
+    (async () => {
+      id.value = store.getters.getCurrentIdOfShop;
+      const getAllProducts = await StudentproductApi.getAllProducts(id.value);
+      data.value = getAllProducts.data;
+
       data.value.data.forEach((data) => {
         const imageUrl = `https://www.api.devnirone.ir/api/product/coverImage/${data._id}`;
-        returnProtectedImage(imageUrl).then((res) => {
-          data.img = res;
-        });
+        // For Each Data Element Set It's Image to Returned Image from DB
+        returnProtectedImage(imageUrl).then((res) => (data.img = res));
       });
-    });
+    })();
 
     let styles = computed(() => {
       return {
@@ -141,9 +126,7 @@ export default defineComponent({
       openSingleBookPage,
       goOnePageBack,
       styles,
-      toPersianNumbers,
-      StudentproductApi,
-      setItemRef
+      toPersianNumbers
     };
   }
 });

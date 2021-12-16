@@ -94,7 +94,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref, onMounted } from 'vue';
+import { defineComponent, computed, ref } from 'vue';
 import router from '@/router';
 import ShopFooter from '@/modules/student-modules/footer/shop-footer.vue';
 import { toPersianNumbers } from '@/utilities/to-persian-numbers';
@@ -103,7 +103,6 @@ import { StudentBasketApi } from '@/api/services/student/student-basket-service'
 import { StudentproductApi } from '@/api/services/student/student-product';
 import { StudentMutationTypes } from '@/store/modules/student/mutation-types';
 import displayProtectedImage from '@/utilities/get-image-from-url';
-// const alertify = require('../../../assets/alertifyjs/alertify');
 
 export default defineComponent({
   components: { ShopFooter },
@@ -114,9 +113,11 @@ export default defineComponent({
   },
   setup(props) {
     const model = ref(JSON.parse(props.item as any));
+    if (props.item != '{}')
+      store.commit(StudentMutationTypes.SET_CURRENT_SHOP_INFO, model.value);
+    model.value = store.getters.getCurrentShopInfo;
     const shopBasket = ref();
     const img = ref();
-    const itemExistsInBasket = ref();
     // The Previes Amount If Any
     const AmountToShowInTemplate = ref(0);
     // The Object That We Add To Basket
@@ -125,37 +126,27 @@ export default defineComponent({
     });
 
     (async () => {
-      await StudentBasketApi.get().then((res) => {
-        shopBasket.value = res.data.data;
-        return true;
-      });
+      const res = await StudentBasketApi.get();
+      shopBasket.value = res.data.data;
 
-      itemExistsInBasket.value = shopBasket.value.items.find((el: any) =>
-        el.product ? el.product._id === model.value._id : false
+      const imageUrl = `https://www.api.devnirone.ir/api/product/coverImage/${model.value._id}`;
+      await displayProtectedImage(imageUrl, img.value);
+
+      const itemExistsInBasket = shopBasket.value.items.find(
+        (el: any) => el.product._id === model.value._id
       );
 
-      itemExistsInBasket.value &&
-        (AmountToShowInTemplate.value = itemExistsInBasket.value.quantity);
+      itemExistsInBasket &&
+        (AmountToShowInTemplate.value = itemExistsInBasket.quantity);
     })();
 
-    const iHaveBeenTouched = async () => {
+    const iHaveBeenTouched = async () =>
       await StudentBasketApi.add(objectToAddToBasket.value);
-    };
-
-    if (props.item === '{}') model.value = store.getters.getCurrentShopInfo;
-
-    if (model.value)
-      store.commit(StudentMutationTypes.SET_CURRENT_SHOP_INFO, model.value);
 
     const goOnePageBack = async () => {
       await StudentBasketApi.add(objectToAddToBasket.value);
       router.go(-1);
     };
-
-    onMounted(() => {
-      const imageUrl = `https://www.api.devnirone.ir/api/product/coverImage/${model.value._id}`;
-      displayProtectedImage(imageUrl, img.value);
-    });
 
     let styles = computed(() => {
       return {

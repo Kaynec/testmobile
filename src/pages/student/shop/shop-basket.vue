@@ -82,6 +82,7 @@ import router from '@/router';
 import { StudentBasketApi } from '@/api/services/student/student-basket-service';
 import { store } from '@/store';
 import { toPersianNumbers } from '@/utilities/to-persian-numbers';
+import { StudentMutationTypes } from '@/store/modules/student/mutation-types';
 
 export default defineComponent({
   components: {
@@ -101,18 +102,17 @@ export default defineComponent({
     const basketItems = ref([]);
     const purchaseId = ref(0);
 
-    StudentBasketApi.get().then((res) => {
+    (async () => {
+      const res = await StudentBasketApi.get();
       purchaseId.value = res.data.data._id;
-      //
       res.data.data.items.forEach((item) => {
         if (item.product != null) {
           allPrice.value += item.product.price;
+          allSpecialPrice.value += item.product.specialPrice || 0;
           basketItems.value.push(item);
-          if (item.product.specialPrice)
-            allSpecialPrice.value += item.product.specialPrice;
         }
       });
-    });
+    })();
 
     const payment = ref();
 
@@ -137,7 +137,6 @@ export default defineComponent({
     const goOnePageBack = () => router.go(-1);
 
     const submitOrder = () => {
-      console.log('SALAMSALAM');
       StudentBasketApi.finalizeOrder().then((res) => {
         console.log(res);
         if (res.data || res.data.status == 0) {
@@ -145,35 +144,37 @@ export default defineComponent({
         }
       });
     };
-    const removeItem = (item) => {
+    const removeItem = async (item) => {
       const tmpObject = {
         item: {
           product: { _id: item.product._id },
-          quantity: item.quantity - item.quantity * 2
+          quantity: -Math.abs(item.quantity)
         }
       };
-      StudentBasketApi.add(tmpObject).then((res) => {
-        if (res.data.status == 0 || res.data.status == 200) {
-          StudentBasketApi.get().then((res) => {
-            // Reset The data And fill Again
 
-            (basketItems.value = []), (allPrice.value = 0);
+      const res = await StudentBasketApi.add(tmpObject);
 
-            allSpecialPrice.value = 0;
+      if (res.data) {
+        (basketItems.value = []), (allPrice.value = 0);
+        store.commit(
+          StudentMutationTypes.SET_BASKET_COUNT,
+          store.getters.getBasketCount - item.quantity
+        );
+        const response = await StudentBasketApi.get();
 
-            res.data.data.items.forEach((item) => {
-              // if product is null return
-              if (!item.product) return;
-              // refill data
-              allPrice.value += item.product.price;
-              basketItems.value.push(item);
-              // if special price add it to special price number
-              if (item.product.specialPrice)
-                allSpecialPrice.value += item.product.specialPrice;
-            });
-          });
-        }
-      });
+        // Reset The data And fill Again
+
+        allSpecialPrice.value = 0;
+
+        response.data.data.items.forEach((item) => {
+          if (!item.product) return;
+          allPrice.value += item.product.price;
+          basketItems.value.push(item);
+
+          if (item.product.specialPrice)
+            allSpecialPrice.value += item.product.specialPrice;
+        });
+      }
     };
 
     let styles = computed(() => {

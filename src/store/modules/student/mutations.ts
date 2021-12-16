@@ -47,7 +47,7 @@ export const mutations: MutationTree<State> & Mutations = {
     state.CurrentIdOfShop = payload;
   },
   [StudentMutationTypes.SET_BASKET_COUNT](state: State, payload: number) {
-    state.BasketCount = payload;
+    if (payload >= 0) state.BasketCount = payload;
   },
   [StudentMutationTypes.SET_CURRENT_SHOP_INFO](state: State, payload: any) {
     state.CurrentShopInfo = payload;

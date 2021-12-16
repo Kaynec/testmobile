@@ -65,14 +65,7 @@
 </template>
 
 <script lang="ts">
-import {
-  defineComponent,
-  ref,
-  computed,
-  reactive,
-  onUpdated,
-  onBeforeUpdate
-} from 'vue';
+import { defineComponent, ref, computed, reactive } from 'vue';
 import SmallHeader from '@/modules/student-modules/header/small-header.vue';
 import { StudentproductApi } from '@/api/services/student/student-product';
 import router from '@/router';
@@ -84,31 +77,17 @@ export default defineComponent({
   components: { SmallHeader, ShopFooter },
   setup() {
     let productCategories = reactive([] as any);
-    StudentproductApi.getAllCategories().then((res) => {
-      if (!res.data.data.length) res.data.data[0] = 'No Product';
-      res.data.data.forEach(async (category) => {
-        productCategories.push(category);
-      });
-    });
-    const currentState = ref('yourProduct');
-    // Images For The Categories
 
-    // Ref For Images
-    let itemRefs = [] as any;
-
-    onBeforeUpdate(() => {
-      itemRefs = [] as any;
-    });
-    const setItemRef = (el) => {
-      if (el) itemRefs.push(el);
-    };
-
-    onUpdated(() => {
+    (async () => {
+      const res = await StudentproductApi.getAllCategories();
+      res.data.data.forEach((category) => productCategories.push(category));
       productCategories.forEach((data) => {
         const imageUrl = `https://www.api.devnirone.ir/api/product-category/coverImage/${data._id}`;
         returnProtectedImage(imageUrl).then((res) => (data.img = res));
       });
-    });
+    })();
+
+    const currentState = ref('yourProduct');
 
     const newsetData = [
       {
@@ -162,8 +141,7 @@ export default defineComponent({
       styles,
       moveToBasket,
       StudentproductApi,
-      store,
-      setItemRef
+      store
     };
   }
 });
