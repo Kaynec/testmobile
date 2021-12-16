@@ -9,10 +9,7 @@
           : 'fas fa-play pause-play'
       "
     ></i>
-    <nav class="nav">
-      <span> کارنامه </span>
-      <img src="../../../assets/img/arrow-left.png" @click="goOnePageBack" />
-    </nav>
+    <MinimalHeader title="کارنامه" />
     <div class="c-video">
       <video
         src="https://mazwai.com/videvo_files/video/free/2019-05/small_watermarked/190416_08_Whales_Drone_004_preview.webm"
@@ -61,8 +58,9 @@
 <script lang="ts">
 import { defineComponent, computed, ref, onBeforeUpdate } from 'vue';
 import router from '@/router';
-
+import MinimalHeader from '@/modules/student-modules/header/minimal-header.vue';
 export default defineComponent({
+  components: { MinimalHeader },
   setup() {
     const sendRequest = ref(false);
     //

@@ -119,11 +119,11 @@ export default class Login extends Vue {
     }, 100);
   }
 
-  get styles() {
-    return {
-      'min-height': `calc( 1vh * 100) `
-    };
-  }
+  // get styles() {
+  //   return {
+  //     'min-height': `calc( 1vh * 100) `
+  //   };
+  // }
   public changeShowRoadMap(boolean: boolean): void {
     this.showRoadMap = boolean;
   }
@@ -159,6 +159,7 @@ export default class Login extends Vue {
   background-color: #f4f4f4;
   font-family: IRANSans;
   position: relative;
+  padding-top: 8vh;
 
   .hero {
     width: 95%;
