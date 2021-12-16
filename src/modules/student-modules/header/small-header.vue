@@ -39,16 +39,19 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 .sm-nav {
-  width: 100%;
   background-color: #171717;
   display: flex;
   color: #fff;
   justify-content: space-between;
   align-items: center;
   padding: 0.7rem;
-  max-height: 8vh;
+  height: 8vh;
+  margin-bottom: 8vh;
   box-shadow: 0 -2px 5px 0 rgba(0, 0, 0, 0.09), 0 2px 4px 0 rgba(0, 0, 0, 0.19);
-
+  position: fixed; /* Set the navbar to fixed position */
+  top: 0; /* Position the navbar at the top of the page */
+  width: 100%; /* Full width */
+  z-index: 2;
   div {
     img {
       width: 29px;

@@ -32,7 +32,6 @@ export default defineComponent({
 
 <style lang="scss" scoped>
 header {
-  width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -42,6 +41,9 @@ header {
   max-height: 10vh;
   padding: 0.5rem;
   z-index: 2;
+  position: fixed; /* Set the navbar to fixed position */
+  top: 0; /* Position the navbar at the top of the page */
+  width: 100%; /* Full width */
   img.logo-mahan {
     width: 5.5rem;
     max-width: 120px;

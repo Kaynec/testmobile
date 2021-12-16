@@ -5,7 +5,7 @@
     <div class="loading1"></div>
   </div>
   <!--  -->
-  <div class="shop" v-else :style="styles">
+  <div class="shop bg" v-else>
     <SmallHeader />
     <div class="grid">
       <div
@@ -153,6 +153,7 @@ export default defineComponent({
   position: relative;
   background-color: #f4f4f4;
   overflow-x: hidden;
+  padding-top: 8vh;
 
   .grid {
     display: grid;
