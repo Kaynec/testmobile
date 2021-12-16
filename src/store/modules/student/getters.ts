@@ -11,6 +11,7 @@ export type Getters = {
   getBasketCount(state: State): number | null;
   getCurrentShopInfo(state: State): any | null;
   getProfilePicture(state: State): string | null;
+  getCurrentSupportPerson: (state) => string | null;
 };
 
 export const getters: GetterTree<State, RootState> & Getters = {
@@ -34,5 +35,8 @@ export const getters: GetterTree<State, RootState> & Getters = {
   },
   getProfilePicture: (state) => {
     return state.ProfilePicture;
+  },
+  getCurrentSupportPerson: (state) => {
+    return state.CurrentSuppertPerson;
   }
 };

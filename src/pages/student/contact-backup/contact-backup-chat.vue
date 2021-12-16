@@ -36,7 +36,10 @@ import { defineComponent, computed, ref } from 'vue';
 import router from '@/router';
 
 export default defineComponent({
-  setup() {
+  props: {
+    data: { type: String }
+  },
+  setup(props) {
     let styles = computed(() => {
       return {
         'min-height': `calc( 1vh * 100) `

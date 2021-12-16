@@ -31,6 +31,10 @@ export type Mutations<S = State> = {
     state: S,
     payload: string | null
   ): void;
+  [StudentMutationTypes.SET_CURRENT_SUPPORT_PERSON](
+    state: S,
+    payload: string | null
+  ): void;
 };
 
 export const mutations: MutationTree<State> & Mutations = {
@@ -54,5 +58,11 @@ export const mutations: MutationTree<State> & Mutations = {
   },
   [StudentMutationTypes.SET_PROFILE_PICTURE](state: State, payload: string) {
     state.ProfilePicture = payload;
+  },
+  [StudentMutationTypes.SET_CURRENT_SUPPORT_PERSON](
+    state: State,
+    payload: string
+  ) {
+    state.CurrentSuppertPerson = payload;
   }
 };

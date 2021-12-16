@@ -81,7 +81,7 @@ export default defineComponent({
     };
 
     onUpdated(() => {
-      data.value.forEach((mentor, idx) => {
+      data.value.forEach((mentor) => {
         const imageUrl = `https://www.api.devnirone.ir/api/mentor/getProfileImage/${mentor.profileImage}`;
         returnProtectedImage(imageUrl).then((res) => {
           mentor.img = res;

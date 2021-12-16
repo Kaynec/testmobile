@@ -1,44 +1,38 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
   <div class="contact-backup-info" :style="styles" v-else>
-    <!-- <img :src="getImgUrl(img)" alt="" /> -->
     <div class="nav">
       <span> اطلاعات بیشتر </span>
       <img src="../../../assets/img/arrow-left.png" @click="goOnePageBack" />
     </div>
-    <img :src="getImgUrl()" alt="hero img" class="hero" @click="goToChatPage" />
+    <img :src="model.img" alt="hero img" class="hero" @click="goToChatPage" />
     <div class="text">
-      <h4>پشتیبان {{ name }}</h4>
-      <h5>{{ profession }}</h5>
-      <p>
-        مشاور چندین رتبه تک رقمی و دورقمی طراح و ایده پرداز سبک مطالعاتی
-        ITDEPEND مشاور پروازی کنکور مدیر کلینیک مشاوره سابقه بیش از 15 سال
-        مشاوره تخصصی کنکور" استاد تولایی فعالیت مشترک خود را با از سال 1395 با
-        ارائه مقالات مشاوره ای و کلیپ های تصویری شروع کرده و در سال 1399 وظیفه
-        مدیریت کلینیک مشاوره را همزمان با تدریس در مدارس تیزهوشان کشور بعهده
-        گرفتند ؛ دفتر برنامه ریزی روبیک کنکور که از بروز ترین روشهای نوین برنامه
-        ریزی دنیا مانند بولت ژورنال الهام گرفته ، یکی از بزرگترین و موفقترین
-        تالیفات استاد بوده که توسط انتشارات بین المللی منتشر و در دسترس عموم
-        قرار گرفته است
-      </p>
+      <h4>پشتیبان {{ model.firstname + model.lastname }}</h4>
+      <p v-html="model.resume"></p>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue';
+import { defineComponent, computed, ref } from 'vue';
 import router from '@/router';
-
+import { StudentMutationTypes } from '@/store/modules/student/mutation-types';
+import { store } from '@/store';
 export default defineComponent({
   props: {
-    name: { type: String },
-    img: { type: String, default: 'PictureOfFirstGuy' },
-    profession: { type: String }
+    data: { type: String, default: '{}' }
   },
   setup(props) {
-    const getImgUrl = () => {
-      return require('../../../assets/img/contact/' + props.img + '-1.png');
-    };
+    const model = ref(JSON.parse(props.data));
+
+    if (props.data != '{}')
+      store.commit(
+        StudentMutationTypes.SET_CURRENT_SUPPORT_PERSON,
+        model.value
+      );
+
+    model.value = store.getters.getCurrentSupportPerson;
+
     const goOnePageBack = () => router.go(-1);
 
     let styles = computed(() => {
@@ -47,9 +41,13 @@ export default defineComponent({
       };
     });
 
-    const goToChatPage = () => router.push({ name: 'ContactBackupChat' });
+    const goToChatPage = () =>
+      router.push({
+        name: 'ContactBackupChat',
+        params: { data: JSON.stringify(props.data) }
+      });
 
-    return { getImgUrl, goOnePageBack, styles, goToChatPage };
+    return { goOnePageBack, styles, goToChatPage, model };
   }
 });
 </script>
