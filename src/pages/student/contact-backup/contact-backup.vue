@@ -19,12 +19,6 @@
           <span></span>
         </div>
 
-        <!-- Spinner -->
-        <!-- <div class="loader-parent" v-if="!item.img">
-          <div class="loading1"></div>
-        </div> -->
-        <!--  -->
-
         <img
           :src="item.img"
           alt="Picture of a supporot person"

@@ -19,10 +19,11 @@ import router from '@/router';
 // import { StudentBasketApi } from '@/api/services/student/student-basket-service';
 
 export default defineComponent({
-  setup() {
+  setup(_, { emit }) {
     // StudentBasketApi.get().then((res) => console.log(res))
 
     const moveToBasket = () => {
+      emit('iHaveBeenTouched');
       router.push({
         name: 'ShopBasket'
       });

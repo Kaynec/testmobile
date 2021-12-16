@@ -37,15 +37,15 @@
           : {{ toPersianNumbers(model.specialPrice) }} تومان
         </p>
         <!-- Add This Item To List Of Sale -->
-        <div class="img-add-div" v-if="itemExistsInBasket">
+        <div class="img-add-div" v-if="AmountToShowInTemplate > 0">
           <span @touchstart="addToBasket(1)">➕ </span>
           <strong style="color: #fff">
-            {{ toPersianNumbers(itemExistsInBasket.quantity) }}
+            {{ toPersianNumbers(`${AmountToShowInTemplate}`) }}
           </strong>
           <span @touchstart="addToBasket(-1)"> ➖ </span>
         </div>
         <img
-          v-else-if="!itemExistsInBasket"
+          v-else
           @touchstart="addToBasket(1)"
           class="img-add"
           src="../../../assets/img/shop/pluss.png"
@@ -89,7 +89,7 @@
       </p>
     </div>
 
-    <ShopFooter />
+    <ShopFooter @iHaveBeenTouched="iHaveBeenTouched" />
   </div>
 </template>
 
@@ -116,28 +116,41 @@ export default defineComponent({
     const model = ref(JSON.parse(props.item as any));
     const shopBasket = ref();
     const img = ref();
-
-    console.log(model.value);
-
-    const itemExistsInBasket = computed(() => {
-      if (shopBasket.value) {
-        return shopBasket.value.items.find((el: any) =>
-          el.product ? el.product._id === model.value._id : false
-        );
-      }
-      return false;
+    const itemExistsInBasket = ref();
+    // The Previes Amount If Any
+    const AmountToShowInTemplate = ref(0);
+    // The Object That We Add To Basket
+    const objectToAddToBasket = ref({
+      item: { product: { _id: model.value._id }, quantity: 0 }
     });
 
-    StudentBasketApi.get().then((res) => (shopBasket.value = res.data.data));
+    (async () => {
+      await StudentBasketApi.get().then((res) => {
+        shopBasket.value = res.data.data;
+        return true;
+      });
 
-    // store.commit(StudentMutationTypes.SET_BASKET_COUNT, 0);
+      itemExistsInBasket.value = shopBasket.value.items.find((el: any) =>
+        el.product ? el.product._id === model.value._id : false
+      );
+
+      itemExistsInBasket.value &&
+        (AmountToShowInTemplate.value = itemExistsInBasket.value.quantity);
+    })();
+
+    const iHaveBeenTouched = async () => {
+      await StudentBasketApi.add(objectToAddToBasket.value);
+    };
 
     if (props.item === '{}') model.value = store.getters.getCurrentShopInfo;
 
     if (model.value)
       store.commit(StudentMutationTypes.SET_CURRENT_SHOP_INFO, model.value);
 
-    const goOnePageBack = () => router.go(-1);
+    const goOnePageBack = async () => {
+      await StudentBasketApi.add(objectToAddToBasket.value);
+      router.go(-1);
+    };
 
     onMounted(() => {
       const imageUrl = `https://www.api.devnirone.ir/api/product/coverImage/${model.value._id}`;
@@ -151,35 +164,12 @@ export default defineComponent({
     });
 
     const addToBasket = (quantity: number) => {
-      console.log(model.value);
-      const tmpObject = {
-        item: { product: { _id: model.value._id }, quantity }
-      };
-      StudentBasketApi.add(tmpObject).then((res) => {
-        if (res.data.status == 0 || res.data.status == 200) {
-          // count in the store
-          store.commit(
-            StudentMutationTypes.SET_BASKET_COUNT,
-            store.getters.getBasketCount + quantity
-          );
-          // mimic api call to reduce performance cost
-          // Index of CurrentItem
-          const idx = shopBasket.value.items.indexOf(itemExistsInBasket.value);
-          // if The item doeesn't exist get new data from api
-          if (idx < 0)
-            StudentBasketApi.get().then(
-              (res) => (shopBasket.value = res.data.data)
-            );
-          // if item quantity is 1 check the quantity passed in
-          else if (shopBasket.value.items[idx].quantity == 1 && quantity < 0) {
-            StudentBasketApi.get().then(
-              (res) => (shopBasket.value = res.data.data)
-            );
-            // if quantity is bigger than zero
-          } else if (shopBasket.value.items[idx].quantity > 0)
-            shopBasket.value.items[idx].quantity += quantity;
-        }
-      });
+      objectToAddToBasket.value.item.quantity += quantity;
+      AmountToShowInTemplate.value += quantity;
+      store.commit(
+        StudentMutationTypes.SET_BASKET_COUNT,
+        store.getters.getBasketCount + quantity
+      );
     };
 
     return {
@@ -192,8 +182,10 @@ export default defineComponent({
       displayProtectedImage,
       store,
       img,
-      itemExistsInBasket,
-      shopBasket
+      iHaveBeenTouched,
+      shopBasket,
+      objectToAddToBasket,
+      AmountToShowInTemplate
     };
   }
 });

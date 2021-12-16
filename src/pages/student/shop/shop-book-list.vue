@@ -30,11 +30,23 @@
           openSingleBookPage(JSON.stringify(product), title, data.data.length)
         "
       >
-        <img
-          src="../../../assets/img/shop/noun-cart-1844738.png"
-          :ref="setItemRef"
-          alt="book img"
-        />
+        <!-- Image  -->
+
+        <div class="image-container">
+          <div v-if="!product.img" class="loader">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <img
+            :src="product.img"
+            @click="sendToBookShopList(item._id, item.title)"
+            v-else
+          />
+        </div>
+        <!--  -->
         <div class="text">
           <!-- <p class="name">{{ product.name || 'کارشناسی ارشد حقوق' }}</p> -->
           <p class="text-detail">
@@ -78,7 +90,7 @@ import { store } from '@/store';
 import router from '@/router';
 import { StudentMutationTypes } from '@/store/modules/student/mutation-types';
 import ShopFooter from '@/modules/student-modules/footer/shop-footer.vue';
-import displayProtectedImage from '@/utilities/get-image-from-url';
+import { returnProtectedImage } from '@/utilities/get-image-from-url';
 
 export default defineComponent({
   props: {
@@ -110,9 +122,11 @@ export default defineComponent({
       itemRefs = [];
     });
     onUpdated(() => {
-      data.value.data.forEach((data, idx) => {
+      data.value.data.forEach((data) => {
         const imageUrl = `https://www.api.devnirone.ir/api/product/coverImage/${data._id}`;
-        displayProtectedImage(imageUrl, itemRefs[idx]);
+        returnProtectedImage(imageUrl).then((res) => {
+          data.img = res;
+        });
       });
     });
 
@@ -174,6 +188,8 @@ export default defineComponent({
       display: flex;
       flex-direction: row;
       justify-content: flex-start;
+      align-items: center;
+
       width: 90%;
       padding: 0.3rem;
       min-height: 8rem;
@@ -186,8 +202,17 @@ export default defineComponent({
         margin-bottom: 4rem;
       }
 
-      img {
-        width: 30%;
+      .image-container {
+        min-width: 30%;
+        max-width: 40%;
+        display: flex;
+        align-items: center;
+        justify-items: center;
+
+        img {
+          width: 100%;
+          object-fit: contain;
+        }
       }
 
       p {

@@ -8,12 +8,24 @@
   <div class="shop" v-else :style="styles">
     <SmallHeader />
     <div class="grid">
-      <img
-        :ref="setItemRef"
+      <div
+        class="img-container"
         v-for="item in productCategories"
         :key="item._id"
-        @click="sendToBookShopList(item._id, item.title)"
-      />
+      >
+        <div v-if="!item.img" class="loader">
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+          <span></span>
+        </div>
+        <img
+          :src="item.img"
+          @click="sendToBookShopList(item._id, item.title)"
+          v-else
+        />
+      </div>
     </div>
     <!--  -->
     <div class="btns">
@@ -53,12 +65,19 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, reactive, onUpdated } from 'vue';
+import {
+  defineComponent,
+  ref,
+  computed,
+  reactive,
+  onUpdated,
+  onBeforeUpdate
+} from 'vue';
 import SmallHeader from '@/modules/student-modules/header/small-header.vue';
 import { StudentproductApi } from '@/api/services/student/student-product';
 import router from '@/router';
 import ShopFooter from '@/modules/student-modules/footer/shop-footer.vue';
-import displayProtectedImage from '@/utilities/get-image-from-url';
+import { returnProtectedImage } from '@/utilities/get-image-from-url';
 import { store } from '@/store';
 
 export default defineComponent({
@@ -73,42 +92,48 @@ export default defineComponent({
     });
     const currentState = ref('yourProduct');
     // Images For The Categories
+
+    // Ref For Images
     let itemRefs = [] as any;
+
+    onBeforeUpdate(() => {
+      itemRefs = [] as any;
+    });
     const setItemRef = (el) => {
       if (el) itemRefs.push(el);
     };
 
     onUpdated(() => {
-      productCategories.forEach((data, idx) => {
+      productCategories.forEach((data) => {
         const imageUrl = `https://www.api.devnirone.ir/api/product-category/coverImage/${data._id}`;
-        displayProtectedImage(imageUrl, itemRefs[idx]);
+        returnProtectedImage(imageUrl).then((res) => (data.img = res));
       });
     });
 
     const newsetData = [
       {
         name: 'ادبیات',
-        img: '  https://arga-mag.com/file/img/2020/08/Book-profile-picture-38.jpg'
+        img: 'https://arga-mag.com/file/img/2020/08/Book-profile-picture-38.jpg'
       },
       {
         name: 'ادبیات',
-        img: '  https://arga-mag.com/file/img/2020/08/Book-profile-picture-38.jpg'
+        img: 'https://arga-mag.com/file/img/2020/08/Book-profile-picture-38.jpg'
       },
       {
         name: 'ادبیات',
-        img: '  https://arga-mag.com/file/img/2020/08/Book-profile-picture-38.jpg'
+        img: 'https://arga-mag.com/file/img/2020/08/Book-profile-picture-38.jpg'
       },
       {
         name: 'ادبیات',
-        img: '  https://arga-mag.com/file/img/2020/08/Book-profile-picture-38.jpg'
+        img: 'https://arga-mag.com/file/img/2020/08/Book-profile-picture-38.jpg'
       },
       {
         name: 'ادبیات',
-        img: '  https://arga-mag.com/file/img/2020/08/Book-profile-picture-38.jpg'
+        img: 'https://arga-mag.com/file/img/2020/08/Book-profile-picture-38.jpg'
       },
       {
         name: 'ادبیات',
-        img: '  https://arga-mag.com/file/img/2020/08/Book-profile-picture-38.jpg'
+        img: 'https://arga-mag.com/file/img/2020/08/Book-profile-picture-38.jpg'
       }
     ];
     const sendToBookShopList = (id: string, title: string) => {
@@ -167,6 +192,14 @@ export default defineComponent({
       width: 88%;
       max-width: 100%;
     }
+  }
+
+  .img-container {
+    min-width: 35%;
+    min-height: 30vh;
+    display: flex;
+    align-items: center;
+    justify-items: center;
   }
 
   .btns {
