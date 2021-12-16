@@ -91,6 +91,7 @@ export default class Login extends Vue {
   public showAzmoon = false;
   public showRoadMap = false;
   public mounted(): void {
+    this.onResize();
     this.$nextTick(() => {
       window.addEventListener('resize', this.onResize);
     });
