@@ -1,6 +1,6 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
-  <div v-else class="road-map" :style="styles">
+  <div v-else class="road-map">
     <SmallHeader />
     <img src="../../../assets/img/roadmap.png" class="hero" />
     <div class="btns">
@@ -53,15 +53,9 @@ export default defineComponent({
     const currentState = ref('past');
     const showDetail = ref(false);
 
-    let styles = computed(() => {
-      return {
-        'min-height': `calc( 1vh * 100) `
-      };
-    });
-
     const changeShowDetail = () => (showDetail.value = !showDetail.value);
 
-    return { currentState, styles, changeShowDetail, showDetail };
+    return { currentState, changeShowDetail, showDetail };
   }
 });
 </script>
@@ -69,9 +63,12 @@ export default defineComponent({
 <style lang="scss" scoped>
 @import '@/css-variable//Global.scss';
 .road-map {
+  width: 100%;
+  height: 100%;
+  padding-top: 8vh;
   position: relative;
-  background: #f4f4f4;
-  overflow: hidden;
+  background-color: #f4f4f4;
+  font-family: IRANSans;
 
   .hero {
     width: 100%;

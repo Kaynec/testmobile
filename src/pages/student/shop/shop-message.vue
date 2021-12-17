@@ -1,6 +1,6 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
-  <div class="shop-message" v-else :style="styles">
+  <div class="shop-message" v-else>
     <nav class="nav">
       <svg
         class="svg"
@@ -28,15 +28,8 @@ export default defineComponent({
   setup() {
     const goOnePageBack = () => router.go(-1);
 
-    let styles = computed(() => {
-      return {
-        'min-height': `calc( 1vh * 100) `
-      };
-    });
-
     return {
-      goOnePageBack,
-      styles
+      goOnePageBack
     };
   }
 });
@@ -52,6 +45,7 @@ export default defineComponent({
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 100%;
 
   .nav {
     display: flex;

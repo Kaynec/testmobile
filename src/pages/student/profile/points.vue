@@ -1,10 +1,7 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
-  <div class="history" v-else :style="styles">
-    <nav class="nav">
-      <span> امتیازات </span>
-      <img src="../../../assets/img/arrow-left.png" @click="goOnePageBack" />
-    </nav>
+  <div class="history" v-else>
+    <MinimalHeader title="امتیازات" />
     <!--  -->
     <div class="container">
       <div class="container-header">
@@ -22,19 +19,14 @@
   </div>
 </template>
 <script lang="ts">
-import { computed, defineComponent, reactive } from 'vue';
+import { defineComponent, reactive } from 'vue';
+import MinimalHeader from '@/modules/student-modules/header/minimal-header.vue';
 import TableChild from '@/modules/student-modules/table-child.vue';
 import router from '@/router';
 
 export default defineComponent({
-  components: { TableChild },
+  components: { TableChild, MinimalHeader },
   setup() {
-    const styles = computed(() => {
-      return {
-        'min-height': `calc( 1vh * 100) `
-      };
-    });
-
     const goOnePageBack = () => router.go(-1);
 
     const data = reactive([
@@ -223,7 +215,7 @@ export default defineComponent({
       }
     ]);
 
-    return { styles, data, goOnePageBack };
+    return { data, goOnePageBack };
   }
 });
 </script>
@@ -231,6 +223,9 @@ export default defineComponent({
 <style lang="scss" scoped>
 .history {
   width: 100%;
+  height: 100%;
+  padding-top: 8vh;
+  position: relative;
   background-color: #f4f4f4;
   font-family: IRANSans;
 

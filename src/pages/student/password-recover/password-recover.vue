@@ -87,8 +87,8 @@ export default defineComponent({
 </script>
 <style lang="scss" scoped>
 .Forget-the-password {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   padding: 37px 24.6px 156px 24px;
   background-color: #f6f8fa;
   display: flex;

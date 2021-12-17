@@ -1,10 +1,7 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
-  <div class="report-card" v-else :style="styles">
-    <nav class="nav">
-      <span> کارنامه </span>
-      <img src="../../../assets/img/arrow-left.png" @click="goOnePageBack" />
-    </nav>
+  <div class="report-card" v-else>
+    <MinimalHeader title="کارنامه" />
     <!--  -->
     <div class="label">
       <!-- Count -->
@@ -99,23 +96,17 @@
 </template>
 
 <script>
-import { defineComponent, computed, ref } from 'vue';
+import { defineComponent, ref } from 'vue';
 import router from '@/router';
 import Vue3ChartJs from '@j-t-mcc/vue3-chartjs';
 import Taraz from '@/modules/student-modules/azmoon/comp-test-taraz.vue';
+import MinimalHeader from '@/modules/student-modules/header/minimal-header.vue';
 
 export default defineComponent({
-  // TODO
-  // uncomment This later
-  // props:{
-  //     label ,
-  //     info,
-  //     count,
-  //     data
-  // },
   components: {
     Vue3ChartJs,
-    Taraz
+    Taraz,
+    MinimalHeader
   },
 
   setup() {
@@ -124,12 +115,6 @@ export default defineComponent({
     const goOnePageBack = () => router.go(-1);
 
     const changeShowTaraz = () => (showTaraz.value = !showTaraz.value);
-
-    let styles = computed(() => {
-      return {
-        'min-height': `calc( 1vh * 100) `
-      };
-    });
 
     const doughnutChart = {
       type: 'doughnut',
@@ -149,7 +134,6 @@ export default defineComponent({
       });
 
     return {
-      styles,
       goOnePageBack,
       doughnutChart,
       goToHamnavard,
@@ -166,6 +150,9 @@ export default defineComponent({
   width: 100%;
   background-color: #f4f4f4;
   font-family: IRANSans;
+  height: 100%;
+  position: relative;
+  padding-top: 8vh;
   .nav {
     width: 100%;
     height: 50px;

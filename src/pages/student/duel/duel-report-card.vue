@@ -1,10 +1,7 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
-  <div class="start" v-else :style="styles">
-    <nav class="nav">
-      <span> کارنامه </span>
-      <img src="../../../assets/img/arrow-left.png" @click="goOnePageBack" />
-    </nav>
+  <div class="start" v-else>
+    <MinimalHeader title="کارنامه" />
     <!--  -->
     <div class="label">
       <p>دوئل مدیر شغلی مهندس عمران</p>
@@ -94,20 +91,14 @@
 </template>
 
 <script>
-import { defineComponent, computed } from 'vue';
+import { defineComponent } from 'vue';
 import router from '@/router';
 import Vue3ChartJs from '@j-t-mcc/vue3-chartjs';
-
+import MinimalHeader from '@/modules/student-modules/header/minimal-header.vue';
 export default defineComponent({
-  components: { Vue3ChartJs },
+  components: { Vue3ChartJs, MinimalHeader },
   setup() {
     const goOnePageBack = () => router.go(-1);
-
-    let styles = computed(() => {
-      return {
-        'min-height': `calc( 1vh * 100) `
-      };
-    });
 
     const doughnutChart = {
       type: 'doughnut',
@@ -124,7 +115,6 @@ export default defineComponent({
     const moveToList = () => router.push({ name: 'DuelAll' });
 
     return {
-      styles,
       goOnePageBack,
       moveToList,
       doughnutChart
@@ -139,6 +129,9 @@ export default defineComponent({
   width: 100%;
   background-color: #f4f4f4;
   font-family: IRANSans;
+  height: 100%;
+  position: relative;
+  padding-top: 8vh;
   .nav {
     width: 100%;
     height: 50px;

@@ -1,10 +1,7 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
-  <div class="chat" v-else :style="styles">
-    <nav class="nav">
-      <span> گفتگو کنید </span>
-      <img src="../../../assets/img/arrow-left.png" @click="goOnePageBack" />
-    </nav>
+  <div class="chat" v-else>
+    <MinimalHeader title="گفتگو کنید " />
     <!-- Messages -->
     <main class="chat-section">
       <div class="msg" v-for="item in Msgs" :key="item">
@@ -31,21 +28,17 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref } from 'vue';
+import { defineComponent, ref } from 'vue';
+import MinimalHeader from '@/modules/student-modules/header/minimal-header.vue';
 
 import router from '@/router';
 
 export default defineComponent({
+  components: { MinimalHeader },
   props: {
     data: { type: String }
   },
   setup(props) {
-    let styles = computed(() => {
-      return {
-        'min-height': `calc( 1vh * 100) `
-      };
-    });
-
     const goOnePageBack = () => router.go(-1);
 
     const Msgs = ref([
@@ -60,7 +53,7 @@ export default defineComponent({
       }
     ]);
 
-    return { styles, Msgs, goOnePageBack };
+    return { Msgs, goOnePageBack };
   }
 });
 </script>
@@ -73,6 +66,8 @@ export default defineComponent({
   flex-direction: column;
   position: relative;
   overflow: hidden;
+  height: 100%;
+  padding-top: 8vh;
 
   .nav {
     width: 100%;

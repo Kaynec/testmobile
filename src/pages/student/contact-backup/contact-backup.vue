@@ -6,7 +6,7 @@
   </div>
   <!--  -->
 
-  <div class="contact-backup" :style="styles" v-else>
+  <div class="contact-backup" v-else>
     <SmallHeader />
     <!-- Change THis With Real Data Coming From Some Server-->
     <div class="flex">
@@ -90,14 +90,9 @@ export default defineComponent({
     });
 
     const goToChatPage = () => router.push({ name: 'ContactBackupChat' });
-    let styles = computed(() => {
-      return {
-        'min-height': `calc( 1vh * 100) `
-      };
-    });
+
     return {
       MoveToBackUpInfo,
-      styles,
       goToChatPage,
       data,
       setImageRef,
@@ -113,6 +108,9 @@ export default defineComponent({
   position: relative;
   background-color: #f4f4f4;
   overflow-x: hidden;
+  width: 100%;
+  height: 100%;
+  padding-top: 8vh;
   .flex {
     margin: 0.5rem;
 

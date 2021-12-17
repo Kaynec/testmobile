@@ -1,13 +1,7 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
   <div v-else class="self-test-answers" :style="styles">
-    <nav class="sm-nav">
-      <div>
-        <span class="user-parts"> پاسخنامه تشریحی آزمون </span>
-      </div>
-
-      <img src="../../../assets/img/arrow-left.png" @click="goOnePageBack" />
-    </nav>
+    <MinimalHeader title="پاسخنامه تشریحی آزمون" />
     <!-- Progress Bar And Count -->
 
     <div class="difficulty">
@@ -78,23 +72,21 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue';
+import { defineComponent } from 'vue';
+import MinimalHeader from '@/modules/student-modules/header/minimal-header.vue';
 import router from '@/router';
 
 export default defineComponent({
+  components: {
+    MinimalHeader
+  },
   props: {
     label: { type: String, default: 'فصل دوم بهداشت' }
   },
   setup() {
-    let styles = computed(() => {
-      return {
-        'min-height': `calc( 1vh * 100) `
-      };
-    });
-
     const goOnePageBack = () => router.go(-1);
 
-    return { styles, goOnePageBack };
+    return { goOnePageBack };
   }
 });
 </script>
@@ -104,6 +96,8 @@ export default defineComponent({
 .self-test-answers {
   width: 100%;
   background: #f4f4f4;
+  height: 100%;
+  padding-top: 8vh;
   .sm-nav {
     width: 100%;
     background-color: #171717;

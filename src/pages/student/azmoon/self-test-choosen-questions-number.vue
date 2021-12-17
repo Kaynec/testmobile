@@ -1,13 +1,7 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
   <div v-else class="self-test-questions" :style="styles">
-    <nav class="sm-nav">
-      <div>
-        <span class="user-parts"> سوالات برگزیده </span>
-      </div>
-
-      <img src="../../../assets/img/arrow-left.png" @click="goOnePageBack" />
-    </nav>
+    <MinimalHeader title="سوالات برگزیده " />
     <!-- Progress Bar And Count -->
 
     <div class="progress-count">
@@ -44,20 +38,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue';
+import { defineComponent } from 'vue';
+import MinimalHeader from '@/modules/student-modules/header/minimal-header.vue';
 import router from '@/router';
 
 export default defineComponent({
+  components: { MinimalHeader },
   props: {
     label: { type: String, default: '۱ الی ۲۰' }
   },
   setup() {
-    let styles = computed(() => {
-      return {
-        'min-height': `calc( 1vh * 100) `
-      };
-    });
-
     const toPersianNumbers = (number: any) => {
       var id = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
       return number.toString().replace(/[0-9]/g, function (w: any) {
@@ -67,7 +57,7 @@ export default defineComponent({
 
     const goOnePageBack = () => router.go(-1);
 
-    return { styles, goOnePageBack, toPersianNumbers };
+    return { goOnePageBack, toPersianNumbers };
   }
 });
 </script>
@@ -75,9 +65,11 @@ export default defineComponent({
 <style lang="scss" scoped>
 @import '@/css-variable//Global.scss';
 .self-test-questions {
-  width: 100%;
+  height: 100%;
+  position: relative;
   background: #f4f4f4;
   font-family: IRANSans;
+  padding-top: 8vh;
 
   .sm-nav {
     width: 100%;

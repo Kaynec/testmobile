@@ -1,6 +1,6 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
-  <div class="user-home bg" v-else>
+  <div class="user-home" v-else>
     <!-- Header -->
     <Header />
     <img
@@ -87,23 +87,8 @@ import Azmoon from '@/modules/student-modules/azmoon/azmoon.vue';
   computed: {}
 })
 export default class Login extends Vue {
-  public windowHeight = window.innerHeight;
   public showAzmoon = false;
   public showRoadMap = false;
-
-  //
-  onResize(): void {
-    (this as any).windowHeight = window.innerHeight;
-  }
-  getMainStyle(): { height: string } {
-    return { height: `${(this as any).windowHeight - 1}px` };
-  }
-  public mounted(): void {
-    this.onResize();
-    this.$nextTick(() => {
-      window.addEventListener('resize', this.onResize);
-    });
-  }
 
   public MoveToCLassRoom(): void {
     setTimeout(() => {
@@ -160,7 +145,7 @@ export default class Login extends Vue {
   font-family: IRANSans;
   position: relative;
   padding-top: 8vh;
-  min-height: -webkit-fill-available;
+  height: 100%;
 
   .hero {
     width: 95%;

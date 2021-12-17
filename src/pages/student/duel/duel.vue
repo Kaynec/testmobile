@@ -1,6 +1,6 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
-  <div v-else class="comp-test" :style="styles">
+  <div v-else class="comp-test">
     <SmallHeader />
     <div class="hero">
       <h1 class="right">
@@ -36,7 +36,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed } from 'vue';
+import { defineComponent, ref } from 'vue';
 import SmallHeader from '@/modules/student-modules/header/small-header.vue';
 
 export default defineComponent({
@@ -47,13 +47,7 @@ export default defineComponent({
     //  Compare Dates Once Data Is available   //
     const currentState = ref('past');
 
-    let styles = computed(() => {
-      return {
-        'min-height': `calc( 1vh * 100) `
-      };
-    });
-
-    return { currentState, styles };
+    return { currentState };
   }
 });
 </script>
@@ -62,10 +56,11 @@ export default defineComponent({
 @import '@/css-variable//Global.scss';
 .comp-test {
   width: 100%;
+  background-color: #f4f4f4;
   font-family: IRANSans;
+  height: 100%;
   position: relative;
-  background: #f4f4f4;
-  overflow: hidden;
+  padding-top: 8vh;
 
   .hero {
     background: $redish-background;

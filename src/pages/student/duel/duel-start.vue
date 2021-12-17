@@ -1,10 +1,7 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
-  <div class="start" v-else :style="styles">
-    <nav class="nav">
-      <span> کارنامه </span>
-      <img src="../../../assets/img/arrow-left.png" @click="goOnePageBack" />
-    </nav>
+  <div class="start" v-else>
+    <MinimalHeader title="کارنامه" />
     <!--  -->
     <div class="label">
       <!-- Count -->
@@ -62,10 +59,12 @@
 </template>
 
 <script>
-import { defineComponent, computed } from 'vue';
+import { defineComponent } from 'vue';
+import MinimalHeader from '@/modules/student-modules/header/minimal-header.vue';
 import router from '@/router';
 
 export default defineComponent({
+  components: { MinimalHeader },
   setup() {
     const goOnePageBack = () => router.go(-1);
 
@@ -74,14 +73,7 @@ export default defineComponent({
         name: 'CompTestQuestions'
       });
 
-    let styles = computed(() => {
-      return {
-        'min-height': `calc( 1vh * 100) `
-      };
-    });
-
     return {
-      styles,
       goOnePageBack,
       goToquestions
     };
@@ -95,7 +87,9 @@ export default defineComponent({
   width: 100%;
   background-color: #f4f4f4;
   font-family: IRANSans;
+  height: 100%;
   position: relative;
+  padding-top: 8vh;
   overflow-x: hidden;
   overflow-y: auto;
   .nav {

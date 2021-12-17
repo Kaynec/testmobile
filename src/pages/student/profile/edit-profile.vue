@@ -5,11 +5,8 @@
     <div class="loading1"></div>
   </div>
   <!--  -->
-  <div class="edit" v-else :style="styles">
-    <nav class="nav">
-      <span> ویرایش اطلاعات </span>
-      <img src="../../../assets/img/arrow-left.png" @click="goOnePageBack" />
-    </nav>
+  <div class="edit" v-else>
+    <MinimalHeader title="ویرایش اطلاعات" />
     <div class="img-container">
       <div class="img">
         <img
@@ -139,18 +136,12 @@ import { returnProtectedImage } from '@/utilities/get-image-from-url';
 import router from '@/router';
 import { provinces } from '@/assets/provinces';
 import { StudentMutationTypes } from '@/store/modules/student/mutation-types';
+import MinimalHeader from '@/modules/student-modules/header/minimal-header.vue';
 const alertify = require('@/assets/alertifyjs/alertify');
 
 export default defineComponent({
+  compo: { MinimalHeader },
   setup() {
-    const styles = computed(() => {
-      return {
-        'min-height': `calc( 1vh * 100) `
-      };
-    });
-
-    console.log(store.getters.getCurrentStudent);
-
     const showThisWhileUplading = ref(false);
 
     const goOnePageBack = () => router.go(-1);
@@ -256,7 +247,6 @@ export default defineComponent({
     const uploadImage = async () => (model.img = await imgInput.value.files[0]);
 
     return {
-      styles,
       v$,
       onSubmit,
       model,
@@ -278,6 +268,9 @@ export default defineComponent({
   width: 100%;
   background-color: #f4f4f4;
   font-family: IRANSans;
+  height: 100%;
+  position: relative;
+  padding-top: 8vh;
 
   .nav {
     width: 100%;

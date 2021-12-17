@@ -1,6 +1,6 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
-  <div class="hamnavard" v-else :style="styles">
+  <div class="hamnavard" v-else>
     <i
       @click="pauseAndPlay"
       :class="
@@ -151,9 +151,10 @@ export default defineComponent({
 @import '@/css-variable//Global.scss';
 .hamnavard {
   width: 100%;
+  height: 100%;
   font-family: IRANSans;
   position: relative;
-  overflow: hidden;
+  padding-top: 8vh;
 
   .pause-play {
     position: fixed;

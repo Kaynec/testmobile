@@ -1,10 +1,7 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
-  <div class="my-profile" v-else :style="styles">
-    <nav class="nav">
-      <span> پروفایل من </span>
-      <img src="../../../assets/img/arrow-left.png" @click="goOnePageBack" />
-    </nav>
+  <div class="my-profile" v-else>
+    <MinimalHeader title="پروفایل من" />
     <!-- Red Div -->
     <div class="info">
       <div class="right">
@@ -56,25 +53,18 @@
 </template>
 <script lang="ts">
 import { computed, defineComponent, reactive, ref } from 'vue';
+import MinimalHeader from '@/modules/student-modules/header/minimal-header.vue';
 import Footer from '@/modules/student-modules/footer/footer.vue';
 import router from '@/router';
 import { store } from '@/store';
 import { StudentActionTypes } from '@/store/modules/student/action-types';
 export default defineComponent({
-  components: { Footer },
+  components: { Footer, MinimalHeader },
   setup() {
     const rightImage = ref(null);
-
     let currentUser = reactive(store.getters.getCurrentStudent);
     let orientationName = ref(currentUser.orientation.title);
     let gradeName = ref(currentUser.grade.title);
-
-    const styles = computed(() => {
-      return {
-        'min-height': `calc( 1vh * 100) `
-      };
-    });
-
     const toPersianNumbers = (number: any) => {
       var id = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
       return number.toString().replace(/[0-9]/g, function (w: any) {
@@ -131,7 +121,6 @@ export default defineComponent({
     };
 
     return {
-      styles,
       data,
       touchstart,
       touchend,
@@ -153,6 +142,9 @@ export default defineComponent({
   width: 100%;
   background-color: #f4f4f4;
   font-family: IRANSans;
+  height: 100%;
+  position: relative;
+  padding-top: 8vh;
 
   .nav {
     width: 100%;

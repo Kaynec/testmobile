@@ -1,6 +1,6 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
-  <div class="shop-order-success" v-else :style="styles">
+  <div class="shop-order-success" v-else>
     <img src="@/assets/img/vpn-key-green@2x.png" alt="White Success Key" />
     <h6>خرید شما با موفقیت انجام شد</h6>
     <div class="middle-card">
@@ -28,19 +28,13 @@ import router from '@/router';
 
 export default defineComponent({
   setup() {
-    let styles = computed(() => {
-      return {
-        'min-height': `calc( 1vh * 100) `
-      };
-    });
-
     const goToHomePage = () => {
       router.push({
         name: 'Home'
       });
     };
 
-    return { styles, goToHomePage };
+    return { goToHomePage };
   }
 });
 </script>
@@ -56,6 +50,7 @@ export default defineComponent({
   gap: 1rem;
   padding-top: 5rem;
   font-family: IRANSans;
+  height: 100%;
 
   img {
     max-width: 30%;

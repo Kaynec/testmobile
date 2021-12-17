@@ -154,6 +154,8 @@ export default defineComponent({
   background-color: #f4f4f4;
   overflow-x: hidden;
   padding-top: 8vh;
+  height: 100%;
+  width: 100%;
 
   .grid {
     display: grid;

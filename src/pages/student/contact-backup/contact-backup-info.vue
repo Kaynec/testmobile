@@ -1,10 +1,7 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
-  <div class="contact-backup-info" :style="styles" v-else>
-    <div class="nav">
-      <span> اطلاعات بیشتر </span>
-      <img src="../../../assets/img/arrow-left.png" @click="goOnePageBack" />
-    </div>
+  <div class="contact-backup-info" v-else>
+    <MinimalHeader title="اطلاعات بیشتر" />
     <img :src="model.img" alt="hero img" class="hero" @click="goToChatPage" />
     <div class="text">
       <h4>پشتیبان {{ model.firstname + model.lastname }}</h4>
@@ -18,7 +15,10 @@ import { defineComponent, computed, ref } from 'vue';
 import router from '@/router';
 import { StudentMutationTypes } from '@/store/modules/student/mutation-types';
 import { store } from '@/store';
+import MinimalHeader from '@/modules/student-modules/header/minimal-header.vue';
+
 export default defineComponent({
+  components: { MinimalHeader },
   props: {
     data: { type: String, default: '{}' }
   },
@@ -35,19 +35,13 @@ export default defineComponent({
 
     const goOnePageBack = () => router.go(-1);
 
-    let styles = computed(() => {
-      return {
-        'min-height': `calc( 1vh * 100) `
-      };
-    });
-
     const goToChatPage = () =>
       router.push({
         name: 'ContactBackupChat',
         params: { data: JSON.stringify(props.data) }
       });
 
-    return { goOnePageBack, styles, goToChatPage, model };
+    return { goOnePageBack, goToChatPage, model };
   }
 });
 </script>
@@ -57,6 +51,9 @@ export default defineComponent({
   position: relative;
   background-color: #f4f4f4;
   overflow-x: hidden;
+  width: 100%;
+  height: 100%;
+  padding-top: 8vh;
 
   .nav {
     width: 100%;

@@ -1,6 +1,6 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
-  <div v-else class="w-100" :style="styles">
+  <div v-else class="w-100 setting">
     <Header />
     <!-- Main Content -->
     <div
@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import { defineComponent, computed } from 'vue';
+import { defineComponent } from 'vue';
 import Footer from '@/modules/student-modules/footer/footer.vue';
 import Header from '@/modules/student-modules/header/header.vue';
 import Card from '@/modules/student-modules/card.vue';
@@ -68,13 +68,17 @@ export default defineComponent({
     Card
   },
   setup() {
-    const styles = computed(() => {
-      return {
-        'min-height': `calc( 1vh * 100) `,
-        'background-color': 'rgba(33, 49, 84, 0.082)'
-      };
-    });
-    return { styles };
+    console.log('w');
   }
 });
 </script>
+<style lang="scss" scoped>
+.setting {
+  width: 100%;
+  height: 100%;
+  padding-top: 8vh;
+  position: relative;
+  background-color: #f4f4f4;
+  font-family: IRANSans;
+}
+</style>

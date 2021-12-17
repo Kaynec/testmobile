@@ -1,6 +1,6 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
-  <div class="self-test" :style="styles" v-else>
+  <div class="self-test" v-else>
     <SmallHeader />
     <div class="lessons">
       <LessonCard
@@ -65,12 +65,6 @@ export default defineComponent({
       currentItem.value = session;
     };
 
-    let styles = computed(() => {
-      return {
-        'min-height': `calc( 1vh * 100) `
-      };
-    });
-
     const changeCurrentCourse = (el) => {
       currentCourse.value = el;
     };
@@ -87,7 +81,6 @@ export default defineComponent({
     return {
       toggleCurrentItem,
       chapterContainer,
-      styles,
       moveToQuestions,
       allCourses,
       changeCurrentCourse,
@@ -103,6 +96,9 @@ export default defineComponent({
   position: relative;
   background: #f4f4f4;
   overflow-x: hidden;
+  width: 100%;
+  height: 100%;
+  padding-top: 8vh;
 
   .lessons {
     padding: 1rem 0.5rem;

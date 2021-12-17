@@ -8,19 +8,12 @@
     <div class="loading1"></div>
   </div>
   <!--  -->
-  <div class="shop-book-list" :style="styles" v-else>
-    <nav class="nav">
-      <span
-        >لیست محصولات {{ title }} ({{
-          toPersianNumbers(`${data.data.length}`)
-        }})</span
-      >
-      <img
-        @click="goOnePageBack"
-        src="../../../assets/img/arrow-left.png"
-        alt="arrow left icon"
-      />
-    </nav>
+  <div class="shop-book-list" v-else>
+    <MinimalHeader
+      :title="`لیست محصولات ${title} ${toPersianNumbers(
+        `${data.data.length}`
+      )}`"
+    />
     <div class="card-container">
       <div
         class="card"
@@ -84,10 +77,11 @@ import router from '@/router';
 import { StudentMutationTypes } from '@/store/modules/student/mutation-types';
 import ShopFooter from '@/modules/student-modules/footer/shop-footer.vue';
 import { returnProtectedImage } from '@/utilities/get-image-from-url';
+import MinimalHeader from '@/modules/student-modules/header/minimal-header.vue';
 
 export default defineComponent({
   props: { id: { type: String }, title: { type: String } },
-  components: { ShopFooter },
+  components: { ShopFooter, MinimalHeader },
   setup(props) {
     const data = ref({} as any),
       id = ref(props.id);
@@ -115,17 +109,10 @@ export default defineComponent({
       });
     })();
 
-    let styles = computed(() => {
-      return {
-        'min-height': `calc( 1vh * 100) `
-      };
-    });
-
     return {
       data,
       openSingleBookPage,
       goOnePageBack,
-      styles,
       toPersianNumbers
     };
   }
@@ -137,8 +124,11 @@ export default defineComponent({
 .shop-book-list {
   position: relative;
   overflow-x: hidden;
+  overflow-y: scroll;
   background: #f4f4f4;
-  font-family: IRANSans;
+  width: 100%;
+  height: 100%;
+  padding-top: 8vh;
   .nav {
     display: flex;
     align-items: center;

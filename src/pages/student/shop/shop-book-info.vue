@@ -9,15 +9,9 @@
   </div>
 
   <!--  -->
-  <div class="shop-book-list" v-else :style="styles">
-    <nav class="nav">
-      <span> {{ model.title }} </span>
-      <img
-        @touchstart="goOnePageBack"
-        src="../../../assets/img/arrow-left.png"
-        alt="arrow left icon"
-      />
-    </nav>
+  <div class="shop-book-list" v-else>
+    <MinimalHeader :title="`${model.title}`" />
+
     <div class="card">
       <img ref="img" />
       <div class="text">
@@ -103,9 +97,10 @@ import { StudentBasketApi } from '@/api/services/student/student-basket-service'
 import { StudentproductApi } from '@/api/services/student/student-product';
 import { StudentMutationTypes } from '@/store/modules/student/mutation-types';
 import displayProtectedImage from '@/utilities/get-image-from-url';
+import MinimalHeader from '@/modules/student-modules/header/minimal-header.vue';
 
 export default defineComponent({
-  components: { ShopFooter },
+  components: { ShopFooter, MinimalHeader },
   props: {
     title: { type: String },
     item: { type: String, default: '{}' },
@@ -148,12 +143,6 @@ export default defineComponent({
       router.go(-1);
     };
 
-    let styles = computed(() => {
-      return {
-        'min-height': `calc( 1vh * 100) `
-      };
-    });
-
     const addToBasket = (quantity: number) => {
       objectToAddToBasket.value.item.quantity += quantity;
       AmountToShowInTemplate.value += quantity;
@@ -165,7 +154,6 @@ export default defineComponent({
 
     return {
       goOnePageBack,
-      styles,
       addToBasket,
       toPersianNumbers,
       StudentproductApi,
@@ -189,6 +177,9 @@ export default defineComponent({
   overflow-x: hidden;
   overflow-y: scroll;
   background: #f4f4f4;
+  width: 100%;
+  height: 100%;
+  padding-top: 8vh;
   .nav {
     display: flex;
     align-items: center;

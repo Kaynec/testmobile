@@ -1,14 +1,7 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
-  <div class="shop-basket" v-else :style="styles">
-    <nav class="nav">
-      <span> سبد خرید شما</span>
-      <img
-        @touchstart="goOnePageBack"
-        src="../../../assets/img/arrow-left.png"
-        alt="arrow left icon"
-      />
-    </nav>
+  <div class="shop-basket" v-else>
+    <MinimalHeader title="سبد خرید شما" />
 
     <form @submit.prevent="onSubmit">
       <h3>آدرس خود را وارد کنید</h3>
@@ -68,8 +61,10 @@ import { defineComponent, computed, ref, reactive } from 'vue';
 import useVuelidate from '@vuelidate/core';
 import { helpers, required } from '@vuelidate/validators';
 import router from '@/router';
+import MinimalHeader from '@/modules/student-modules/header/minimal-header.vue';
 
 export default defineComponent({
+  components: { MinimalHeader },
   setup() {
     const model = reactive({
       address: '',
@@ -109,18 +104,10 @@ export default defineComponent({
     }));
 
     const v$ = useVuelidate(rules, model);
-
     const goOnePageBack = () => router.go(-1);
-
-    let styles = computed(() => {
-      return {
-        'min-height': `calc( 1vh * 100) `
-      };
-    });
 
     return {
       goOnePageBack,
-      styles,
       model,
       v$,
       textareaPlaceHolder,
@@ -137,6 +124,9 @@ export default defineComponent({
   overflow-x: hidden;
   background: #f4f4f4;
   font-family: IRANSans;
+  width: 100%;
+  height: 100%;
+  padding-top: 8vh;
 
   .nav {
     display: flex;

@@ -1,17 +1,13 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
-  <div v-else class="self-test-questions" :style="styles">
-    <nav class="sm-nav">
-      <div>
-        <span class="user-parts">
-          امتیازات کسب شده :
-          {{ toPersianNumbers(store.getters.getCurrentStudent.point) }} &nbsp; |
+  <div v-else class="self-test-questions">
+    <MinimalHeader
+      :title="`
+    امتیازات کسب شده :
+          ${toPersianNumbers(store.getters.getCurrentStudent.point)} &nbsp; |
           &nbsp; امتیاز این فصل : ۱۸۷
-        </span>
-      </div>
-
-      <img src="../../../assets/img/arrow-left.png" @click="goOnePageBack" />
-    </nav>
+    `"
+    />
     <!-- Progress Bar And Count -->
     <div class="progress-count">
       <div class="count">
@@ -92,8 +88,10 @@ import router from '@/router';
 import { toPersianNumbers } from '@/utilities/to-persian-numbers';
 import { store } from '@/store';
 import { StudentExamApi } from '@/api/services/student/student-exam-service';
+import MinimalHeader from '@/modules/student-modules/header/minimal-header.vue';
 
 export default defineComponent({
+  components: { MinimalHeader },
   props: {
     label: { type: String, default: 'فصل دوم بهداشت' },
     item: { type: String, default: '{}' }
@@ -120,14 +118,6 @@ export default defineComponent({
         AllQuestions.value.push(res.data.data);
       });
     });
-
-    let styles = computed(() => ({
-      'min-height': `calc( 1vh * 100) `
-    }));
-
-    setTimeout(() => {
-      console.log(model.value);
-    }, 2000);
 
     const goOnePageBack = () => router.go(-1);
 
@@ -176,7 +166,6 @@ export default defineComponent({
     });
 
     return {
-      styles,
       goOnePageBack,
       timeForTemplate,
       model,
@@ -199,6 +188,9 @@ export default defineComponent({
 .self-test-questions {
   width: 100%;
   background: #f4f4f4;
+  height: 100%;
+  position: relative;
+  padding-top: 8vh;
   .sm-nav {
     width: 100%;
     background-color: #171717;

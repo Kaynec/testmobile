@@ -1,10 +1,7 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
-  <div class="inbox" :style="styles" v-else>
-    <nav class="nav">
-      <span> پیام های دریافتی </span>
-      <img src="../../../assets/img/arrow-left.png" @click="goOnePageBack" />
-    </nav>
+  <div class="inbox" v-else>
+    <MinimalHeader title="پیام های دریافتی " />
 
     <!-- Container -->
     <div class="container">
@@ -43,20 +40,15 @@
 <script lang="ts">
 import Message from '@/modules/student-modules/message/profile-message.vue';
 import router from '@/router';
+import MinimalHeader from '@/modules/student-modules/header/minimal-header.vue';
 import { defineComponent, reactive, computed, ref } from 'vue';
 
 export default defineComponent({
-  components: { Message },
+  components: { Message, MinimalHeader },
   setup() {
     const showMessage = ref(false);
     // We Change This objects Information with the pressed div
     const currentItem = ref({});
-    //
-    const styles = computed(() => {
-      return {
-        'min-height': `calc( 1vh * 100) `
-      };
-    });
 
     const goOnePageBack = () => router.go(-1);
 
@@ -92,7 +84,6 @@ export default defineComponent({
       }
     ]);
     return {
-      styles,
       goOnePageBack,
       data,
       changeShowMessage,
@@ -108,7 +99,9 @@ export default defineComponent({
   width: 100%;
   background-color: #f4f4f4;
   font-family: IRANSans;
+  height: 100%;
   position: relative;
+  padding-top: 8vh;
 
   .nav {
     width: 100%;

@@ -1,6 +1,6 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
-  <div class="shop-message" v-else :style="styles">
+  <div class="shop-message" v-else>
     <nav class="nav">
       <svg
         class="svg"
@@ -21,22 +21,15 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue';
+import { defineComponent } from 'vue';
 import router from '@/router';
 
 export default defineComponent({
   setup() {
     const goOnePageBack = () => router.go(-1);
 
-    let styles = computed(() => {
-      return {
-        'min-height': `calc( 1vh * 100) `
-      };
-    });
-
     return {
-      goOnePageBack,
-      styles
+      goOnePageBack
     };
   }
 });
@@ -52,6 +45,8 @@ export default defineComponent({
   display: flex;
   align-items: center;
   justify-content: center;
+  height: 100%;
+  padding-top: 8vh;
 
   .nav {
     display: flex;

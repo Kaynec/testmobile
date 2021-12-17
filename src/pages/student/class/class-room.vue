@@ -1,6 +1,6 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
-  <div class="class" :style="styles" v-else>
+  <div class="class" v-else>
     <SmallHeader />
     <ClassInfo v-if="classInfo" @convertBoolean="toggleClassInfo" />
     <img src="../../../assets/img/class/hero.png" alt="hero img" class="hero" />
@@ -62,13 +62,7 @@ export default defineComponent({
       });
     };
 
-    let styles = computed(() => {
-      return {
-        'min-height': `calc( 1vh * 100) `
-      };
-    });
-
-    return { classInfo, toggleClassInfo, openNote, styles };
+    return { classInfo, toggleClassInfo, openNote };
   }
 });
 </script>
@@ -79,6 +73,7 @@ export default defineComponent({
   overflow-x: hidden;
   background-color: #f4f4f4;
   position: relative;
+  height: 100%;
 
   .hero {
     width: 100%;

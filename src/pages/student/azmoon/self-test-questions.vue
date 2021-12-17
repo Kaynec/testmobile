@@ -7,18 +7,15 @@
   </div>
   <!--  -->
 
-  <div v-else class="self-test-questions" :style="styles">
-    <nav class="sm-nav">
-      <div>
-        <span class="user-parts">
-          امتیازات کسب شده :
-          {{ toPersianNumbers(store.getters.getCurrentStudent.point) }} &nbsp; |
-          &nbsp; امتیاز این فصل : {{ toPersianNumbers(0) }}
-        </span>
-      </div>
+  <div v-else class="self-test-questions">
+    <MinimalHeader
+      :title="`
+     امتیازات کسب شده :
+          ${toPersianNumbers(store.getters.getCurrentStudent.point)} &nbsp; |
+          &nbsp; امتیاز این فصل : ${toPersianNumbers(`0`)}
+    `"
+    />
 
-      <img src="../../../assets/img/arrow-left.png" @click="goOnePageBack" />
-    </nav>
     <!-- Progress Bar And Count -->
 
     <div class="progress-count">
@@ -115,6 +112,7 @@
 
 <script lang="ts">
 import { defineComponent, computed, ref } from 'vue';
+import MinimalHeader from '@/modules/student-modules/header/minimal-header.vue';
 import { StudentSelfTestApi } from '@/api/services/student/student-selftest-service';
 import { StudentExamApi } from '@/api/services/student/student-exam-service';
 import { toPersianNumbers } from '@/utilities/to-persian-numbers';
@@ -123,6 +121,7 @@ import router from '@/router';
 const alertify = require('@/assets/alertifyjs/alertify');
 
 export default defineComponent({
+  components: { MinimalHeader },
   props: {
     item: { type: String, default: '{}' }
   },
@@ -264,6 +263,9 @@ export default defineComponent({
 .self-test-questions {
   width: 100%;
   background: #f4f4f4;
+  height: 100%;
+  position: relative;
+  padding-top: 8vh;
   .sm-nav {
     width: 100%;
     background-color: #171717;

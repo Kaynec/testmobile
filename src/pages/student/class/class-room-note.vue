@@ -1,12 +1,8 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
   <!-- Header -->
-  <div class="class-note" :style="styles" v-else>
-    <nav class="sm-nav">
-      <span class="user-parts"> یادداشت ها </span>
-
-      <img src="../../../assets/img/arrow-left.png" @touchend="goOnePageBack" />
-    </nav>
+  <div class="class-note" v-else>
+    <MinimalHeader title="یادداشت ها " />
     <!-- Save Section -->
     <div class="save">
       <!-- Change This TO Real Data Later -->
@@ -22,19 +18,15 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from 'vue';
+import { defineComponent } from 'vue';
+import MinimalHeader from '@/modules/student-modules/header/minimal-header.vue';
 import router from '@/router';
 
 export default defineComponent({
+  components: { MinimalHeader },
   setup() {
     const goOnePageBack = () => router.go(-1);
-    let styles = computed(() => {
-      return {
-        'min-height': `calc( 1vh * 100) `
-      };
-    });
-    // ${window.innerHeight * 0.01}
-    return { goOnePageBack, styles };
+    return { goOnePageBack };
   }
 });
 </script>
@@ -47,6 +39,7 @@ export default defineComponent({
   position: relative;
   display: flex;
   flex-direction: column;
+  height: 100%;
 
   .sm-nav {
     display: flex;

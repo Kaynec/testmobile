@@ -1,6 +1,6 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
-  <div class="shop-order-failure" v-else :style="styles">
+  <div class="shop-order-failure" v-else>
     <img src="@/assets/img/failkey-red@2x.png" alt="White failure Key" />
     <h6>سفارش شما ثبت نشد</h6>
     <div class="middle-card">
@@ -23,24 +23,18 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed } from 'vue';
+import { defineComponent } from 'vue';
 import router from '@/router';
 
 export default defineComponent({
   setup() {
-    let styles = computed(() => {
-      return {
-        'min-height': `calc( 1vh * 100) `
-      };
-    });
-
     const goToHomePage = () => {
       router.push({
         name: 'Home'
       });
     };
 
-    return { styles, goToHomePage };
+    return { goToHomePage };
   }
 });
 </script>
@@ -56,6 +50,7 @@ export default defineComponent({
   gap: 1rem;
   padding-top: 5rem;
   font-family: IRANSans;
+  height: 100%;
 
   img {
     max-width: 30%;

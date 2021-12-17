@@ -1,14 +1,7 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
-  <div class="shop-basket" v-else :style="styles">
-    <nav class="nav">
-      <span> سبد خرید شما</span>
-      <img
-        @touchstart="goOnePageBack"
-        src="../../../assets/img/arrow-left.png"
-        alt="arrow left icon"
-      />
-    </nav>
+  <div class="shop-basket" v-else>
+    <MinimalHeader title="سبد خرید شما" />
     <!--  -->
     <div class="container">
       <!-- Change The Data -->
@@ -83,10 +76,12 @@ import { StudentBasketApi } from '@/api/services/student/student-basket-service'
 import { store } from '@/store';
 import { toPersianNumbers } from '@/utilities/to-persian-numbers';
 import { StudentMutationTypes } from '@/store/modules/student/mutation-types';
+import MinimalHeader from '@/modules/student-modules/header/minimal-header.vue';
 
 export default defineComponent({
   components: {
-    ChapterList
+    ChapterList,
+    MinimalHeader
   },
   setup() {
     const date = new Date();
@@ -177,14 +172,8 @@ export default defineComponent({
       }
     };
 
-    let styles = computed(() => {
-      return {
-        'min-height': `calc( 1vh * 100) `
-      };
-    });
     return {
       goOnePageBack,
-      styles,
       payment,
       submitOrder,
       toPersianNumbers,
@@ -210,6 +199,9 @@ export default defineComponent({
   overflow-x: hidden;
   background: #f4f4f4;
   font-family: IRANSans;
+  width: 100%;
+  height: 100%;
+  padding-top: 8vh;
 
   .nav {
     display: flex;

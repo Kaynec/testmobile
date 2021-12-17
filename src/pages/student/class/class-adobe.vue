@@ -1,29 +1,21 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
-  <div class="abobe" v-else :style="styles">
-    <nav class="nav">
-      <span> ادوبی کانکت </span>
-      <img src="../../../assets/img/arrow-left.png" @click="goOnePageBack" />
-    </nav>
+  <div class="abobe" v-else>
+    <MinimalHeader title="ادوبی کانکت" />
   </div>
 </template>
 
 <script>
-import { defineComponent, computed } from 'vue';
+import { defineComponent } from 'vue';
+import MinimalHeader from '@/modules/student-modules/header/minimal-header.vue';
 import router from '@/router';
 
 export default defineComponent({
+  components: { MinimalHeader },
   setup() {
     const goOnePageBack = () => router.go(-1);
 
-    let styles = computed(() => {
-      return {
-        'min-height': `calc( 1vh * 100) `
-      };
-    });
-
     return {
-      styles,
       goOnePageBack
     };
   }
@@ -39,6 +31,7 @@ export default defineComponent({
   position: relative;
   overflow-x: hidden;
   overflow-y: auto;
+  height: 100%;
   .nav {
     width: 100%;
     height: 50px;

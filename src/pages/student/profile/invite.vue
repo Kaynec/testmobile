@@ -1,10 +1,7 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
-  <div class="invite" :style="styles" v-else>
-    <nav class="nav">
-      <span> پروفایل من </span>
-      <img src="../../../assets/img/arrow-left.png" @click="goOnePageBack" />
-    </nav>
+  <div class="invite" v-else>
+    <MinimalHeader title="پروفایل من" />
     <!--  -->
     <div class="container">
       <img
@@ -27,33 +24,33 @@
 
 <script lang="ts">
 import { defineComponent, computed } from 'vue';
+import MinimalHeader from '@/modules/student-modules/header/minimal-header.vue';
 import router from '@/router';
 
 export default defineComponent({
+  components: { MinimalHeader },
   setup() {
-    const styles = computed(() => {
-      return {
-        'min-height': `calc( 1vh * 100) `
-      };
-    });
-
     const goOnePageBack = () => router.go(-1);
 
-    return { styles, goOnePageBack };
+    return { goOnePageBack };
   }
 });
 </script>
 
 <style lang="scss" scoped>
 .invite {
-  width: 100%;
-  background-color: #f4f4f4;
   display: flex;
-  // flex-direction: column;
+
   align-items: center;
   justify-content: center;
   position: relative;
+
+  width: 100%;
+  background-color: #f4f4f4;
   font-family: IRANSans;
+  height: 100%;
+  position: relative;
+  padding-top: 8vh;
 
   .nav {
     width: 100%;

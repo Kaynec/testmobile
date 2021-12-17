@@ -188,13 +188,6 @@ export default defineComponent({
       data.value = res.data.data;
       updateCalendarClasses();
     });
-
-    let styles = computed(() => {
-      return {
-        'min-height': `calc( 1vh * 100) `
-      };
-    });
-
     const changeCalendarAddEvent = () => {
       showCalendarAddEvent.value = !showCalendarAddEvent.value;
       StudentEventApi.get({ date: dateForDataBase }).then((res) => {
@@ -221,8 +214,6 @@ export default defineComponent({
         if (+toEnglishNumbers(templateDate[0]) > el)
           numberDays.value[el] = { class: 'red', count: el };
         else numberDays.value[el] = { class: 'green', count: el };
-
-        console.log(numberDays.value[el]);
       });
     };
 
@@ -248,7 +239,6 @@ export default defineComponent({
     };
 
     return {
-      styles,
       toPersianNumbers,
       toEnglishNumbers,
       days,
@@ -272,10 +262,12 @@ export default defineComponent({
 @import '@/css-variable//Global.scss';
 .calendar-page {
   max-width: 100vw;
+  height: 100%;
   overflow-x: hidden;
   background-color: #f4f4f4;
   font-family: IRANSans;
   position: relative;
+  padding-top: 8vh;
 
   .calendar {
     width: 90%;

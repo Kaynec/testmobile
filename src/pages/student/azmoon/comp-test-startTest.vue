@@ -8,11 +8,8 @@
     <div class="loading1"></div>
   </div>
   <!--  -->
-  <div class="start" v-else :style="styles">
-    <nav class="nav">
-      <span> آزمون های جامع </span>
-      <img src="../../../assets/img/arrow-left.png" @click="goOnePageBack" />
-    </nav>
+  <div class="start" v-else>
+    <MinimalHeader title="شروغ آزمون" />
     <!--  -->
     <div class="label">
       <!-- Count -->
@@ -24,30 +21,7 @@
       </h6>
       <h6 class="second-h6">پایه {{ timeInformation.grade.title }}</h6>
     </div>
-    <!--  -->
-    <!-- <div class="time">
-      <div>
-        <p>
-          {{ timeInformation.texts.dayInText }}
-          {{ timeInformation.texts.monthInText }}
-          {{ toPersianNumbers(timeInformation.texts.year) }}
-        </p>
-        <h5>تاریخ آزمون</h5>
-      </div>
-      <div>
-        <p>{{ toPersianNumbers(timeInformation.time) }}</p>
-        <h5>ساعت شروع آزمون</h5>
-      </div>
-      <div>
-        <p>
-          {{
-            addMinutes(`${timeInformation.time}:00`, timeInformation.duration)
-          }}
-        </p>
-        <h5>ساعت پایان آزمون</h5>
-      </div>
-    </div> -->
-    <!--  -->
+
     <div class="budget">
       <div class="budget-img">
         <h5>درس مورد نظر را انتخاب کنید</h5>
@@ -64,29 +38,24 @@
         <p class="budget-label-second-p">{{ item.title }}</p>
       </div>
     </div>
-
-    <!-- <button @click="goToquestions(timeInformation)">
-      شروع آزمون
-      <i class="fas fa-arrow-right"></i>
-    </button> -->
   </div>
-
-  <!--  -->
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, reactive, ref } from 'vue';
+import { defineComponent, reactive, ref } from 'vue';
 import { StudentExamApi } from '@/api/services/student/student-exam-service';
 import router from '@/router';
 import { toPersianNumbers } from '@/utilities/to-persian-numbers';
 import { store } from '@/store';
 import { StudentMutationTypes } from '@/store/modules/student/mutation-types';
+import MinimalHeader from '@/modules/student-modules/header/minimal-header.vue';
 const moment = require('moment-jalaali');
 
 export default defineComponent({
   props: {
     id: { type: String }
   },
+  components: { MinimalHeader },
   setup(props) {
     const orientationTitleInformation = reactive([] as any),
       timeInformation = ref({} as any);
@@ -105,9 +74,8 @@ export default defineComponent({
       store.commit(StudentMutationTypes.SET_CURRENT_ID_OF_EXAM, props.id);
     StudentExamApi.get(props.id || store.getters.getCurrentIdOfExam).then(
       (res) => {
+        console.log(res.data.data);
         timeInformation.value = res.data.data;
-        // addMinutes(timeInformation.value.time, timeInformation.value.duration);
-        // console.log(timeInformation.value.time, timeInformation.value.duration);
         let mDate = moment(timeInformation.value.date, 'jYYYY/jM/jD');
         let currentDate = new Date(mDate.format('YYYY/M/D')).toLocaleDateString(
           'fa-FA',
@@ -131,6 +99,7 @@ export default defineComponent({
         };
 
         res.data.data.budgeting.forEach((item: any) => {
+          console.log(item);
           orientationTitleInformation.push({
             orientation: item.course.orientation,
             title: item.course.title,
@@ -140,10 +109,6 @@ export default defineComponent({
       }
     );
 
-    setTimeout(() => {
-      console.log(orientationTitleInformation.value);
-    }, 5000);
-
     const goOnePageBack = () => router.go(-1);
 
     const goToquestions = (item) =>
@@ -152,14 +117,7 @@ export default defineComponent({
         params: { item: JSON.stringify(item) }
       });
 
-    let styles = computed(() => {
-      return {
-        'min-height': `calc( 1vh * 100) `
-      };
-    });
-
     return {
-      styles,
       goOnePageBack,
       goToquestions,
       orientationTitleInformation,
@@ -180,6 +138,8 @@ export default defineComponent({
   position: relative;
   overflow-x: hidden;
   overflow-y: auto;
+  padding-top: 8vh;
+  height: 100%;
   .nav {
     width: 100%;
     height: 50px;

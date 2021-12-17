@@ -31,7 +31,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, onMounted } from 'vue';
+import { defineComponent, ref } from 'vue';
 import SmallHeader from '@/modules/student-modules/header/small-header.vue';
 import CompTestPast from '@/modules/student-modules/azmoon/comp-test-past.vue';
 import CompTestFuture from '@/modules/student-modules/azmoon/comp-test-future.vue';
@@ -47,7 +47,6 @@ export default defineComponent({
   setup() {
     let pastExams = [] as any;
     let futureExams = [] as any;
-    const windowHeight = ref();
     // if the past has been done than move it to the past section
     StudentExamApi.getAll().then((res) => {
       res.data.data.forEach((date: any) => {
@@ -61,25 +60,7 @@ export default defineComponent({
       });
     });
     const currentState = ref('past');
-    let styles = computed(() => {
-      return {
-        'min-height': `calc( 1vh * 100) `
-      };
-    });
-    //
-
-    const onResize = () => (windowHeight.value = window.innerHeight);
-
-    const getMainStyle = () => {
-      return { height: `${windowHeight.value - 1}px` };
-    };
-    onMounted(() => {
-      onResize();
-
-      (window as any).addEventListener('resize', onResize);
-    });
-
-    return { currentState, styles, futureExams, pastExams, getMainStyle };
+    return { currentState, futureExams, pastExams };
   }
 });
 </script>
@@ -91,6 +72,8 @@ export default defineComponent({
   background: #f4f4f4;
   overflow: hidden;
   height: 100%;
+  padding-top: 8vh;
+  width: 100%;
 
   .hero {
     width: 100%;

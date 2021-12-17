@@ -1,10 +1,7 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
   <div class="history" v-else :style="styles">
-    <nav class="nav">
-      <span> سوابق خرید </span>
-      <img src="../../../assets/img/arrow-left.png" @click="goOnePageBack" />
-    </nav>
+    <MinimalHeader title="سوابق خرید " />
     <!--  -->
     <div class="container">
       <div class="container-header">
@@ -21,25 +18,19 @@
   </div>
 </template>
 <script lang="ts">
-import { computed, defineComponent, reactive, ref } from 'vue';
+import { defineComponent, reactive, ref } from 'vue';
 import { StudentBasketApi } from '@/api/services/student/student-basket-service';
 import TableChild from '@/modules/student-modules/table-child.vue';
+import MinimalHeader from '@/modules/student-modules/header/minimal-header.vue';
 import router from '@/router';
 
 export default defineComponent({
-  components: { TableChild },
+  components: { TableChild, MinimalHeader },
   setup() {
     let historyData = ref();
     // StudentBasketApi.HistoryOfBoughtProducts().then(
     //   (res) => (historyData.value = res.data.data)
     // );
-
-    const styles = computed(() => {
-      return {
-        'min-height': `calc( 1vh * 100) `
-      };
-    });
-
     const goOnePageBack = () => router.go(-1);
     let data = reactive({} as any);
 
@@ -47,7 +38,7 @@ export default defineComponent({
       (res) => (data = reactive(res.data.data))
     );
 
-    return { styles, data, goOnePageBack, historyData };
+    return { data, goOnePageBack, historyData };
   }
 });
 </script>
@@ -57,6 +48,9 @@ export default defineComponent({
   width: 100%;
   background-color: #f4f4f4;
   font-family: IRANSans;
+  height: 100%;
+  position: relative;
+  padding-top: 8vh;
 
   .nav {
     width: 100%;
