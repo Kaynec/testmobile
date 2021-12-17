@@ -41,11 +41,11 @@
   font-style: normal;
   font-display: swap;
 }
-#app {
-  width: 100vw;
-  height: 100vh;
-  direction: rtl;
-}
+// #app {
+//   width: 100vw;
+//   height: 100vh;
+//   direction: rtl;
+// }
 .main-header .navbar-nav .nav-item .nav-link {
   background: transparent;
   border: none;
@@ -338,9 +338,6 @@
     transform: translate(-120px, 0);
   }
 }
-// .bg {
-//   width: 100%;
-//   height: 100%;
-//   overflow: scroll;
-//   -webkit-overflow-scrolling: touch;
-// }
+.bg {
+  min-height: 100%;
+}

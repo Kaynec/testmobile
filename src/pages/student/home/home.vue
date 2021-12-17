@@ -75,7 +75,7 @@ import Header from '@/modules/student-modules/header/header.vue';
 import RoadMap from '@/modules/student-modules/roadmap/roadmap.vue';
 import Azmoon from '@/modules/student-modules/azmoon/azmoon.vue';
 
-import { store } from '@/store';
+// import { store } from '@/store';
 
 @Options({
   components: {
@@ -90,12 +90,21 @@ export default class Login extends Vue {
   public windowHeight = window.innerHeight;
   public showAzmoon = false;
   public showRoadMap = false;
+
+  //
+  onResize(): void {
+    (this as any).windowHeight = window.innerHeight;
+  }
+  getMainStyle(): { height: string } {
+    return { height: `${(this as any).windowHeight - 1}px` };
+  }
   public mounted(): void {
     this.onResize();
     this.$nextTick(() => {
       window.addEventListener('resize', this.onResize);
     });
   }
+
   public MoveToCLassRoom(): void {
     setTimeout(() => {
       router.push({
@@ -120,23 +129,13 @@ export default class Login extends Vue {
     }, 100);
   }
 
-  // get styles() {
-  //   return {
-  //     'min-height': `calc( 1vh * 100) `
-  //   };
-  // }
   public changeShowRoadMap(boolean: boolean): void {
     this.showRoadMap = boolean;
   }
   public changeShowAzmoon(boolean: boolean): void {
     this.showAzmoon = boolean;
   }
-  onResize(): void {
-    (this as any).windowHeight = window.innerHeight;
-  }
-  getMainStyle(): { height: string } {
-    return { height: `${(this as any).windowHeight - 1}px` };
-  }
+
   async logout() {
     debugger;
     await useStudentStore().dispatch(
@@ -161,6 +160,7 @@ export default class Login extends Vue {
   font-family: IRANSans;
   position: relative;
   padding-top: 8vh;
+  min-height: -webkit-fill-available;
 
   .hero {
     width: 95%;

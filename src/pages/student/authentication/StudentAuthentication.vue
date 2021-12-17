@@ -1,7 +1,7 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
 
-  <div class="Forget-the-password" v-else>
+  <div class="Forget-the-password" v-else :style="getMainStyle">
     <img src="../../../assets/img/logo-mahan@2x.png" class="logo-mahan" />
 
     <!-- Main Part -->
@@ -70,13 +70,13 @@
 
 <script lang="ts">
 import router from '@/router';
-import { computed, defineComponent, reactive } from 'vue';
+import { computed, defineComponent, reactive, ref, onMounted } from 'vue';
 import useVuelidate from '@vuelidate/core';
 import { required, helpers } from '@vuelidate/validators';
 import axios from 'axios';
 //
 import { store } from '@/store';
-import { StudentAuthServiceApi } from '@/api/services/student/student-auth-service';
+// import { StudentAuthServiceApi } from '@/api/services/student/student-auth-service';
 import { StudentMutationTypes } from '@/store/modules/student/mutation-types';
 import { StudentActionTypes } from '@/store/modules/student/action-types';
 
@@ -87,7 +87,20 @@ export default defineComponent({
   },
   setup(props) {
     const model = reactive(JSON.parse(props.model) as any);
+    const windowHeight = ref();
     // If Entered Without Authentication
+
+    const onResize = () => {
+      (this as any).windowHeight = window.innerHeight;
+    };
+    const getMainStyle = () => {
+      return { height: `${windowHeight.value - 1}px` };
+    };
+    onMounted(() => {
+      onResize();
+
+      (window as any).addEventListener('resize', onResize);
+    });
 
     // if (!model.phone) router.push({ name: 'StudentLogin' });
     const code = reactive({ code: '' });
@@ -155,7 +168,8 @@ export default defineComponent({
       v$,
       sendToHome,
       sendToPasswordRecover,
-      resendVerificationCode
+      resendVerificationCode,
+      getMainStyle
     };
   }
 });
