@@ -41,27 +41,6 @@ export default defineComponent({
   flex-direction: column;
   height: 100%;
 
-  .sm-nav {
-    display: flex;
-    position: sticky;
-    top: 0;
-    width: 100%;
-    background-color: #171717;
-    color: #fff;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.7rem;
-    max-height: 8vh;
-    box-shadow: 0 -2px 5px 0 rgba(0, 0, 0, 0.09),
-      0 2px 4px 0 rgba(0, 0, 0, 0.19);
-
-    span {
-      font-family: IRANSans;
-      font-size: 11px;
-      font-weight: bold;
-    }
-  }
-
   .save {
     width: 100%;
     background-color: #fff;

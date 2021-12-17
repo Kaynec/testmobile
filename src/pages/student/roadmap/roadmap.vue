@@ -33,7 +33,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed } from 'vue';
+import { defineComponent, ref } from 'vue';
 import SmallHeader from '@/modules/student-modules/header/small-header.vue';
 import RoadMapPast from '@/modules/student-modules/roadmap/road-map-past.vue';
 import RoadMapFuture from '@/modules/student-modules/roadmap/road-map-future.vue';

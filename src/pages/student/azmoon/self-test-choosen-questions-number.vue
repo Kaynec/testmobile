@@ -71,34 +71,6 @@ export default defineComponent({
   font-family: IRANSans;
   padding-top: 8vh;
 
-  .sm-nav {
-    width: 100%;
-    background-color: #171717;
-    display: flex;
-    color: #fff;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0.7rem;
-    max-height: 8vh;
-    box-shadow: 0 -2px 5px 0 rgba(0, 0, 0, 0.09),
-      0 2px 4px 0 rgba(0, 0, 0, 0.19);
-
-    div {
-      img {
-        width: 29px;
-        height: 28px;
-        margin: 0 10px 0 0;
-        border-radius: 8px;
-        border: solid 2px #ddd;
-      }
-
-      span {
-        font-size: 11px;
-        font-weight: bold;
-      }
-    }
-  }
-
   .progress-count {
     width: 100%;
     padding: 1rem;

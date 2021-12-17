@@ -92,27 +92,6 @@ export default defineComponent({
   padding-top: 8vh;
   overflow-x: hidden;
   overflow-y: auto;
-  .nav {
-    width: 100%;
-    height: 50px;
-    padding: 10px 15px 10px 10px;
-    box-shadow: 0 -2px 5px 0 rgba(0, 0, 0, 0.09),
-      0 2px 4px 0 rgba(0, 0, 0, 0.19);
-    background-color: #171717;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-
-    span {
-      margin: 7px 0 7px 2px;
-      font-family: IRANSans;
-      font-size: 11px;
-      font-weight: bold;
-      line-height: 1.45;
-      color: #fff;
-      display: inline-block;
-    }
-  }
 
   .time {
     width: 95%;
