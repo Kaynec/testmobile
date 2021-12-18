@@ -31,6 +31,7 @@ export default defineComponent({
   padding: 0.8rem;
   position: fixed; /* Set the navbar to fixed position */
   top: 0;
+  z-index: 2;
 
   img {
     padding: 0;

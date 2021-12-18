@@ -11,7 +11,7 @@
     <!-- Progress Bar And Count -->
     <div class="progress-count">
       <div class="count">
-        <span> {{ model.orientation }} {{ model.session.title }} </span>
+        <!-- <span> {{ model.orientation }} {{ model.session.title }} </span> -->
         <!-- Change This And Width Of The Progress Bar Dynamically -->
         <span> {{ AllQuestions.length }}/{{ currentQuestion + 1 }} </span>
       </div>
@@ -114,9 +114,16 @@ export default defineComponent({
     });
 
     model.value.questions.forEach((item: any) => {
-      StudentExamApi.getOneQuestion(item).then((res) => {
-        AllQuestions.value.push(res.data.data);
-      });
+      StudentExamApi.getOneQuestion(item)
+        .then((res) => {
+          if (res.data.data) {
+            AllQuestions.value.push(res.data.data);
+          }
+          return true;
+        })
+        .then((res) => {
+          console.log(AllQuestions.value);
+        });
     });
 
     const goOnePageBack = () => router.go(-1);
@@ -137,13 +144,11 @@ export default defineComponent({
         question: {
           _id: question._id
         },
-        course: { _id: model.value.course._id }, //
+        course: { _id: question.course._id }, //
         session: {
-          _id: model.value.session._id
+          _id: question.session._id
         }
       };
-
-      console.log(tmp);
 
       e.target.classList.add('active');
     };

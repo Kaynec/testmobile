@@ -11,14 +11,6 @@ export type Mutations<S = State> = {
     state: S,
     payload: UserDocuments | null
   ): void;
-  [StudentMutationTypes.SET_CURRENT_ID_OF_EXAM](
-    state: S,
-    payload: string | null
-  ): void;
-  [StudentMutationTypes.SET_CURRENT_ID_OF_SHOP](
-    state: S,
-    payload: string | null
-  ): void;
   [StudentMutationTypes.SET_BASKET_COUNT](
     state: S,
     payload: number | null
@@ -43,12 +35,6 @@ export const mutations: MutationTree<State> & Mutations = {
   },
   [StudentMutationTypes.SET_USER](state: State, user: UserDocuments | null) {
     state.user = user;
-  },
-  [StudentMutationTypes.SET_CURRENT_ID_OF_EXAM](state: State, payload: string) {
-    state.CurrentIdOfExam = payload;
-  },
-  [StudentMutationTypes.SET_CURRENT_ID_OF_SHOP](state: State, payload: string) {
-    state.CurrentIdOfShop = payload;
   },
   [StudentMutationTypes.SET_BASKET_COUNT](state: State, payload: number) {
     if (payload >= 0) state.BasketCount = payload;

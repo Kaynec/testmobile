@@ -428,7 +428,7 @@ const routes: Array<RouteRecordRaw> = [
         beforeEnter: ifStudentAuthenticated
       },
       {
-        path: 'comp-test-start',
+        path: 'comp-test-start/:id',
         name: 'compTestStart',
         props: true,
         component: CompTestStart,
@@ -494,7 +494,7 @@ const routes: Array<RouteRecordRaw> = [
         beforeEnter: ifStudentAuthenticated
       },
       {
-        path: 'shop-book-list',
+        path: 'shop-book-list/:id',
         name: 'ShopBookList',
         component: ShopBookList,
         props: true,

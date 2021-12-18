@@ -46,19 +46,18 @@ import { defineComponent, reactive, ref } from 'vue';
 import { StudentExamApi } from '@/api/services/student/student-exam-service';
 import router from '@/router';
 import { toPersianNumbers } from '@/utilities/to-persian-numbers';
-import { store } from '@/store';
-import { StudentMutationTypes } from '@/store/modules/student/mutation-types';
 import MinimalHeader from '@/modules/student-modules/header/minimal-header.vue';
 const moment = require('moment-jalaali');
+import { useRoute } from 'vue-router';
+// import { store } from '@/store';
+// import { StudentMutationTypes } from '@/store/modules/student/mutation-types';
 
 export default defineComponent({
-  props: {
-    id: { type: String }
-  },
   components: { MinimalHeader },
-  setup(props) {
-    const orientationTitleInformation = reactive([] as any),
-      timeInformation = ref({} as any);
+  setup() {
+    const orientationTitleInformation = reactive([] as any);
+    const timeInformation = ref({} as any);
+    const route = useRoute();
 
     const addMinutes = (time, minsToAdd) => {
       function D(J) {
@@ -69,45 +68,47 @@ export default defineComponent({
 
       return D(((mins % (24 * 60)) / 60) | 0) + ':' + D(mins % 60);
     };
-    //
-    if (props.id)
-      store.commit(StudentMutationTypes.SET_CURRENT_ID_OF_EXAM, props.id);
-    StudentExamApi.get(props.id || store.getters.getCurrentIdOfExam).then(
-      (res) => {
-        console.log(res.data.data);
-        timeInformation.value = res.data.data;
-        let mDate = moment(timeInformation.value.date, 'jYYYY/jM/jD');
-        let currentDate = new Date(mDate.format('YYYY/M/D')).toLocaleDateString(
-          'fa-FA',
-          {
-            weekday: 'long',
-            month: 'long',
-            day: 'numeric'
-          }
-        ) as any;
 
-        currentDate = currentDate.split(',');
-        let monthInText = currentDate[0].split(' ')[0],
-          dayInText = currentDate[0].split(' ')[1],
-          weekDay = currentDate[1];
+    StudentExamApi.get(route.params.id as any).then((res) => {
+      timeInformation.value = res.data.data;
+      let mDate = moment(timeInformation.value.date, 'jYYYY/jM/jD');
+      let currentDate = new Date(mDate.format('YYYY/M/D')).toLocaleDateString(
+        'fa-FA',
+        {
+          weekday: 'long',
+          month: 'long',
+          day: 'numeric'
+        }
+      ) as any;
 
-        timeInformation.value.texts = {
-          monthInText,
-          weekDay,
-          dayInText,
-          year: timeInformation.value.date.split('/')[0]
-        };
+      currentDate = currentDate.split(',');
+      let monthInText = currentDate[0].split(' ')[0],
+        dayInText = currentDate[0].split(' ')[1],
+        weekDay = currentDate[1];
 
-        res.data.data.budgeting.forEach((item: any) => {
-          console.log(item);
-          orientationTitleInformation.push({
-            orientation: item.course.orientation,
-            title: item.course.title,
-            ...item
-          });
-        });
-      }
-    );
+      timeInformation.value.texts = {
+        monthInText,
+        weekDay,
+        dayInText,
+        year: timeInformation.value.date.split('/')[0]
+      };
+
+      res.data.data.budgeting.forEach((item: any) => {
+        let tmp = {} as any;
+
+        if (item.course) {
+          tmp.orientation = item.course.orientation;
+          tmp.title = item.course.title;
+        } else if (!item.course) {
+          tmp.orientation = 'رشته تحصیلی';
+          tmp.title = 'درس تحصیلی';
+        }
+        tmp = { ...tmp, ...item };
+
+        orientationTitleInformation.push(tmp);
+        console.log(orientationTitleInformation);
+      });
+    });
 
     const goOnePageBack = () => router.go(-1);
 

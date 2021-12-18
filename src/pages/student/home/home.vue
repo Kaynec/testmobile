@@ -171,10 +171,17 @@ export default class Login extends Vue {
     justify-content: center;
     flex-basis: 33.33%;
     width: 33.33%;
+    // background: red;
 
     img {
-      border-radius: 43%;
-      width: 80%;
+      border-radius: 50%;
+      // width: 80%;
+      width: 100%;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
     }
 
     &:nth-of-type(7),

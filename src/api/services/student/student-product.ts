@@ -16,6 +16,22 @@ class product {
       }
     });
   }
+  async getNewProducts() {
+    return instance.get('product/getnewproducts', {
+      headers: {
+        // Overwrite Axios's automatically set Content-Type
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+  async getBoughtProducts() {
+    return instance.get('order/getBoughtProducts', {
+      headers: {
+        // Overwrite Axios's automatically set Content-Type
+        'Content-Type': 'application/json'
+      }
+    });
+  }
   async getCategoryPicture(id: string) {
     return instance.get(`/product-category/coverImage/${id}`, {
       headers: {
@@ -49,7 +65,7 @@ class product {
     });
   }
   getDemoFile(id: string) {
-    return instance.get(`/product/coverImage/${id}`, {
+    return instance.get(`/product/demo/${id}`, {
       headers: {
         // Overwrite Axios's automatically set Content-Type
         // 'Content-Type': 'application/json'
@@ -57,7 +73,7 @@ class product {
     });
   }
   getOriginalFile(id: string) {
-    return instance.get(`/product/coverImage/${id}`, {
+    return instance.get(`/product/original/${id}`, {
       headers: {
         // Overwrite Axios's automatically set Content-Type
         // 'Content-Type': 'application/json'

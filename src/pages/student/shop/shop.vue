@@ -46,16 +46,16 @@
     <div class="Cards">
       <template v-if="currentState == 'yourProduct'">
         <!-- Empty Right Now But We Will Fill It Later With Database Data -->
-        <div class="Card" v-for="product in newsetData" :key="product">
-          <img :src="product.img" alt="Card img" />
+        <div class="Card" v-for="product in yourProduct" :key="product">
+          <!-- <img :src="product.img" alt="Card img" /> -->
           <p>{{ product.name }}</p>
         </div>
       </template>
 
       <template v-if="currentState == 'newsetProduct'">
         <div class="Card" v-for="product in newsetData" :key="product">
-          <img :src="product.img" alt="Card img" />
-          <p>{{ product.name }}</p>
+          <!-- <img :src="product.img" alt="Card img" /> -->
+          <p>{{ product.title }}</p>
         </div>
       </template>
     </div>
@@ -77,10 +77,17 @@ export default defineComponent({
   components: { SmallHeader, ShopFooter },
   setup() {
     let productCategories = reactive([] as any);
+    const newsetData = ref([]) as any;
+    const yourProduct = ref([]) as any;
 
     (async () => {
       const res = await StudentproductApi.getAllCategories();
+      const newRes = await StudentproductApi.getNewProducts();
+      const getBoughtProducts = await StudentproductApi.getBoughtProducts();
+      newRes.data.data.forEach((child) => newsetData.value.push(child));
+      getBoughtProducts.data.data.forEach((child) => yourProduct.push(child));
       res.data.data.forEach((category) => productCategories.push(category));
+
       productCategories.forEach((data) => {
         const imageUrl = `https://www.api.devnirone.ir/api/product-category/coverImage/${data._id}`;
         returnProtectedImage(imageUrl).then((res) => (data.img = res));
@@ -88,33 +95,6 @@ export default defineComponent({
     })();
 
     const currentState = ref('yourProduct');
-
-    const newsetData = [
-      {
-        name: 'ادبیات',
-        img: 'https://arga-mag.com/file/img/2020/08/Book-profile-picture-38.jpg'
-      },
-      {
-        name: 'ادبیات',
-        img: 'https://arga-mag.com/file/img/2020/08/Book-profile-picture-38.jpg'
-      },
-      {
-        name: 'ادبیات',
-        img: 'https://arga-mag.com/file/img/2020/08/Book-profile-picture-38.jpg'
-      },
-      {
-        name: 'ادبیات',
-        img: 'https://arga-mag.com/file/img/2020/08/Book-profile-picture-38.jpg'
-      },
-      {
-        name: 'ادبیات',
-        img: 'https://arga-mag.com/file/img/2020/08/Book-profile-picture-38.jpg'
-      },
-      {
-        name: 'ادبیات',
-        img: 'https://arga-mag.com/file/img/2020/08/Book-profile-picture-38.jpg'
-      }
-    ];
     const sendToBookShopList = (id: string, title: string) => {
       router.push({
         name: 'ShopBookList',
@@ -141,7 +121,8 @@ export default defineComponent({
       styles,
       moveToBasket,
       StudentproductApi,
-      store
+      store,
+      yourProduct
     };
   }
 });

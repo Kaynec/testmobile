@@ -52,7 +52,7 @@
   </div>
 </template>
 <script lang="ts">
-import { computed, defineComponent, reactive, ref } from 'vue';
+import { defineComponent, reactive, ref } from 'vue';
 import MinimalHeader from '@/modules/student-modules/header/minimal-header.vue';
 import Footer from '@/modules/student-modules/footer/footer.vue';
 import router from '@/router';
@@ -147,7 +147,7 @@ export default defineComponent({
   padding-top: 8vh;
   .info {
     width: 95%;
-    margin: 1rem auto;
+    margin: 0 auto 1rem;
     background: linear-gradient(
       to top left,
       rgb(189, 39, 43) 0%,

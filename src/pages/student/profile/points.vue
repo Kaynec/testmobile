@@ -9,23 +9,24 @@
         <span>امتیاز </span>
         <span>تاریخ</span>
       </div>
-      <TableChild
+      <!-- <TableChild
         v-for="item in data"
         :key="item"
         :content="item.content"
         :label="item.label"
-      />
+      /> -->
     </div>
   </div>
 </template>
 <script lang="ts">
 import { defineComponent, reactive } from 'vue';
 import MinimalHeader from '@/modules/student-modules/header/minimal-header.vue';
-import TableChild from '@/modules/student-modules/table-child.vue';
+// import TableChild from '@/modules/student-modules/table-child.vue';
 import router from '@/router';
 
 export default defineComponent({
-  components: { TableChild, MinimalHeader },
+  // components: { TableChild, MinimalHeader },
+  components: { MinimalHeader },
   setup() {
     const goOnePageBack = () => router.go(-1);
 

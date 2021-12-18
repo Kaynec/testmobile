@@ -69,28 +69,25 @@
 
 <script lang="ts">
 // Get All The Books The Relate To This Genre And List It In The Template
-import { defineComponent, computed, ref } from 'vue';
+import { defineComponent, ref } from 'vue';
 import { StudentproductApi } from '@/api/services/student/student-product';
 import { toPersianNumbers } from '@/utilities/to-persian-numbers';
-import { store } from '@/store';
 import router from '@/router';
-import { StudentMutationTypes } from '@/store/modules/student/mutation-types';
 import ShopFooter from '@/modules/student-modules/footer/shop-footer.vue';
 import { returnProtectedImage } from '@/utilities/get-image-from-url';
 import MinimalHeader from '@/modules/student-modules/header/minimal-header.vue';
+import { useRoute } from 'vue-router';
+// import { StudentMutationTypes } from '@/store/modules/student/mutation-types';
+// import { store } from '@/store';
 
 export default defineComponent({
-  props: { id: { type: String }, title: { type: String } },
+  props: { id: { type: String } },
   components: { ShopFooter, MinimalHeader },
-  setup(props) {
-    const data = ref({} as any),
-      id = ref(props.id);
+  setup() {
+    const data = ref({} as any);
+    const route = useRoute();
+    let title = ref('');
 
-    if (props.id) {
-      store.commit(StudentMutationTypes.SET_CURRENT_ID_OF_SHOP, id.value);
-    }
-
-    //
     const openSingleBookPage = (item, title, length) => {
       router.push({ name: 'SingleBookInfo', params: { item, title, length } });
     };
@@ -98,9 +95,20 @@ export default defineComponent({
     const goOnePageBack = () => router.go(-1);
 
     (async () => {
-      id.value = store.getters.getCurrentIdOfShop;
-      const getAllProducts = await StudentproductApi.getAllProducts(id.value);
+      const getAllProducts = await StudentproductApi.getAllProducts(
+        route.params.id
+      );
+
       data.value = getAllProducts.data;
+
+      const idOfCurrentSubcategory = data.value.data[0].category;
+
+      StudentproductApi.getAllCategories().then((Res) => {
+        const find = Res.data.data.find((el) => {
+          return el._id == idOfCurrentSubcategory;
+        });
+        title.value = find.title || '';
+      });
 
       data.value.data.forEach((data) => {
         const imageUrl = `https://www.api.devnirone.ir/api/product/coverImage/${data._id}`;
@@ -113,7 +121,8 @@ export default defineComponent({
       data,
       openSingleBookPage,
       goOnePageBack,
-      toPersianNumbers
+      toPersianNumbers,
+      title
     };
   }
 });
