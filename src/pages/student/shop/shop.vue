@@ -5,7 +5,7 @@
     <div class="loading1"></div>
   </div>
   <!--  -->
-  <div class="shop bg" v-else>
+  <div class="shop" v-else>
     <SmallHeader />
     <div class="grid">
       <div
@@ -46,15 +46,25 @@
     <div class="Cards">
       <template v-if="currentState == 'yourProduct'">
         <!-- Empty Right Now But We Will Fill It Later With Database Data -->
-        <div class="Card" v-for="product in yourProduct" :key="product">
-          <!-- <img :src="product.img" alt="Card img" /> -->
+        <div
+          class="Card"
+          v-for="product in yourProduct"
+          @click="openSingleBookPage(product)"
+          :key="product"
+        >
+          <img :src="product.img" alt="Card img" />
           <p>{{ product.name }}</p>
         </div>
       </template>
 
       <template v-if="currentState == 'newsetProduct'">
-        <div class="Card" v-for="product in newsetData" :key="product">
-          <!-- <img :src="product.img" alt="Card img" /> -->
+        <div
+          class="Card"
+          v-for="product in newsetData"
+          @click="openSingleBookPage(product)"
+          :key="product"
+        >
+          <img v-if="product.img" :src="product.img" />
           <p>{{ product.title }}</p>
         </div>
       </template>
@@ -65,7 +75,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed, reactive } from 'vue';
+import { defineComponent, ref, reactive } from 'vue';
 import SmallHeader from '@/modules/student-modules/header/small-header.vue';
 import { StudentproductApi } from '@/api/services/student/student-product';
 import router from '@/router';
@@ -84,15 +94,27 @@ export default defineComponent({
       const res = await StudentproductApi.getAllCategories();
       const newRes = await StudentproductApi.getNewProducts();
       const getBoughtProducts = await StudentproductApi.getBoughtProducts();
+      // Fill The Data
       newRes.data.data.forEach((child) => newsetData.value.push(child));
       getBoughtProducts.data.data.forEach((child) => yourProduct.push(child));
       res.data.data.forEach((category) => productCategories.push(category));
-
+      // Get The Images For Them
       productCategories.forEach((data) => {
         const imageUrl = `https://www.api.devnirone.ir/api/product-category/coverImage/${data._id}`;
         returnProtectedImage(imageUrl).then((res) => (data.img = res));
       });
+
+      newsetData.value.forEach((data) => {
+        const imageUrl = `https://www.api.devnirone.ir/api/product/coverImage/${data._id}`;
+        returnProtectedImage(imageUrl).then((res) => (data.img = res));
+      });
+
+      yourProduct.value.forEach((data) => {
+        const imageUrl = `https://www.api.devnirone.ir/api/product/coverImage/${data._id}`;
+        returnProtectedImage(imageUrl).then((res) => (data.img = res));
+      });
     })();
+    //
 
     const currentState = ref('yourProduct');
     const sendToBookShopList = (id: string, title: string) => {
@@ -102,11 +124,13 @@ export default defineComponent({
       });
     };
 
-    let styles = computed(() => {
-      return {
-        'min-height': `calc( 1vh * 100) `
-      };
-    });
+    const openSingleBookPage = (item) => {
+      router.push({
+        name: 'SingleBookInfo',
+        params: { item: JSON.stringify(item) }
+      });
+    };
+
     const moveToBasket = () => {
       router.push({
         name: 'ShopBasket'
@@ -118,11 +142,11 @@ export default defineComponent({
       productCategories,
       newsetData,
       sendToBookShopList,
-      styles,
       moveToBasket,
       StudentproductApi,
       store,
-      yourProduct
+      yourProduct,
+      openSingleBookPage
     };
   }
 });
@@ -200,23 +224,24 @@ export default defineComponent({
   }
   //
   .Cards {
-    display: grid;
-    width: 100%;
-    grid-template-columns: repeat(3, 1fr);
-    grid-gap: 3px;
-    margin: 0;
-    padding: 0;
-    min-height: 35vh;
-    margin-top: 0.7rem;
+    display: flex;
     justify-items: center;
     align-items: center;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    margin-top: 0.7rem;
+
+    margin: 1rem auto 3.5rem;
+    width: 90%;
 
     .Card {
       display: flex;
       flex-direction: column;
       align-items: center;
-      max-width: 125px;
-      max-height: 128px;
+      justify-content: center;
+      flex-basis: 33%;
+      min-height: 150px;
       padding: 3px 4px;
       border-radius: 14.7px;
       box-shadow: -2px 2px 3px 0 rgba(0, 0, 0, 0.08);
@@ -228,8 +253,9 @@ export default defineComponent({
         margin-bottom: 5rem;
       }
       img {
-        width: 70%;
-        margin-bottom: 0.5rem;
+        width: 90%;
+        margin: 0 auto;
+        padding-top: 0.5rem;
       }
 
       p {

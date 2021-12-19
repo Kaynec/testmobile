@@ -1,58 +1,38 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
-  <div v-else class="self-test-answers" :style="styles">
+  <div v-else class="self-test-answers">
     <MinimalHeader title="پاسخنامه تشریحی آزمون" />
     <!-- Progress Bar And Count -->
-
+    <!-- 
     <div class="difficulty">
       <img src="../../../assets/img/bookmark-light.png" alt="bookmark" />
       <span>آسان</span>
       <span>متوسط</span>
-      <!-- Change This With The Type Of The Question -->
       <span class="active">دشوار</span>
     </div>
-
+ -->
     <!-- Quiz Card -->
     <!-- Change This With Real Data Of Question -->
 
     <div class="quiz-card shadow">
-      <p class="number-of-question">سوال شماره <span> ۱۰ </span></p>
+      <p class="number-of-question">
+        سوال شماره
+        <span> {{ toPersianNumbers(`${currentQuestionIndex + 1}`) }} </span>
+      </p>
 
       <h5>
-        چرا برای نوشتن یک بند، موضوع کلی را به موضوع های کوچک تر تقسیم می کنیم؟
+        {{ allQuestions[currentChunk][currentQuestionIndex].text }}
       </h5>
       <div class="quiz-card-container">
-        <div class="card">
-          <span> تا بتوانیم بند بلندتری بنویسیم </span>
-          <div class="img">
-            <img
-              src="../../../assets/img/azmoon-icons/accept-path-light.png"
-              alt="active"
-            />
-          </div>
-        </div>
+        <div
+          v-for="(option, idx) in allQuestions[currentChunk][
+            currentQuestionIndex
+          ].options"
+          :key="option._id"
+          :class="getClass(idx)"
+        >
+          <span> {{ option.text }} </span>
 
-        <div class="card">
-          <span> چون بند کوتاه است </span>
-          <div class="img">
-            <img
-              src="../../../assets/img/azmoon-icons/accept-path-light.png"
-              alt="active"
-            />
-          </div>
-        </div>
-
-        <div class="card active">
-          <span> تا از پراکندگی مطالب بند، جلوگیری کنیم </span>
-          <div class="img">
-            <img
-              src="../../../assets/img/azmoon-icons/accept-path-light.png"
-              alt="active"
-            />
-          </div>
-        </div>
-        <div class="card">
-          <span> تا اطلاعات بیشتری درباره یک موضوع داشته باشیم </span>
           <div class="img">
             <img
               src="../../../assets/img/azmoon-icons/accept-path-light.png"
@@ -65,28 +45,76 @@
 
     <!-- Detailed Answer -->
     <p class="answer">
-      نگارش، به آموزش بندنویسی می‌پردازد و به تعمیق و تجربه‌های یادگیری در این
-      زمینه اختصاص دارد. در این بخش موارد زیر آموزش داده می‌شود
+      {{
+        allQuestions[currentChunk][currentQuestionIndex].descriptiveAnswer.text
+      }}
     </p>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import MinimalHeader from '@/modules/student-modules/header/minimal-header.vue';
+import { toPersianNumbers } from '@/utilities/to-persian-numbers';
+import { store } from '@/store';
 import router from '@/router';
+import { useRoute } from 'vue-router';
+// import { StudentSelfTestApi } from '@/api/services/student/student-selftest-service';
+// import { StudentExamApi } from '@/api/services/student/student-exam-service';
+// const alertify = require('@/assets/alertifyjs/alertify');
 
 export default defineComponent({
-  components: {
-    MinimalHeader
-  },
+  components: { MinimalHeader },
   props: {
-    label: { type: String, default: 'فصل دوم بهداشت' }
+    title: { type: String, default: 'فصل دوم مهندسی صص' },
+    questions: { type: String, default: '[]' },
+    currentChunk: { type: String }
   },
-  setup() {
+  setup(props) {
+    const route = useRoute();
+
+    const allQuestions = ref(JSON.parse(props.questions));
+
+    const chunk = props.currentChunk as any;
+
+    const model = ref({} as any);
+
+    // const questions = ref([] as any);
+    // const currentQuestion = ref({} as any)
+    const currentQuestionIndex = ref(0);
+
     const goOnePageBack = () => router.go(-1);
 
-    return { goOnePageBack };
+    const showPreviousQuestion = () => {
+      if (currentQuestionIndex.value - 1 >= 0) currentQuestionIndex.value--;
+    };
+
+    const getClass = (idx: number) => {
+      const tmp = allQuestions.value[chunk][currentQuestionIndex.value];
+
+      if (tmp.correct == idx + 1) return 'card active';
+      // if (tmp.answer === idx + 1 && tmp.correct == idx + 1) {
+      //   return 'card active';
+      // }
+      else if (tmp.answer === idx + 1 && tmp.correct != idx + 1) {
+        return 'card danger';
+      } else {
+        return 'card';
+      }
+    };
+
+    console.log(props.title, props.questions, props.currentChunk);
+
+    return {
+      goOnePageBack,
+      model,
+      toPersianNumbers,
+      currentQuestionIndex,
+      allQuestions,
+      getClass,
+      store,
+      showPreviousQuestion
+    };
   }
 });
 </script>
@@ -105,6 +133,7 @@ export default defineComponent({
     font-family: IRANSans;
     padding-top: 1rem;
     margin: 0 auto;
+    padding: 1rem;
     justify-content: space-between;
     span {
       padding: 5px 27px 7px;
@@ -210,6 +239,20 @@ export default defineComponent({
         }
         .img {
           background-color: #4ac367;
+        }
+      }
+
+      .card.danger {
+        border: solid 2px #c01a22;
+
+        span {
+          font-family: IRANSans;
+          font-size: 13px;
+          font-weight: bold;
+          color: #c01a22;
+        }
+        .img {
+          background-color: #c01a22;
         }
       }
     }

@@ -32,14 +32,6 @@ class product {
       }
     });
   }
-  async getCategoryPicture(id: string) {
-    return instance.get(`/product-category/coverImage/${id}`, {
-      headers: {
-        // Overwrite Axios's automatically set Content-Type
-        // 'Content-Type': 'application/json'
-      }
-    });
-  }
   async getProduct(id: string) {
     return instance.get(`product/${id}`, {
       headers: {
@@ -53,14 +45,6 @@ class product {
       headers: {
         // Overwrite Axios's automatically set Content-Type
         'Content-Type': 'application/json'
-      }
-    });
-  }
-  async getProductPicture(id: string) {
-    return instance.get(`/product/coverImage/${id}`, {
-      headers: {
-        // Overwrite Axios's automatically set Content-Type
-        // 'Content-Type': 'application/json'
       }
     });
   }

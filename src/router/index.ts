@@ -53,8 +53,6 @@ import ShopMessage from '@/pages/student/shop/shop-message.vue';
 
 import StudentGroupPage from '@/pages/student/group/group.vue';
 
-import RoadMap from '@/pages/student/roadmap/roadmap.vue';
-
 import Hamnavard from '@/pages/student/hamnavard/hamnavard.vue';
 
 import SelfTest from '@/pages/student/azmoon/self-test.vue';
@@ -65,10 +63,10 @@ import SelfTestQuestionsAnswers from '@/pages/student/azmoon/self-test-answers.v
 import QuestionsChoosenNumbers from '@/pages/student/azmoon/self-test-choosen-questions-number.vue';
 import ListOfExams from '@/pages/student/azmoon/list-of-exams.vue';
 
+import ReportCard from '@/pages/student/azmoon/report-card.vue';
 import CompTest from '@/pages/student/azmoon/comp-test.vue';
 import CompTestQuestions from '@/pages/student/azmoon/comp-test-questions.vue';
 import CompTestStart from '@/pages/student/azmoon/comp-test-startTest.vue';
-import ReportCard from '@/pages/student/azmoon/report-card.vue';
 
 import Duel from '@/pages/student/duel/duel.vue';
 import DuelStart from '@/pages/student/duel/duel-start.vue';
@@ -380,7 +378,7 @@ const routes: Array<RouteRecordRaw> = [
         beforeEnter: ifStudentAuthenticated
       },
       {
-        path: 'self-test-questions',
+        path: 'self-test-questions/:id',
         name: 'SelfTestQuestions',
         component: SelfTestQuestions,
         beforeEnter: ifStudentAuthenticated,
@@ -402,7 +400,7 @@ const routes: Array<RouteRecordRaw> = [
         beforeEnter: ifStudentAuthenticated
       },
       {
-        path: 'choosen-number',
+        path: 'choosen-number/:id',
         name: 'QuestionsChoosenNumbers',
         component: QuestionsChoosenNumbers,
         beforeEnter: ifStudentAuthenticated
@@ -421,27 +419,6 @@ const routes: Array<RouteRecordRaw> = [
         props: true,
         beforeEnter: ifStudentAuthenticated
       },
-      {
-        path: 'comp-test',
-        name: 'compTest',
-        component: CompTest,
-        beforeEnter: ifStudentAuthenticated
-      },
-      {
-        path: 'comp-test-start/:id',
-        name: 'compTestStart',
-        props: true,
-        component: CompTestStart,
-        beforeEnter: ifStudentAuthenticated
-      },
-      {
-        path: 'comp-test-questions',
-        name: 'CompTestQuestions',
-        props: true,
-        component: CompTestQuestions,
-        beforeEnter: ifStudentAuthenticated
-      },
-
       {
         path: 'duel',
         name: 'Duel',
@@ -475,6 +452,27 @@ const routes: Array<RouteRecordRaw> = [
         component: ReportCard,
         beforeEnter: ifStudentAuthenticated
       },
+      {
+        path: 'comp-test',
+        name: 'compTest',
+        component: CompTest,
+        beforeEnter: ifStudentAuthenticated
+      },
+      {
+        path: 'comp-test-start',
+        name: 'compTestStart',
+        props: true,
+        component: CompTestStart,
+        beforeEnter: ifStudentAuthenticated
+      },
+      {
+        path: 'comp-test-questions',
+        name: 'CompTestQuestions',
+        props: true,
+        component: CompTestQuestions,
+        beforeEnter: ifStudentAuthenticated
+      },
+
       {
         path: 'hamnavard',
         name: 'Hamnavard',
@@ -574,13 +572,6 @@ const routes: Array<RouteRecordRaw> = [
         path: 'class-room-note',
         name: 'ClassRoomNote',
         component: ClassRoomNote,
-        beforeEnter: ifStudentAuthenticated,
-        props: true
-      },
-      {
-        path: 'roadmap',
-        name: 'RoadMap',
-        component: RoadMap,
         beforeEnter: ifStudentAuthenticated,
         props: true
       },

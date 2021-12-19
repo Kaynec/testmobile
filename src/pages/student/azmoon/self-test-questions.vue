@@ -21,7 +21,7 @@
     <div class="progress-count">
       <div class="count">
         <span>
-          {{ model.title }}
+          {{ title }}
         </span>
         <!-- Change This And Width Of The Progress Bar Dynamically -->
         <span>
@@ -96,15 +96,20 @@
       <button class="red" v-else @click="submitSelfTest">
         سوالات بیشتر <i class="fas fa-arrow-right"></i>
       </button>
+
+      <button
+        class="green"
+        v-if="currentQuestionIndex + 1 == questions[currentChunk].length"
+        @click="openSelfTestQuestionsAnswers"
+      >
+        پاسخنامه تشریحی
+      </button>
       <button
         class="red"
         @click="showPreviousQuestion"
-        v-if="currentQuestionIndex - 1 >= 0"
+        v-else-if="currentQuestionIndex - 1 >= 0"
       >
         سوال قبلی
-      </button>
-      <button class="green" v-else @click="openSelfTestQuestionsAnswers">
-        پاسخنامه تشریحی
       </button>
     </div>
   </div>
@@ -118,15 +123,17 @@ import { StudentExamApi } from '@/api/services/student/student-exam-service';
 import { toPersianNumbers } from '@/utilities/to-persian-numbers';
 import { store } from '@/store';
 import router from '@/router';
+import { useRoute } from 'vue-router';
 const alertify = require('@/assets/alertifyjs/alertify');
 
 export default defineComponent({
   components: { MinimalHeader },
-  props: {
-    item: { type: String, default: '{}' }
-  },
   setup(props) {
-    const model = ref(JSON.parse(props.item));
+    const route = useRoute();
+    const id = route.params.id as string;
+    const title = ref('');
+
+    const model = ref({} as any);
 
     const questions = ref([] as any);
     // const currentQuestion = ref({} as any)
@@ -135,6 +142,14 @@ export default defineComponent({
     const currentChunk = ref(0);
 
     (async () => {
+      const resForModel = await StudentSelfTestApi.getOneSession(id);
+      console.log(resForModel);
+      model.value = resForModel.data.data;
+      // Get The Title
+      const courseRes = await StudentSelfTestApi.getOneCourse(
+        model.value.course
+      );
+      title.value = `${resForModel.data.data.title} ${courseRes.data.data.title}`;
       // Check For Duplicate Exam And increase currentChunk if true
       const res = await StudentSelfTestApi.selfTestResult({
         course: model.value.course,
@@ -208,15 +223,14 @@ export default defineComponent({
       });
     };
 
-    let styles = computed(() => {
-      return {
-        'min-height': `calc( 1vh * 100) `
-      };
-    });
-
     const openSelfTestQuestionsAnswers = () =>
       router.push({
-        name: 'SelfTestQuestionsAnswers'
+        name: 'SelfTestQuestionsAnswers',
+        params: {
+          title: title.value,
+          questions: JSON.stringify(questions.value),
+          currentChunk: currentChunk.value
+        }
       });
 
     // Make The Answer the clicked one 1 based instead of zero
@@ -226,7 +240,6 @@ export default defineComponent({
         idx + 1);
 
     const goOnePageBack = () => router.go(-1);
-
     const showNextQuestion = () => {
       if (
         currentQuestionIndex.value + 1 <
@@ -240,7 +253,6 @@ export default defineComponent({
     };
 
     return {
-      styles,
       goOnePageBack,
       openSelfTestQuestionsAnswers,
       model,
@@ -252,7 +264,8 @@ export default defineComponent({
       changeQuestionsAnswer,
       store,
       showNextQuestion,
-      showPreviousQuestion
+      showPreviousQuestion,
+      title
     };
   }
 });

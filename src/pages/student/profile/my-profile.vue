@@ -5,11 +5,7 @@
     <!-- Red Div -->
     <div class="info">
       <div class="right">
-        <img
-          :src="store.getters.getProfilePicture"
-          class="profile-image"
-          ref="rightImage"
-        />
+        <img :src="imageUrl" class="profile-image" />
         <router-link class="edit" to="edit-profile">
           ویرایش
           <i class="fas fa-angle-left"></i>
@@ -58,10 +54,10 @@ import Footer from '@/modules/student-modules/footer/footer.vue';
 import router from '@/router';
 import { store } from '@/store';
 import { StudentActionTypes } from '@/store/modules/student/action-types';
+import { imageUrl } from '@/utilities/get-image-from-url';
 export default defineComponent({
   components: { Footer, MinimalHeader },
   setup() {
-    const rightImage = ref(null);
     let currentUser = reactive(store.getters.getCurrentStudent);
     let orientationName = ref(currentUser.orientation.title);
     let gradeName = ref(currentUser.grade.title);
@@ -131,7 +127,7 @@ export default defineComponent({
       orientationName,
       gradeName,
       store,
-      rightImage
+      imageUrl
     };
   }
 });

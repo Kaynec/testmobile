@@ -35,4 +35,6 @@ export const returnProtectedImage = async (imageUrl: string) => {
   return dataUrl;
 };
 
+export const imageUrl = `https://www.api.devnirone.ir/api/student/getProfileImage/${store.getters.getCurrentStudent.profileImage}`;
+
 export default displayProtectedImage;

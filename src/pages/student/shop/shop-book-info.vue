@@ -88,7 +88,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref } from 'vue';
+import { defineComponent, ref } from 'vue';
 import router from '@/router';
 import ShopFooter from '@/modules/student-modules/footer/shop-footer.vue';
 import { toPersianNumbers } from '@/utilities/to-persian-numbers';
@@ -102,9 +102,7 @@ import MinimalHeader from '@/modules/student-modules/header/minimal-header.vue';
 export default defineComponent({
   components: { ShopFooter, MinimalHeader },
   props: {
-    title: { type: String },
-    item: { type: String, default: '{}' },
-    length: { type: String }
+    item: { type: String, default: '{}' }
   },
   setup(props) {
     const model = ref(JSON.parse(props.item as any));

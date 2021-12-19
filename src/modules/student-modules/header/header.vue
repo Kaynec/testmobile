@@ -6,7 +6,7 @@
         امتیاز شما:
         {{ toPersianNumbers(`${point}`) }}
       </span>
-      <img :src="store.getters.getProfilePicture" class="profile-image" />
+      <img :src="imageUrl" class="profile-image" />
     </div>
   </header>
 </template>
@@ -15,17 +15,16 @@
 import { defineComponent, ref } from 'vue';
 import { store } from '@/store';
 import { toPersianNumbers } from '@/utilities/to-persian-numbers';
+import { imageUrl } from '@/utilities/get-image-from-url';
 
 export default defineComponent({
   setup() {
     const currentUser = ref(store.getters.getCurrentStudent);
-
     const point = ref('0');
-
     if (currentUser.value && currentUser.value.point)
       point.value = currentUser.value.point;
 
-    return { currentUser, toPersianNumbers, point, store };
+    return { currentUser, toPersianNumbers, point, store, imageUrl };
   }
 });
 </script>

@@ -73,7 +73,7 @@ export default defineComponent({
       if (currentItem.value) {
         router.push({
           name: 'SelfTestQuestions',
-          params: { item: JSON.stringify(currentItem.value) }
+          params: { id: currentItem.value._id }
         });
       }
     };
@@ -108,7 +108,6 @@ export default defineComponent({
   }
 
   .chapters-list {
-    height: 100%;
     overflow: hidden;
     padding-bottom: 5em;
   }

@@ -8,7 +8,6 @@ export type Getters = {
   getCurrentStudent(state: State): UserDocuments | null;
   getBasketCount(state: State): number | null;
   getCurrentShopInfo(state: State): any | null;
-  getProfilePicture(state: State): string | null;
   getCurrentSupportPerson: (state) => string | null;
 };
 
@@ -24,9 +23,6 @@ export const getters: GetterTree<State, RootState> & Getters = {
   },
   getCurrentShopInfo: (state) => {
     return state.CurrentShopInfo;
-  },
-  getProfilePicture: (state) => {
-    return state.ProfilePicture;
   },
   getCurrentSupportPerson: (state) => {
     return state.CurrentSuppertPerson;

@@ -9,11 +9,7 @@
     <MinimalHeader title="ویرایش اطلاعات" />
     <div class="img-container">
       <div class="img">
-        <img
-          :src="store.getters.getProfilePicture"
-          class="avatar"
-          alt="avatar img"
-        />
+        <img :src="imageUrl" class="avatar" />
 
         <img
           src="../../../assets/img/camera@2x.png"
@@ -126,18 +122,17 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, reactive, ref } from 'vue';
+import { defineComponent, reactive, ref } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { required, minLength, helpers, maxLength } from '@vuelidate/validators';
 import { StudentAuthServiceApi } from '@/api/services/student/student-auth-service';
 import { StudentActionTypes } from '@/store/modules/student/action-types';
 import { store } from '@/store';
-import { returnProtectedImage } from '@/utilities/get-image-from-url';
 import router from '@/router';
 import { provinces } from '@/assets/provinces';
-import { StudentMutationTypes } from '@/store/modules/student/mutation-types';
 import MinimalHeader from '@/modules/student-modules/header/minimal-header.vue';
 const alertify = require('@/assets/alertifyjs/alertify');
+import { imageUrl } from '@/utilities/get-image-from-url';
 
 export default defineComponent({
   compo: { MinimalHeader },
@@ -219,13 +214,6 @@ export default defineComponent({
         if (img != '') {
           temp.append('profile', img);
           const profileRes = await StudentAuthServiceApi.uploadProfile(temp);
-          if (profileRes.data) {
-            const imageUrl = `https://www.api.devnirone.ir/api/student/getProfileImage/${store.getters.getCurrentStudent.profileImage}`;
-            // Set The Img of User To This One
-            returnProtectedImage(imageUrl).then((res) => {
-              store.commit(StudentMutationTypes.SET_PROFILE_PICTURE, res);
-            });
-          }
         }
 
         // If The res is okay
@@ -257,7 +245,8 @@ export default defineComponent({
       uploadImage,
       StudentAuthServiceApi,
       store,
-      showThisWhileUplading
+      showThisWhileUplading,
+      imageUrl
     };
   }
 });

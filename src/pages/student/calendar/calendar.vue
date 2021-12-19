@@ -1,6 +1,6 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
-  <div class="calendar-page" v-else :style="styles">
+  <div class="calendar-page" v-else>
     <SmallHeader />
     <!--  -->
     <div class="calendar">
@@ -22,6 +22,7 @@
         </div>
         <!-- Add Class Green For 'Green' Background And 'red' For a Red Background -->
         <div class="days-number">
+          <span v-for="i in numbersBeforeTheMonthStart" :key="i"> -- </span>
           <span
             v-for="number in numberDays"
             :key="number"
@@ -71,7 +72,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref } from 'vue';
+import { defineComponent, ref } from 'vue';
 import SmallHeader from '@/modules/student-modules/header/small-header.vue';
 import { StudentEventApi } from '@/api/services/student/student-event-service';
 import CalendarAddEvent from '@/modules/student-modules/calendar/calendar-add-event.vue';
@@ -97,12 +98,46 @@ export default defineComponent({
     }).format(date);
 
     const dates = ref([] as any);
-
     let templateDate = faDate.split(' ');
-
     let isCurrentYearLeapYear = moment.jIsLeapYear(
       toEnglishNumbers(templateDate[2])
     );
+    let numbersBeforeTheMonthStart = ref(0);
+
+    const weekDays = [
+      { name: 'شنبه' },
+      { name: 'یکشنبه' },
+      { name: 'دوشنبه' },
+      { name: 'سه شنبه' },
+      { name: 'چهارشنبه' },
+      { name: 'پنجشنبه' },
+      { name: 'جمعه' }
+    ];
+
+    const faDateAllDigit = new Intl.DateTimeFormat('fa', {
+      year: 'numeric',
+      month: 'numeric',
+      day: 'numeric'
+    }).format(date);
+
+    // let m = moment(toEnglishNumbers(faDateAllDigit), 'jYYYY/jM/jD');
+    const m = moment(
+      toEnglishNumbers(
+        `${faDateAllDigit.split('/')[0]}/${faDateAllDigit.split('/')[1]}`
+      ) + '/1',
+      'jYYYY/jM/jD'
+    );
+
+    const dateAtStartofMonth = m.format('Y/M/D');
+
+    let whatDayStartsTheDay = new Intl.DateTimeFormat('fa', {
+      weekday: 'long'
+    }).format(new Date(dateAtStartofMonth)) as any;
+
+    weekDays.forEach((el, idx) => {
+      if (el.name === whatDayStartsTheDay)
+        numbersBeforeTheMonthStart.value = idx;
+    });
 
     const monthsOfYear = [
       {
@@ -253,7 +288,8 @@ export default defineComponent({
       data,
       formatCardDate,
       dates,
-      numberDays
+      numberDays,
+      numbersBeforeTheMonthStart
     };
   }
 });

@@ -19,9 +19,7 @@
         class="card"
         v-for="product in data.data"
         :key="product"
-        @click="
-          openSingleBookPage(JSON.stringify(product), title, data.data.length)
-        "
+        @click="openSingleBookPage(JSON.stringify(product))"
       >
         <!-- Image  -->
 
@@ -88,8 +86,8 @@ export default defineComponent({
     const route = useRoute();
     let title = ref('');
 
-    const openSingleBookPage = (item, title, length) => {
-      router.push({ name: 'SingleBookInfo', params: { item, title, length } });
+    const openSingleBookPage = (item) => {
+      router.push({ name: 'SingleBookInfo', params: { item } });
     };
 
     const goOnePageBack = () => router.go(-1);
@@ -99,6 +97,7 @@ export default defineComponent({
         route.params.id
       );
 
+      console.log(getAllProducts);
       data.value = getAllProducts.data;
 
       const idOfCurrentSubcategory = data.value.data[0].category;

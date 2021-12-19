@@ -16,6 +16,22 @@ class SelfTest {
       }
     });
   }
+  async getOneSession(id: string) {
+    return instance.get(`session/${id}`, {
+      headers: {
+        // Overwrite Axios's automatically set Content-Type
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+  async getOneCourse(id: string) {
+    return instance.get(`course/${id}`, {
+      headers: {
+        // Overwrite Axios's automatically set Content-Type
+        'Content-Type': 'application/json'
+      }
+    });
+  }
   async selfTestResult(selftest) {
     return instance.post('self-test/getSessionResult', selftest, {
       headers: {

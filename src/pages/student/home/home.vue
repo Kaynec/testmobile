@@ -60,8 +60,6 @@
     <Footer />
     <!--  -->
   </div>
-  <!-- RoadMap  Add a Link as A Prop And Open That On Click -->
-  <RoadMap v-if="showRoadMap" @convertBoolean="changeShowRoadMap(false)" />
   <!-- Azmoon -->
   <Azmoon v-if="showAzmoon" @convertBoolean="changeShowAzmoon(false)" />
 </template>
@@ -72,7 +70,6 @@ import { StudentActionTypes } from '@/store/modules/student/action-types';
 import router from '@/router';
 import Footer from '@/modules/student-modules/footer/footer.vue';
 import Header from '@/modules/student-modules/header/header.vue';
-import RoadMap from '@/modules/student-modules/roadmap/roadmap.vue';
 import Azmoon from '@/modules/student-modules/azmoon/azmoon.vue';
 
 // import { store } from '@/store';
@@ -81,7 +78,6 @@ import Azmoon from '@/modules/student-modules/azmoon/azmoon.vue';
   components: {
     Footer,
     Header,
-    RoadMap,
     Azmoon
   },
   computed: {}

@@ -50,6 +50,7 @@ export default defineComponent({
     // if the past has been done than move it to the past section
     StudentExamApi.getAll().then((res) => {
       res.data.data.forEach((date: any) => {
+        console.log(date);
         let mDate = moment(date.date, 'jYYYY/jM/jD');
         if (
           compareAsc(new Date(mDate.format('YYYY/M/D')), new Date()) === 1 ||
