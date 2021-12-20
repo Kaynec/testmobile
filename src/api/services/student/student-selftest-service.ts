@@ -40,6 +40,30 @@ class SelfTest {
       }
     });
   }
+  async bookmarkQuestion(question) {
+    return instance.post('selected-question', question, {
+      headers: {
+        // Overwrite Axios's automatically set Content-Type
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+  async unBookmarkQuestion(id) {
+    return instance.delete(`selected-question/${id}`, {
+      headers: {
+        // Overwrite Axios's automatically set Content-Type
+        'Content-Type': 'application/json'
+      }
+    });
+  }
+  async AllBookmarkQuestions() {
+    return instance.get('selected-question/', {
+      headers: {
+        // Overwrite Axios's automatically set Content-Type
+        'Content-Type': 'application/json'
+      }
+    });
+  }
 }
 
 export const StudentSelfTestApi = new SelfTest();

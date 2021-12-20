@@ -111,12 +111,24 @@
       >
         سوال قبلی
       </button>
+      <img
+        src="../../../assets/img/bookmark-light@2x.png"
+        @click="bookmarkQuestion(questions[currentChunk][currentQuestionIndex])"
+        class="img"
+        v-if="!isBookmarked()"
+      />
+      <img
+        src="../../../assets/img/bookmark@2x.png"
+        @click="bookmarkQuestion(questions[currentChunk][currentQuestionIndex])"
+        class="img"
+        v-else
+      />
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import MinimalHeader from '@/modules/student-modules/header/minimal-header.vue';
 import { StudentSelfTestApi } from '@/api/services/student/student-selftest-service';
 import { StudentExamApi } from '@/api/services/student/student-exam-service';
@@ -124,6 +136,7 @@ import { toPersianNumbers } from '@/utilities/to-persian-numbers';
 import { store } from '@/store';
 import router from '@/router';
 import { useRoute } from 'vue-router';
+import { StudentMutationTypes } from '@/store/modules/student/mutation-types';
 const alertify = require('@/assets/alertifyjs/alertify');
 
 export default defineComponent({
@@ -141,9 +154,10 @@ export default defineComponent({
 
     const currentChunk = ref(0);
 
+    const allBookmarkedQuestions = ref([] as any);
+
     (async () => {
       const resForModel = await StudentSelfTestApi.getOneSession(id);
-      console.log(resForModel);
       model.value = resForModel.data.data;
       // Get The Title
       const courseRes = await StudentSelfTestApi.getOneCourse(
@@ -223,15 +237,16 @@ export default defineComponent({
       });
     };
 
-    const openSelfTestQuestionsAnswers = () =>
-      router.push({
-        name: 'SelfTestQuestionsAnswers',
-        params: {
-          title: title.value,
-          questions: JSON.stringify(questions.value),
-          currentChunk: currentChunk.value
-        }
+    const openSelfTestQuestionsAnswers = () => {
+      store.commit(StudentMutationTypes.SET_CURRENT_QUESTIONS, {
+        title: title.value,
+        questions: questions.value,
+        currentChunk: currentChunk.value
       });
+      router.push({
+        name: 'SelfTestAnswersList'
+      });
+    };
 
     // Make The Answer the clicked one 1 based instead of zero
 
@@ -252,6 +267,55 @@ export default defineComponent({
       if (currentQuestionIndex.value - 1 >= 0) currentQuestionIndex.value--;
     };
 
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // Push All Bookmarked Questions
+
+    StudentSelfTestApi.AllBookmarkQuestions().then((res) => {
+      allBookmarkedQuestions.value = res.data.data;
+    });
+
+    const isBookmarked = () => {
+      return allBookmarkedQuestions.value.find((item) => {
+        return (
+          item.question._id ==
+          questions.value[currentChunk.value][currentQuestionIndex.value]._id
+        );
+      });
+    };
+
+    const bookmarkQuestion = (question) => {
+      console.log(question);
+      const isBookmark = isBookmarked();
+      // If The Question Is Not Bookmarked
+      if (!isBookmark) {
+        StudentSelfTestApi.bookmarkQuestion({
+          question: {
+            _id: question._id
+          },
+          session: {
+            _id: question.session
+          },
+          course: {
+            _id: question.course
+          }
+        }).then((res) => {
+          console.log(res);
+          // Re Fill The Bookmarked Array
+          StudentSelfTestApi.AllBookmarkQuestions().then((res) => {
+            allBookmarkedQuestions.value = res.data.data;
+          });
+        });
+      } else if (isBookmark) {
+        StudentSelfTestApi.unBookmarkQuestion(isBookmark._id).then((res) => {
+          console.log(res);
+          // Re Fill The Bookmarked Array
+          StudentSelfTestApi.AllBookmarkQuestions().then((res) => {
+            allBookmarkedQuestions.value = res.data.data;
+          });
+        });
+      }
+    };
+
     return {
       goOnePageBack,
       openSelfTestQuestionsAnswers,
@@ -265,7 +329,9 @@ export default defineComponent({
       store,
       showNextQuestion,
       showPreviousQuestion,
-      title
+      title,
+      isBookmarked,
+      bookmarkQuestion
     };
   }
 });
@@ -275,8 +341,8 @@ export default defineComponent({
 @import '@/css-variable//Global.scss';
 .self-test-questions {
   width: 100%;
+  min-height: 100%;
   background: #f4f4f4;
-  height: 100%;
   position: relative;
   padding-top: 8vh;
 
@@ -400,17 +466,23 @@ export default defineComponent({
     width: 90%;
     margin: 2.5rem auto 0.8rem auto;
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
+    align-items: center;
     flex-wrap: nowrap;
     gap: 0.5rem;
 
+    .img {
+      max-width: 3rem;
+    }
+
     button {
-      width: 50%;
+      max-width: 37%;
+      flex-grow: 1;
       padding: 0.9rem 1.5rem;
       border-radius: 15px;
       border: none;
       font-family: IRANSans;
-      font-size: 14px;
+      font-size: 12px;
       font-weight: bold;
       text-align: center;
       color: #fff;

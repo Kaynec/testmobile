@@ -76,7 +76,7 @@ export default defineComponent({
     height: 100%;
     position: absolute;
     top: 0;
-    left: 0;
+    left: 0px;
   }
   .btn {
     width: 25%;

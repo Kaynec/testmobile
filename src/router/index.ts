@@ -59,8 +59,9 @@ import SelfTest from '@/pages/student/azmoon/self-test.vue';
 import SelfTestQuestions from '@/pages/student/azmoon/self-test-questions.vue';
 import SelfTestQuestionsMain from '@/pages/student/azmoon/self-test-questions-main.vue';
 import SelfTestQuestionsChoosen from '@/pages/student/azmoon/self-test-choosen-questions.vue';
-import SelfTestQuestionsAnswers from '@/pages/student/azmoon/self-test-answers.vue';
+import SelfTestQuestionsAnswer from '@/pages/student/azmoon/self-test-answers.vue';
 import QuestionsChoosenNumbers from '@/pages/student/azmoon/self-test-choosen-questions-number.vue';
+import SelfTestAnswersList from '@/pages/student/azmoon/self-test-answers-list.vue';
 import ListOfExams from '@/pages/student/azmoon/list-of-exams.vue';
 
 import ReportCard from '@/pages/student/azmoon/report-card.vue';
@@ -406,9 +407,17 @@ const routes: Array<RouteRecordRaw> = [
         beforeEnter: ifStudentAuthenticated
       },
       {
-        path: 'self-test-answers',
-        name: 'SelfTestQuestionsAnswers',
-        component: SelfTestQuestionsAnswers,
+        path: 'self-test-answer/:idx',
+        name: 'SelfTestQuestionsAnswer',
+        component: SelfTestQuestionsAnswer,
+        props: true,
+        beforeEnter: ifStudentAuthenticated
+      },
+
+      {
+        path: 'self-test-answers-list',
+        name: 'SelfTestAnswersList',
+        component: SelfTestAnswersList,
         props: true,
         beforeEnter: ifStudentAuthenticated
       },

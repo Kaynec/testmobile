@@ -1,7 +1,7 @@
 import { MutationTree } from 'vuex';
 
 import { Token, UserDocuments } from '@/@types';
-
+import { CurrentQuestionsListInterface } from './state';
 import { State } from './state';
 import { StudentMutationTypes } from './mutation-types';
 
@@ -23,6 +23,10 @@ export type Mutations<S = State> = {
     state: S,
     payload: string | null
   ): void;
+  [StudentMutationTypes.SET_CURRENT_QUESTIONS](
+    state: S,
+    payload: CurrentQuestionsListInterface | null
+  ): void;
 };
 
 export const mutations: MutationTree<State> & Mutations = {
@@ -43,5 +47,11 @@ export const mutations: MutationTree<State> & Mutations = {
     payload: string
   ) {
     state.CurrentSuppertPerson = payload;
+  },
+  [StudentMutationTypes.SET_CURRENT_QUESTIONS](
+    state: State,
+    payload: CurrentQuestionsListInterface
+  ) {
+    state.CurrentQuestionsList = payload;
   }
 };

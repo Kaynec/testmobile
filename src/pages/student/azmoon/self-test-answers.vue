@@ -1,35 +1,33 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
   <div v-else class="self-test-answers">
-    <MinimalHeader title="پاسخنامه تشریحی آزمون" />
+    <MinimalHeader :title="`پاسخنامه تشریحی  ${title}`" />
     <!-- Progress Bar And Count -->
-    <!-- 
-    <div class="difficulty">
+
+    <!-- <div class="difficulty">
       <img src="../../../assets/img/bookmark-light.png" alt="bookmark" />
       <span>آسان</span>
       <span>متوسط</span>
       <span class="active">دشوار</span>
-    </div>
- -->
+    </div> -->
+
     <!-- Quiz Card -->
     <!-- Change This With Real Data Of Question -->
 
     <div class="quiz-card shadow">
       <p class="number-of-question">
         سوال شماره
-        <span> {{ toPersianNumbers(`${currentQuestionIndex + 1}`) }} </span>
+        <span> {{ toPersianNumbers(`${id + 1}`) }} </span>
       </p>
 
       <h5>
-        {{ allQuestions[currentChunk][currentQuestionIndex].text }}
+        {{ Question.text }}
       </h5>
       <div class="quiz-card-container">
         <div
-          v-for="(option, idx) in allQuestions[currentChunk][
-            currentQuestionIndex
-          ].options"
+          v-for="(option, index) in Question.options"
           :key="option._id"
-          :class="getClass(idx)"
+          :class="getClass(index)"
         >
           <span> {{ option.text }} </span>
 
@@ -45,9 +43,7 @@
 
     <!-- Detailed Answer -->
     <p class="answer">
-      {{
-        allQuestions[currentChunk][currentQuestionIndex].descriptiveAnswer.text
-      }}
+      {{ Question.descriptiveAnswer.text }}
     </p>
   </div>
 </template>
@@ -59,61 +55,55 @@ import { toPersianNumbers } from '@/utilities/to-persian-numbers';
 import { store } from '@/store';
 import router from '@/router';
 import { useRoute } from 'vue-router';
+
 // import { StudentSelfTestApi } from '@/api/services/student/student-selftest-service';
 // import { StudentExamApi } from '@/api/services/student/student-exam-service';
 // const alertify = require('@/assets/alertifyjs/alertify');
 
 export default defineComponent({
   components: { MinimalHeader },
-  props: {
-    title: { type: String, default: 'فصل دوم مهندسی صص' },
-    questions: { type: String, default: '[]' },
-    currentChunk: { type: String }
-  },
-  setup(props) {
+  setup() {
     const route = useRoute();
 
-    const allQuestions = ref(JSON.parse(props.questions));
+    const title = ref(store.getters.getCurrentQuestionsList.title);
 
-    const chunk = props.currentChunk as any;
+    const Questions = ref(
+      store.getters.getCurrentQuestionsList.questions[
+        store.getters.getCurrentQuestionsList.currentChunk
+      ]
+    );
 
-    const model = ref({} as any);
+    const id = Number(route.params.idx);
 
-    // const questions = ref([] as any);
-    // const currentQuestion = ref({} as any)
-    const currentQuestionIndex = ref(0);
+    const Question = ref(Questions.value[id]);
 
     const goOnePageBack = () => router.go(-1);
 
-    const showPreviousQuestion = () => {
-      if (currentQuestionIndex.value - 1 >= 0) currentQuestionIndex.value--;
-    };
-
     const getClass = (idx: number) => {
-      const tmp = allQuestions.value[chunk][currentQuestionIndex.value];
-
-      if (tmp.correct == idx + 1) return 'card active';
+      if (Question.value.correct == idx + 1) return 'card active';
       // if (tmp.answer === idx + 1 && tmp.correct == idx + 1) {
       //   return 'card active';
       // }
-      else if (tmp.answer === idx + 1 && tmp.correct != idx + 1) {
+      else if (
+        Question.value.answer === idx + 1 &&
+        Question.value.correct != idx + 1
+      ) {
         return 'card danger';
       } else {
         return 'card';
       }
     };
 
-    console.log(props.title, props.questions, props.currentChunk);
+    console.log(Question.value);
 
     return {
       goOnePageBack,
-      model,
       toPersianNumbers,
-      currentQuestionIndex,
-      allQuestions,
       getClass,
       store,
-      showPreviousQuestion
+      Question,
+      id,
+      title
     };
   }
 });

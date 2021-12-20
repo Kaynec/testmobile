@@ -71,8 +71,7 @@ import router from '@/router';
 import Footer from '@/modules/student-modules/footer/footer.vue';
 import Header from '@/modules/student-modules/header/header.vue';
 import Azmoon from '@/modules/student-modules/azmoon/azmoon.vue';
-
-// import { store } from '@/store';
+import { store } from '@/store';
 
 @Options({
   components: {
@@ -85,6 +84,10 @@ import Azmoon from '@/modules/student-modules/azmoon/azmoon.vue';
 export default class Login extends Vue {
   public showAzmoon = false;
   public showRoadMap = false;
+
+  mounted() {
+    console.log(store.getters.getCurrentStudent.profileImage);
+  }
 
   public MoveToCLassRoom(): void {
     setTimeout(() => {
@@ -118,7 +121,6 @@ export default class Login extends Vue {
   }
 
   async logout() {
-    debugger;
     await useStudentStore().dispatch(
       StudentActionTypes.LOG_OUT_STUDENT,
       undefined

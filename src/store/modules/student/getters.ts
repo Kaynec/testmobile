@@ -2,6 +2,7 @@ import { GetterTree } from 'vuex';
 import { RootState } from '@/store';
 import { State } from './state';
 import { UserDocuments } from '@/@types';
+import { CurrentQuestionsListInterface } from './state';
 
 export type Getters = {
   getStudentToken(state: State): string | null;
@@ -9,6 +10,7 @@ export type Getters = {
   getBasketCount(state: State): number | null;
   getCurrentShopInfo(state: State): any | null;
   getCurrentSupportPerson: (state) => string | null;
+  getCurrentQuestionsList: (state) => CurrentQuestionsListInterface | null;
 };
 
 export const getters: GetterTree<State, RootState> & Getters = {
@@ -26,5 +28,8 @@ export const getters: GetterTree<State, RootState> & Getters = {
   },
   getCurrentSupportPerson: (state) => {
     return state.CurrentSuppertPerson;
+  },
+  getCurrentQuestionsList: (state) => {
+    return state.CurrentQuestionsList;
   }
 };
