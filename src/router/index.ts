@@ -394,14 +394,14 @@ const routes: Array<RouteRecordRaw> = [
       },
 
       {
-        path: 'self-test-questions-choosen',
+        path: 'self-test-questions-choosen/:idx/:currentChunk',
         name: 'SelfTestQuestionsChoosen',
         component: SelfTestQuestionsChoosen,
         props: true,
         beforeEnter: ifStudentAuthenticated
       },
       {
-        path: 'choosen-number/:id',
+        path: 'choosen-number',
         name: 'QuestionsChoosenNumbers',
         component: QuestionsChoosenNumbers,
         beforeEnter: ifStudentAuthenticated

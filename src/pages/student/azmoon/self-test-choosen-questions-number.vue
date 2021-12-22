@@ -1,22 +1,30 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
-  <div v-else class="self-test-questions" :style="styles">
+  <div v-else class="self-test-questions">
     <MinimalHeader title="سوالات برگزیده " />
     <!-- Progress Bar And Count -->
 
     <div class="progress-count">
       <div class="count">
-        <span>
-          {{ label }}
+        <span v-if="allData[currentChunk]">
+          {{ toPersianNumbers(currentChunk * 20 + 1) }}
+          الی
+          {{
+            toPersianNumbers(allData[currentChunk].length + currentChunk * 20)
+          }}
         </span>
         <!-- Change This And Width Of The Progress Bar Dynamically -->
-        <span> ۵۶ </span>
+        <span> {{ toPersianNumbers(allCount) }} </span>
       </div>
       <div class="progress" style="height: 5px">
         <div
           class="progress-bar bg-success"
           role="progressbar"
-          :style="`width: ${50}%`"
+          :style="`width: ${
+            (allData[currentChunk].length + (currentChunk * 20) / allCount) *
+            100
+          }%`"
+          v-if="allData[currentChunk]"
           aria-valuenow="25"
           aria-valuemin="0"
           aria-valuemax="100"
@@ -25,39 +33,80 @@
     </div>
     <!-- Container for numbers -->
     <div class="container">
-      <div class="number" v-for="i in 20" :key="i">
-        <span>{{ toPersianNumbers(i) }}</span>
+      <div class="number" v-for="(item, i) in allData[currentChunk]" :key="i">
+        <span @click="openThePage(item, i)">
+          {{ toPersianNumbers(i + 1 + currentChunk * 20) }}
+        </span>
       </div>
     </div>
     <!-- Buttons -->
     <div class="btns">
-      <button class="red">صفحه بعدی</button>
-      <button class="grey">صفحه قبلی</button>
+      <button class="red" @click="nextPage">صفحه بعدی</button>
+      <button class="grey" @click="previousPage">صفحه قبلی</button>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, ref } from 'vue';
 import MinimalHeader from '@/modules/student-modules/header/minimal-header.vue';
+import { StudentSelfTestApi } from '@/api/services/student/student-selftest-service';
 import router from '@/router';
+import { toPersianNumbers } from '@/utilities/to-persian-numbers';
 
 export default defineComponent({
   components: { MinimalHeader },
-  props: {
-    label: { type: String, default: '۱ الی ۲۰' }
-  },
   setup() {
-    const toPersianNumbers = (number: any) => {
-      var id = ['۰', '۱', '۲', '۳', '۴', '۵', '۶', '۷', '۸', '۹'];
-      return number.toString().replace(/[0-9]/g, function (w: any) {
-        return id[+w];
-      });
-    };
+    const allData = ref([]) as any;
 
     const goOnePageBack = () => router.go(-1);
 
-    return { goOnePageBack, toPersianNumbers };
+    const currentChunk = ref(0) as any;
+
+    const allCount = ref(0) as any;
+
+    (async () => {
+      const resForModel = await StudentSelfTestApi.AllBookmarkQuestions();
+
+      resForModel.data.data.forEach((item) => {
+        if (item.question) allData.value.push(item);
+      });
+
+      // Count of all items before split
+      allCount.value = allData.value.length;
+
+      const tmpArray = allData.value;
+      allData.value = [];
+      //  Split The Array to array of 20
+      for (let i = 0, j = tmpArray.length; i < j; i += 20)
+        allData.value.push(tmpArray.slice(i, i + 20));
+    })();
+
+    const nextPage = () => {
+      if (currentChunk.value + 1 < allData.value.length) currentChunk.value++;
+    };
+    const previousPage = () => {
+      if (currentChunk.value - 1 >= 0) currentChunk.value--;
+    };
+
+    const openThePage = (item, idx) => {
+      console.log(item);
+      router.push({
+        name: 'SelfTestQuestionsChoosen',
+        params: { idx, currentChunk: currentChunk.value }
+      });
+    };
+
+    return {
+      goOnePageBack,
+      toPersianNumbers,
+      allData,
+      currentChunk,
+      nextPage,
+      previousPage,
+      allCount,
+      openThePage
+    };
   }
 });
 </script>
@@ -102,7 +151,7 @@ export default defineComponent({
 
     .number {
       box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.22);
-      padding: 1rem 1.3rem;
+      padding: 0.6rem 0.95rem;
       border-radius: 25%;
       display: flex;
       align-items: center;

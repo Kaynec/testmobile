@@ -74,11 +74,7 @@
           </span>
 
           <div class="img">
-            <img
-              src="../../../assets/img/accept-path-light.png"
-              @click="changeShowDetail"
-              alt="active"
-            />
+            <img src="../../../assets/img/accept-path-light.png" alt="active" />
           </div>
         </div>
       </div>
@@ -128,7 +124,7 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from 'vue';
+import { defineComponent, ref } from 'vue';
 import MinimalHeader from '@/modules/student-modules/header/minimal-header.vue';
 import { StudentSelfTestApi } from '@/api/services/student/student-selftest-service';
 import { StudentExamApi } from '@/api/services/student/student-exam-service';
@@ -141,7 +137,7 @@ const alertify = require('@/assets/alertifyjs/alertify');
 
 export default defineComponent({
   components: { MinimalHeader },
-  setup(props) {
+  setup() {
     const route = useRoute();
     const id = route.params.id as string;
     const title = ref('');
@@ -271,9 +267,12 @@ export default defineComponent({
     // Push All Bookmarked Questions
 
     StudentSelfTestApi.AllBookmarkQuestions().then((res) => {
-      allBookmarkedQuestions.value = res.data.data;
+      res.data.data.forEach((question) => {
+        if (question.question != null) {
+          allBookmarkedQuestions.value.push(question);
+        }
+      });
     });
-
     const isBookmarked = () => {
       return allBookmarkedQuestions.value.find((item) => {
         return (
@@ -284,7 +283,6 @@ export default defineComponent({
     };
 
     const bookmarkQuestion = (question) => {
-      console.log(question);
       const isBookmark = isBookmarked();
       // If The Question Is Not Bookmarked
       if (!isBookmark) {
@@ -298,19 +296,25 @@ export default defineComponent({
           course: {
             _id: question.course
           }
-        }).then((res) => {
-          console.log(res);
+        }).then(() => {
           // Re Fill The Bookmarked Array
           StudentSelfTestApi.AllBookmarkQuestions().then((res) => {
-            allBookmarkedQuestions.value = res.data.data;
+            res.data.data.forEach((question) => {
+              if (question.question != null) {
+                allBookmarkedQuestions.value.push(question);
+              }
+            });
           });
         });
       } else if (isBookmark) {
         StudentSelfTestApi.unBookmarkQuestion(isBookmark._id).then((res) => {
-          console.log(res);
           // Re Fill The Bookmarked Array
           StudentSelfTestApi.AllBookmarkQuestions().then((res) => {
-            allBookmarkedQuestions.value = res.data.data;
+            res.data.data.forEach((question) => {
+              if (question.question != null) {
+                allBookmarkedQuestions.value.push(question);
+              }
+            });
           });
         });
       }

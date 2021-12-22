@@ -215,17 +215,22 @@ export default defineComponent({
     // Get Data From Database
     let data = ref([]);
 
-    const dateForDataBase = `${toEnglishNumbers(
+    let dateForDataBase = `${toEnglishNumbers(
       currentDaysOfMonth.currentYear
     )}/${currentDaysOfMonth.monthNumber}/${toEnglishNumbers(templateDate[0])}`;
+    // in case day is less than 1
+    let newDate = dateForDataBase.split('/') as any;
+    if (+newDate[1] < 9) newDate[1] = `0${dateForDataBase[1]}`;
+    if (+newDate[2] < 9) newDate[2] = `0${newDate[2]}`;
+    newDate = newDate.join('/');
 
-    StudentEventApi.get({ date: dateForDataBase }).then((res) => {
+    StudentEventApi.get({ date: newDate }).then((res) => {
       data.value = res.data.data;
       updateCalendarClasses();
     });
     const changeCalendarAddEvent = () => {
       showCalendarAddEvent.value = !showCalendarAddEvent.value;
-      StudentEventApi.get({ date: dateForDataBase }).then((res) => {
+      StudentEventApi.get({ date: newDate }).then((res) => {
         data.value = res.data.data;
         updateCalendarClasses();
       });

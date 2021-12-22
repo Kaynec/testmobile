@@ -1,93 +1,187 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
-  <div v-else class="self-test-questions" :style="styles">
+  <div v-else class="self-test-questions">
     <MinimalHeader title="سوالات برگزیده" />
     <!-- Progress Bar And Count -->
 
     <div class="progress-count">
       <div class="count">
+        <span> </span>
         <span>
-          {{ label }}
+          <!-- {{ toPersianNumbers(allCount) }}/{{ toPersianNumbers(idx + 1) }} -->
         </span>
-        <!-- Change This And Width Of The Progress Bar Dynamically -->
-        <span> ۲/۱ </span>
       </div>
       <div class="progress" style="height: 5px">
-        <div
+        <!-- <div
           class="progress-bar bg-success"
           role="progressbar"
-          :style="`width: ${50}%`"
+          :style="`width: ${
+            (allData[currentChunk].length + (currentChunk * 20) / allCount) *
+            100
+          }%`"
           aria-valuenow="25"
           aria-valuemin="0"
           aria-valuemax="100"
-        ></div>
+        ></div> -->
       </div>
     </div>
 
-    <!-- Quiz Card -->
-
-    <div class="quiz-card shadow">
-      <p class="number-of-question">سوال شماره <span> ۱۰ </span></p>
-
+    <div
+      class="quiz-card shadow"
+      v-if="allData[currentChunk] && allData[currentChunk][idx]"
+    >
+      <p class="number-of-question">
+        سوال شماره <span> {{ toPersianNumbers(+idx + 1) }} </span>
+      </p>
       <h5>
-        <!-- Change This With Real Data Of Question -->
-        چرا برای نوشتن یک بند، موضوع کلی را به موضوع های کوچک تر تقسیم می کنیم؟
+        {{ allData[currentChunk][idx].question.text }}
       </h5>
-      <div class="quiz-card-container">
-        <div class="card">
-          <span>
-            <!-- Answer Text -->
-            تا بتوانیم بند بلندتری بنویسیم
-          </span>
-          <img src="../../../assets/img/vpn-key-white.png" class="tick" />
-        </div>
-
-        <div class="card">
-          <span>
-            <!-- Answer Text -->
-            چون بند کوتاه است
-          </span>
-          <img src="../../../assets/img/vpn-key-white.png" class="tick" />
-        </div>
-
-        <div class="card">
-          <span>
-            <!-- Answer Text -->
-            تا از پراکندگی مطالب بند، جلوگیری کنیم
-          </span>
-          <img src="../../../assets/img/vpn-key-white.png" class="tick" />
-        </div>
-        <div class="card">
-          <span>
-            <!-- Answer Text -->
-            تا اطلاعات بیشتری درباره یک موضوع داشته باشیم
-          </span>
-          <img src="../../../assets/img/vpn-key-white.png" class="tick" />
+      <div v-if="allData[currentChunk]" class="quiz-card-container">
+        <div
+          v-for="(item, index) in allData[currentChunk][idx].question.options"
+          :key="item._id"
+          @click="changeQuestionsAnswer(index)"
+          class="card"
+        >
+          {{ item.text }}
+          <img src="../../../assets/img/vpn-key-white.png" class="img" />
         </div>
       </div>
     </div>
 
     <!-- Buttons -->
-    <div class="btns">
-      <button class="red">سوال بعدی <i class="fas fa-arrow-right"></i></button>
-      <img src="../../../assets/img/bookmark.png" alt="" />
+    <div
+      class="btns"
+      v-if="allData[currentChunk] && allData[currentChunk][idx]"
+    >
+      <button
+        class="red"
+        @click="showNextQuestion"
+        v-if="idx + 1 < allData[currentChunk].length"
+      >
+        سوال بعدی
+      </button>
+
+      <button class="red" @click="showPreviousQuestion" v-if="idx - 1 >= 0">
+        سوال قبلی
+      </button>
+      <img
+        src="../../../assets/img/bookmark-light@2x.png"
+        @click="bookmarkQuestion(allData[currentChunk][idx])"
+        class="img"
+        v-if="!isBookmarked()"
+      />
+      <img
+        src="../../../assets/img/bookmark@2x.png"
+        @click="bookmarkQuestion(allData[currentChunk][idx])"
+        class="img"
+        v-else
+      />
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import router from '@/router';
 import MinimalHeader from '@/modules/student-modules/header/minimal-header.vue';
+import { useRoute } from 'vue-router';
+import { StudentSelfTestApi } from '@/api/services/student/student-selftest-service';
+import { toPersianNumbers } from '@/utilities/to-persian-numbers';
 export default defineComponent({
   components: { MinimalHeader },
-  props: {
-    label: { type: String, default: 'فصل دوم بهداشت' }
-  },
   setup() {
+    const route = useRoute();
+
+    const allData = ref([] as any);
+
+    const allCount = ref(0);
+
+    const idx = ref(route.params.idx);
+
+    const currentChunk = ref(+route.params.currentChunk) as any;
+
+    (async () => {
+      const res = await StudentSelfTestApi.AllBookmarkQuestions();
+
+      const tmpArray = [] as any;
+
+      res.data.data.forEach((question) => {
+        if (question.question != null) {
+          tmpArray.push(question);
+        }
+      });
+
+      allCount.value = tmpArray.length;
+
+      for (let i = 0, j = tmpArray.length; i < j; i += 20)
+        allData.value.push(tmpArray.slice(i, i + 20));
+    })();
+
     const goOnePageBack = () => router.go(-1);
 
-    return { goOnePageBack };
+    // Push All Bookmarked Questions
+
+    const isBookmarked = () => {
+      return allData.value.find((item) => {
+        return item._id == allData.value[currentChunk.value][+idx.value]._id;
+      });
+    };
+
+    const bookmarkQuestion = (question) => {
+      const isBookmark = isBookmarked();
+      // If The Question Is Not Bookmarked
+      if (!isBookmark) {
+        StudentSelfTestApi.bookmarkQuestion({
+          question: {
+            _id: question._id
+          },
+          session: {
+            _id: question.session
+          },
+          course: {
+            _id: question.course
+          }
+        }).then(() => {
+          // Re Fill The Bookmarked Array
+          StudentSelfTestApi.AllBookmarkQuestions().then((res) => {
+            res.data.data.forEach((item) => {
+              if (item.question != null) {
+                allData.value.push(item);
+              }
+            });
+          });
+        });
+      } else if (isBookmark) {
+        StudentSelfTestApi.unBookmarkQuestion(isBookmark._id).then(() => {
+          // Re Fill The Bookmarked Array
+          StudentSelfTestApi.AllBookmarkQuestions().then((res) => {
+            res.data.data.forEach((item) => {
+              if (item.question != null) {
+                allData.value.push(item);
+              }
+            });
+          });
+        });
+      }
+    };
+
+    // Make The Answer the clicked one 1 based instead of zero
+
+    const changeQuestionsAnswer = (id: number) =>
+      (allData.value[currentChunk.value][+idx.value].answer = id + 1);
+
+    return {
+      goOnePageBack,
+      idx,
+      currentChunk,
+      allData,
+      toPersianNumbers,
+      isBookmarked,
+      bookmarkQuestion,
+      allCount,
+      changeQuestionsAnswer
+    };
   }
 });
 </script>
@@ -100,6 +194,7 @@ export default defineComponent({
   width: 100%;
   padding-top: 8vh;
   background: #f4f4f4;
+  overflow: hidden;
 
   .progress-count {
     width: 100%;
@@ -124,11 +219,11 @@ export default defineComponent({
 
   .quiz-card {
     width: 90%;
-    margin: 1rem auto;
+    margin: 1rem auto 0;
     background-color: #fff;
     padding: 1rem;
     border-radius: 25px;
-
+    overflow-y: scroll;
     .number-of-question {
       font-family: IRANSans;
       font-size: 12px;
@@ -180,19 +275,38 @@ export default defineComponent({
         height: 4rem;
         max-height: 5.5rem;
 
+        .img {
+          width: 27px;
+          height: 27px;
+          padding: 7px;
+          border-radius: 50%;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          background: #fff;
+          border: solid 1px #c1c1c193;
+
+          img {
+            object-fit: contain;
+          }
+        }
+
         span {
           font-family: IRANSans;
           font-size: 13px;
           font-weight: bold;
           color: #646464;
         }
+      }
+      // Success Class
+      .success {
+        border: solid 1px #3fca60;
 
-        .tick {
-          width: 24px;
-          height: 24px;
-          object-fit: contain;
-          border: solid 1px #c1c1c1;
-          border-radius: 50px;
+        span {
+          color: #3fca60;
+        }
+        .img {
+          background: #3fca60;
         }
       }
     }
@@ -200,11 +314,16 @@ export default defineComponent({
 
   .btns {
     width: 90%;
-    margin: 2.5rem auto 0.8rem auto;
+    margin: 0.9rem auto 0.4rem;
     display: flex;
     justify-content: space-between;
     flex-wrap: nowrap;
     gap: 0.5rem;
+
+    .img {
+      width: 22%;
+      height: 22%;
+    }
 
     button {
       width: 50%;
