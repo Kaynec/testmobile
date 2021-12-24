@@ -41,7 +41,7 @@
           v-for="(item, index) in allData[currentChunk][idx].question.options"
           :key="item._id"
           @click="changeQuestionsAnswer(index)"
-          class="card"
+          :class="getClass(index)"
         >
           {{ item.text }}
           <img src="../../../assets/img/vpn-key-white.png" class="img" />
@@ -65,29 +65,29 @@
       <button class="red" @click="showPreviousQuestion" v-if="idx - 1 >= 0">
         سوال قبلی
       </button>
-      <img
+      <!-- <img
         src="../../../assets/img/bookmark-light@2x.png"
         @click="bookmarkQuestion(allData[currentChunk][idx])"
         class="img"
-        v-if="!isBookmarked()"
-      />
+        v-if="!isBookmarkedBoolean"
+      /> -->
       <img
         src="../../../assets/img/bookmark@2x.png"
-        @click="bookmarkQuestion(allData[currentChunk][idx])"
+        @click="goOnePageBackAlert"
         class="img"
-        v-else
       />
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from 'vue';
+import { defineComponent, ref } from 'vue';
 import router from '@/router';
 import MinimalHeader from '@/modules/student-modules/header/minimal-header.vue';
 import { useRoute } from 'vue-router';
 import { StudentSelfTestApi } from '@/api/services/student/student-selftest-service';
 import { toPersianNumbers } from '@/utilities/to-persian-numbers';
+const alertify = require('../../../assets/alertifyjs/alertify');
 export default defineComponent({
   components: { MinimalHeader },
   setup() {
@@ -97,19 +97,26 @@ export default defineComponent({
 
     const allCount = ref(0);
 
-    const idx = ref(route.params.idx);
+    const idx = ref(+route.params.idx);
 
     const currentChunk = ref(+route.params.currentChunk) as any;
 
+    const allBookmarkedQuestions = ref([] as any);
     (async () => {
       const res = await StudentSelfTestApi.AllBookmarkQuestions();
 
-      const tmpArray = [] as any;
+      let tmpArray = [] as any;
 
       res.data.data.forEach((question) => {
-        if (question.question != null) {
-          tmpArray.push(question);
-        }
+        if (question.question != null) tmpArray.push(question);
+      });
+
+      allBookmarkedQuestions.value = tmpArray;
+
+      tmpArray.forEach((item) => {
+        item.question.options.forEach((option, idx) => {
+          if (option.isAnswer) item.question.correct = idx + 1;
+        });
       });
 
       allCount.value = tmpArray.length;
@@ -120,56 +127,93 @@ export default defineComponent({
 
     const goOnePageBack = () => router.go(-1);
 
-    // Push All Bookmarked Questions
-
-    const isBookmarked = () => {
-      return allData.value.find((item) => {
-        return item._id == allData.value[currentChunk.value][+idx.value]._id;
-      });
+    const goOnePageBackAlert = () => {
+      alertify.success('سوال مورد نظر از لیست سوالات برگزیده حذف شد');
+      router.go(-1);
     };
 
-    const bookmarkQuestion = (question) => {
-      const isBookmark = isBookmarked();
-      // If The Question Is Not Bookmarked
-      if (!isBookmark) {
-        StudentSelfTestApi.bookmarkQuestion({
-          question: {
-            _id: question._id
-          },
-          session: {
-            _id: question.session
-          },
-          course: {
-            _id: question.course
-          }
-        }).then(() => {
-          // Re Fill The Bookmarked Array
-          StudentSelfTestApi.AllBookmarkQuestions().then((res) => {
-            res.data.data.forEach((item) => {
-              if (item.question != null) {
-                allData.value.push(item);
-              }
-            });
-          });
-        });
-      } else if (isBookmark) {
-        StudentSelfTestApi.unBookmarkQuestion(isBookmark._id).then(() => {
-          // Re Fill The Bookmarked Array
-          StudentSelfTestApi.AllBookmarkQuestions().then((res) => {
-            res.data.data.forEach((item) => {
-              if (item.question != null) {
-                allData.value.push(item);
-              }
-            });
-          });
-        });
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+    // Push All Bookmarked Questions
+
+    // const isBookmarkedBoolean = ref();
+
+    // const isBookmarked = () => {
+    //   const item = allBookmarkedQuestions.value.find((item) => {
+    //     return item._id == allData.value[currentChunk.value][idx.value]._id;
+    //   });
+    //   return item || false;
+    // };
+
+    // (async () => {
+    //   const res = await StudentSelfTestApi.AllBookmarkQuestions();
+    //   res.data.data.forEach((question) => {
+    //     if (question.question != null) {
+    //       allBookmarkedQuestions.value.push(question);
+    //     }
+    //   });
+
+    //   isBookmarkedBoolean.value = !!isBookmarked();
+    // })();
+
+    // const bookmarkQuestion = async (question) => {
+    //   const isBookmark = isBookmarked();
+
+    //   const tmp = {
+    //     question: { _id: question._id },
+    //     session: { _id: question.session },
+    //     course: { _id: question.course }
+    //   };
+    //   // If The Question Is Not Bookmarked
+    //   if (!isBookmark) await StudentSelfTestApi.bookmarkQuestion(tmp);
+    //   else if (isBookmark)
+    //     await StudentSelfTestApi.unBookmarkQuestion(isBookmark._id);
+
+    //   // Re Fill The Bookmarked Array
+    //   const res = await StudentSelfTestApi.AllBookmarkQuestions();
+    //   allBookmarkedQuestions.value = [];
+    //   res.data.data.forEach((question) => {
+    //     if (question.question != null)
+    //       allBookmarkedQuestions.value.push(question);
+    //   });
+    //   isBookmarkedBoolean.value = !!isBookmarked();
+    // };
+
+    const showPreviousQuestion = () => {
+      if (idx.value - 1 >= 0) idx.value--;
+    };
+
+    const showNextQuestion = () => {
+      if (idx.value + 1 <= allData.value[currentChunk.value].length)
+        idx.value++;
+    };
+
+    const getClass = (indx: number) => {
+      if (
+        allData.value[currentChunk.value][idx.value].question.correct ==
+        indx + 1
+      )
+        return 'card active';
+      // if (tmp.answer === idx + 1 && tmp.correct == idx + 1) {
+      //   return 'card active';
+      // }
+      else if (
+        allData.value[currentChunk.value][idx.value].question.answer ===
+          indx + 1 &&
+        allData.value[currentChunk.value][idx.value].question.correct !=
+          indx + 1
+      ) {
+        return 'card danger';
       }
+      // console.log(allData.value[currentChunk.value][idx.value]);
+      return 'card';
     };
 
     // Make The Answer the clicked one 1 based instead of zero
 
-    const changeQuestionsAnswer = (id: number) =>
-      (allData.value[currentChunk.value][+idx.value].answer = id + 1);
+    const changeQuestionsAnswer = (id: number) => {
+      allData.value[currentChunk.value][idx.value].question.answer = id + 1;
+      console.log(allData.value[currentChunk.value][idx.value].question);
+    };
 
     return {
       goOnePageBack,
@@ -177,10 +221,15 @@ export default defineComponent({
       currentChunk,
       allData,
       toPersianNumbers,
-      isBookmarked,
-      bookmarkQuestion,
+      // isBookmarked,
+      // bookmarkQuestion,
       allCount,
-      changeQuestionsAnswer
+      changeQuestionsAnswer,
+      showPreviousQuestion,
+      showNextQuestion,
+      // isBookmarkedBoolean
+      goOnePageBackAlert,
+      getClass
     };
   }
 });
@@ -314,20 +363,20 @@ export default defineComponent({
 
   .btns {
     width: 90%;
-    margin: 0.9rem auto 0.4rem;
     display: flex;
     justify-content: space-between;
+    align-items: center;
     flex-wrap: nowrap;
-    gap: 0.5rem;
+    margin: 1.2rem auto 0;
 
     .img {
-      width: 22%;
-      height: 22%;
+      aspect-ratio: 1;
+      width: 15%;
+      height: 15%;
     }
 
     button {
-      width: 50%;
-      padding: 0.9rem 1.5rem;
+      padding: 1rem 1.4rem;
       border-radius: 15px;
       border: none;
       font-family: IRANSans;

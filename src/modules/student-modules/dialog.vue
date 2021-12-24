@@ -28,10 +28,12 @@ import router from '@/router/index';
 export default defineComponent({
   props: {
     label: { type: String },
-    componentName: { type: String, default: 'empty' }
+    componentName: { type: String, default: 'empty' },
+    params: { type: String }
   },
 
   setup(props) {
+    console.log(props);
     let Dialog = ref();
     let active = ref(null);
 
@@ -45,9 +47,15 @@ export default defineComponent({
       Dialog.value.classList.remove('active');
 
       if (props.componentName != 'empty') {
-        router.push({
+        const tmp = {
           name: props.componentName
-        });
+        };
+        props.params &&
+          (tmp.params = {
+            id: props.params
+          });
+        console.log(tmp);
+        router.push(tmp);
       }
     };
     const getImgUrl = (src, color) => {

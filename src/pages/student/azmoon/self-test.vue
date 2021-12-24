@@ -26,6 +26,12 @@
         <span @click="moveToQuestions"> ادامه آزمون خودسنجی </span>
       </div>
     </div>
+    <!--  -->
+    <SelfTestPopUp
+      :id="currentItem._id"
+      v-if="showPopUp"
+      @convertBoolean="showPopUp = !showPopUp"
+    />
   </div>
 </template>
 <script lang="ts">
@@ -34,17 +40,21 @@ import SmallHeader from '@/modules/student-modules/header/small-header.vue';
 import LessonCard from '@/modules/student-modules/azmoon/lesson-card.vue';
 import LessionList from '@/modules/student-modules/chapter-list.vue';
 import { StudentSelfTestApi } from '@/api/services/student/student-selftest-service';
+import SelfTestPopUp from '@/modules/student-modules/azmoon/self-test-pop-up.vue';
 import router from '@/router';
 export default defineComponent({
   components: {
     SmallHeader,
     LessonCard,
-    LessionList
+    LessionList,
+    SelfTestPopUp
   },
   setup() {
     const currentItem = ref(null) as any;
 
     const chapterContainer = ref(null) as any;
+
+    const showPopUp = ref(false);
 
     const allCourses = ref([] as any);
     const currentCourse = ref({} as any);
@@ -70,12 +80,13 @@ export default defineComponent({
     };
 
     const moveToQuestions = () => {
-      if (currentItem.value) {
-        router.push({
-          name: 'SelfTestQuestions',
-          params: { id: currentItem.value._id }
-        });
-      }
+      showPopUp.value = true;
+      // if (currentItem.value) {
+      //   router.push({
+      //     name: 'SelfTestQuestions',
+      //     params: { id: currentItem.value._id }
+      //   });
+      // }
     };
 
     return {
@@ -84,7 +95,9 @@ export default defineComponent({
       moveToQuestions,
       allCourses,
       changeCurrentCourse,
-      currentSessions
+      currentSessions,
+      currentItem,
+      showPopUp
     };
   }
 });

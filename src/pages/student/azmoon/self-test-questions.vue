@@ -111,13 +111,13 @@
         src="../../../assets/img/bookmark-light@2x.png"
         @click="bookmarkQuestion(questions[currentChunk][currentQuestionIndex])"
         class="img"
-        v-if="!isBookmarked()"
+        v-if="!isBookmarkedBoolean"
       />
       <img
         src="../../../assets/img/bookmark@2x.png"
         @click="bookmarkQuestion(questions[currentChunk][currentQuestionIndex])"
         class="img"
-        v-else
+        v-else-if="isBookmarkedBoolean"
       />
     </div>
   </div>
@@ -266,58 +266,50 @@ export default defineComponent({
     ////////////////////////////////////////////////////////////////////////////////////////////////
     // Push All Bookmarked Questions
 
-    StudentSelfTestApi.AllBookmarkQuestions().then((res) => {
-      res.data.data.forEach((question) => {
-        if (question.question != null) {
-          allBookmarkedQuestions.value.push(question);
-        }
-      });
-    });
+    const isBookmarkedBoolean = ref();
+
     const isBookmarked = () => {
-      return allBookmarkedQuestions.value.find((item) => {
+      const item = allBookmarkedQuestions.value.find((item) => {
         return (
           item.question._id ==
           questions.value[currentChunk.value][currentQuestionIndex.value]._id
         );
       });
+      return item || false;
     };
 
-    const bookmarkQuestion = (question) => {
+    (async () => {
+      const res = await StudentSelfTestApi.AllBookmarkQuestions();
+      res.data.data.forEach((question) => {
+        if (question.question != null) {
+          allBookmarkedQuestions.value.push(question);
+        }
+      });
+
+      isBookmarkedBoolean.value = !!isBookmarked();
+    })();
+
+    const bookmarkQuestion = async (question) => {
       const isBookmark = isBookmarked();
+
+      const tmp = {
+        question: { _id: question._id },
+        session: { _id: question.session },
+        course: { _id: question.course }
+      };
       // If The Question Is Not Bookmarked
-      if (!isBookmark) {
-        StudentSelfTestApi.bookmarkQuestion({
-          question: {
-            _id: question._id
-          },
-          session: {
-            _id: question.session
-          },
-          course: {
-            _id: question.course
-          }
-        }).then(() => {
-          // Re Fill The Bookmarked Array
-          StudentSelfTestApi.AllBookmarkQuestions().then((res) => {
-            res.data.data.forEach((question) => {
-              if (question.question != null) {
-                allBookmarkedQuestions.value.push(question);
-              }
-            });
-          });
-        });
-      } else if (isBookmark) {
-        StudentSelfTestApi.unBookmarkQuestion(isBookmark._id).then((res) => {
-          // Re Fill The Bookmarked Array
-          StudentSelfTestApi.AllBookmarkQuestions().then((res) => {
-            res.data.data.forEach((question) => {
-              if (question.question != null) {
-                allBookmarkedQuestions.value.push(question);
-              }
-            });
-          });
-        });
-      }
+      if (!isBookmark) await StudentSelfTestApi.bookmarkQuestion(tmp);
+      else if (isBookmark)
+        await StudentSelfTestApi.unBookmarkQuestion(isBookmark._id);
+
+      // Re Fill The Bookmarked Array
+      const res = await StudentSelfTestApi.AllBookmarkQuestions();
+      allBookmarkedQuestions.value = [];
+      res.data.data.forEach((question) => {
+        if (question.question != null)
+          allBookmarkedQuestions.value.push(question);
+      });
+      isBookmarkedBoolean.value = !!isBookmarked();
     };
 
     return {
@@ -335,7 +327,8 @@ export default defineComponent({
       showPreviousQuestion,
       title,
       isBookmarked,
-      bookmarkQuestion
+      bookmarkQuestion,
+      isBookmarkedBoolean
     };
   }
 });
