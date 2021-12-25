@@ -5,18 +5,21 @@
       @click="pauseAndPlay"
       :class="
         pausedStatus == true
-          ? 'fas fa-pause pause-play'
-          : 'fas fa-play pause-play'
+          ? 'fas fa-play pause-play'
+          : 'fas fa-pause pause-play'
       "
+      v-if="video"
+      :style="`display : ${video.paused ? 'flex' : 'none'}`"
     ></i>
     <MinimalHeader title="کارنامه" />
     <div class="c-video">
       <video
-        src="https://mazwai.com/videvo_files/video/free/2019-05/small_watermarked/190416_08_Whales_Drone_004_preview.webm"
+        :src="videoSrc"
         class="video"
         autoplay
         ref="video"
         @timeupdate="onUpdate"
+        @click="pauseAndPlay"
       ></video>
     </div>
     <!-- Btns -->
@@ -56,21 +59,35 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, computed, ref, onBeforeUpdate } from 'vue';
+import { defineComponent, watch, ref, onBeforeUpdate } from 'vue';
 import router from '@/router';
 import MinimalHeader from '@/modules/student-modules/header/minimal-header.vue';
+import { StudentHamnavardApi } from '@/api/services/student/student-hamnavard-service';
+import { displayProtectedVideo } from '@/utilities/get-image-from-url';
+import { store } from '@/store';
 export default defineComponent({
   components: { MinimalHeader },
   setup() {
+    const allData = ref({}) as any;
     const sendRequest = ref(false);
-    //
     const goOnePageBack = () => router.go(-1);
     const video = ref(null) as any;
     const currentTime = ref(0) as any;
     const duration = ref(0) as any;
     const pausedStatus = ref(false);
     const progressbarChild = ref() as any;
-    //
+    const videoSrc = ref('');
+
+    (async () => {
+      await StudentHamnavardApi.getAll().then(
+        (res) => (allData.value = res.data.data)
+      );
+      const imageUrl = `https://www.api.devnirone.ir/api/hamnavard/getVideo/${allData.value.videos[0].file}`;
+      displayProtectedVideo(imageUrl).then((res) => {
+        videoSrc.value = res;
+      });
+    })();
+
     onBeforeUpdate(() => {
       duration.value = video.value.duration;
       const tmp = duration.value / 60;
@@ -88,10 +105,10 @@ export default defineComponent({
       video.value.paused
         ? (pausedStatus.value = true)
         : (pausedStatus.value = false);
-      //
+
       const tmp = currentTime.value / 60;
       let firstSide = tmp > 0 ? ~~tmp : `0${~~tmp}`;
-      //
+
       let secondSide =
         currentTime.value < 60 ? ~~currentTime.value : ~~currentTime.value % 60;
       currentTime.value = firstSide + ':' + secondSide;
@@ -111,6 +128,7 @@ export default defineComponent({
       video.value.currentTime = ~~tmp;
       video.value.play();
     };
+
     const onTouch = (e: any) => {
       let clientRect = e.currentTarget.getBoundingClientRect();
       let fullWidth = clientRect.right;
@@ -121,15 +139,13 @@ export default defineComponent({
       video.value.play();
     };
 
-    let styles = computed(() => {
-      return {
-        'min-height': `calc( 1vh * 100) `
-      };
+    const changeSendRequest = () => (sendRequest.value = true);
+
+    watch(video.value, () => {
+      console.log(video.value);
     });
 
-    const changeSendRequest = () => (sendRequest.value = true);
     return {
-      styles,
       goOnePageBack,
       video,
       currentTime,
@@ -141,7 +157,8 @@ export default defineComponent({
       sendRequest,
       changeSendRequest,
       touchMove,
-      onTouch
+      onTouch,
+      videoSrc
     };
   }
 });
@@ -160,7 +177,7 @@ export default defineComponent({
     position: fixed;
     margin-left: auto;
     margin-right: auto;
-    width: 50px; /* Need a specific value to work */
+    width: 0px; /* Need a specific value to work */
     height: 2rem;
     font-size: 3rem;
     border-radius: 50%;
@@ -175,17 +192,22 @@ export default defineComponent({
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 9999;
   }
   .c-video {
     width: 100%;
     height: 100%;
-    inset: 0;
+    left: 0;
+    top: 0;
     position: absolute;
-    z-index: -1;
+    background-color: #f4f4f4;
+    // z-index: -1;
 
     video {
       height: 100%;
-      z-index: 1;
+      width: 100%;
+      object-fit: contain;
+      // z-index: 1;
     }
   }
 
