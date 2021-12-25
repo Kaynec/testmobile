@@ -1,10 +1,7 @@
 <template>
   <div class="desktop" v-if="!isMobile()"></div>
   <!-- Spinner -->
-  <div
-    class="loader-parent"
-    v-else-if="!orientationTitleInformation.length || !timeInformation"
-  >
+  <div class="loader-parent" v-else-if="!timeInformation">
     <div class="loading1"></div>
   </div>
   <!--  -->
@@ -96,17 +93,16 @@ export default defineComponent({
       res.data.data.budgeting.forEach((item: any) => {
         let tmp = {} as any;
 
-        if (item.course) {
-          tmp.orientation = item.course.orientation;
-          tmp.title = item.course.title;
-        } else if (!item.course) {
-          tmp.orientation = 'رشته تحصیلی';
-          tmp.title = 'درس تحصیلی';
+        if (item.course && item.session && item.questions) {
+          tmp = {
+            orientation: item.course.orientation,
+            title: item.course.title,
+            ...item
+          };
         }
-        tmp = { ...tmp, ...item };
-
-        orientationTitleInformation.push(tmp);
-        console.log(orientationTitleInformation);
+        if (tmp.course) {
+          orientationTitleInformation.push(tmp);
+        }
       });
     });
 
