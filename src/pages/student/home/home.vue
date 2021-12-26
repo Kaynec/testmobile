@@ -3,9 +3,21 @@
   <div class="user-home" v-else>
     <!-- Header -->
     <Header />
-    <transition name="fade">
-      <img :src="currentImg" class="hero" alt="hero-img" :key="currentImg" />
-    </transition>
+
+    <div class="hero-container">
+      <transition name="slide-left" mode="out-in">
+        <img :key="currentImg" :src="currentImg" class="hero" />
+      </transition>
+      <div class="img-control">
+        <span
+          v-for="i in images.length"
+          :key="i"
+          :class="`${currentIndex + 1 == i ? 'rectangle' : 'dot'}`"
+          @click="currentIndex = i - 1"
+        >
+        </span>
+      </div>
+    </div>
     <!-- Main Container -->
     <div class="cart-container">
       <div class="cart long">
@@ -86,9 +98,8 @@ import Azmoon from '@/modules/student-modules/azmoon/azmoon.vue';
   },
   computed: {
     currentImg: function () {
-      return require('../../../assets/' +
-        this.images[Math.abs(this.currentIndex) % this.images.length] +
-        '.png');
+      return require('../../../assets/img/' +
+        this.images[Math.abs(this.currentIndex) % this.images.length]);
     }
   }
 })
@@ -97,25 +108,20 @@ export default class Login extends Vue {
   public showRoadMap = false;
   public timer = null as number | null;
   public currentIndex = 0;
-  public images = [
-    // '../../../assets/img/tech-training-purple.png'
-    'duel.png',
-    'img/tech-training-purple@2x',
-    'roadmap@3x'
-  ];
+  public images = ['tech-training-purple@2x.png', 'roadmap@3x.png'];
   mounted() {
     this.startSlide();
   }
 
   public startSlide() {
-    this.timer = setInterval(this.next, 8000);
+    this.timer = setInterval(this.next, 3000);
   }
 
   public next() {
-    this.currentIndex += 1;
+    this.currentIndex = (this.currentIndex + 1) % this.images.length;
   }
   public prev() {
-    this.currentIndex -= 1;
+    this.currentIndex = (this.currentIndex - 1) % this.images.length;
   }
 
   public MoveToCLassRoom(): void {
@@ -174,11 +180,39 @@ export default class Login extends Vue {
   padding-top: 8vh;
   height: 100%;
 
-  .hero {
-    width: 95%;
-    max-height: 40vh;
-    object-fit: cover;
-    margin: 1rem auto 0;
+  .hero-container {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    .hero {
+      width: 95%;
+      min-height: 27vh;
+      max-height: 35vh;
+      object-fit: contain;
+      margin: 1rem auto 0;
+    }
+    .img-control {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      .dot {
+        height: 12px;
+        width: 12px;
+        background-color: rgba(237, 27, 36, 0.4);
+        border-radius: 50%;
+        display: inline-block;
+        margin: 5px;
+      }
+      .rectangle {
+        width: 36px;
+        border-radius: 10px;
+        background-color: #d21921;
+        height: 12px;
+      }
+    }
   }
 }
 .cart-container {
@@ -203,7 +237,6 @@ export default class Login extends Vue {
     margin: 0.2rem;
     border-radius: 50%;
     width: clamp(17%, 25%, 250px);
-    // height: 25%;
     aspect-ratio: 1;
     padding: 0.5rem;
 

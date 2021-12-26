@@ -42,6 +42,28 @@ export default defineComponent({
   setup() {
     const imgRef = ref();
     const numberOfSlides = 5;
+    const data = ref([
+      {
+        title: 'کتاب درسی',
+        session: 'فصل 1',
+        description: 'ماتریس و اعمال روی ماتریس ها'
+      },
+      {
+        title: 'کتاب درسی',
+        session: 'فصل 2',
+        description: 'ماتریس و اعمال روی ماتریس ها'
+      },
+      {
+        title: 'کتاب درسی',
+        session: 'فصل 3',
+        description: 'ماتریس و اعمال روی ماتریس ها'
+      },
+      {
+        title: 'کتاب درسی',
+        session: 'فصل 4',
+        description: 'ماتریس و اعمال روی ماتریس ها'
+      }
+    ]);
     //
     const moveImg = (position) => {
       const style =

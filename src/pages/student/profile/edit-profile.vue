@@ -132,7 +132,6 @@ import router from '@/router';
 import { provinces } from '@/assets/provinces';
 import MinimalHeader from '@/modules/student-modules/header/minimal-header.vue';
 const alertify = require('@/assets/alertifyjs/alertify');
-import { imageUrl } from '@/utilities/get-image-from-url';
 
 export default defineComponent({
   compo: { MinimalHeader },
@@ -150,6 +149,10 @@ export default defineComponent({
       province: store.getters.getCurrentStudent.province,
       img: ''
     });
+
+    const imageUrl =
+      `https://www.api.devnirone.ir/api/student/getProfileImage/${store.getters.getCurrentStudent.profileImage}` ||
+      'https://images.vexels.com/media/users/3/129616/isolated/preview/fb517f8913bd99cd48ef00facb4a67c0-businessman-avatar-silhouette-by-vexels.png';
 
     // limit for pic is 10 Mb
     const limitSize = (value) => !helpers.req(value) || value.size < 10485760;

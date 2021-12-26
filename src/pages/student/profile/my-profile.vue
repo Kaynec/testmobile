@@ -54,7 +54,7 @@ import Footer from '@/modules/student-modules/footer/footer.vue';
 import router from '@/router';
 import { store } from '@/store';
 import { StudentActionTypes } from '@/store/modules/student/action-types';
-import { imageUrl } from '@/utilities/get-image-from-url';
+
 export default defineComponent({
   components: { Footer, MinimalHeader },
   setup() {
@@ -67,6 +67,10 @@ export default defineComponent({
         return id[+w];
       });
     };
+
+    const imageUrl =
+      `https://www.api.devnirone.ir/api/student/getProfileImage/${store.getters.getCurrentStudent.profileImage}` ||
+      'https://images.vexels.com/media/users/3/129616/isolated/preview/fb517f8913bd99cd48ef00facb4a67c0-businessman-avatar-silhouette-by-vexels.png';
 
     const goOnePageBack = () => router.go(-1);
 

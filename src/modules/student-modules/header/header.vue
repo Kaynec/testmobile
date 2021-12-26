@@ -15,11 +15,14 @@
 import { defineComponent, ref } from 'vue';
 import { store } from '@/store';
 import { toPersianNumbers } from '@/utilities/to-persian-numbers';
-import { imageUrl } from '@/utilities/get-image-from-url';
 
 export default defineComponent({
   setup() {
     const currentUser = ref(store.getters.getCurrentStudent);
+    const imageUrl =
+      `https://www.api.devnirone.ir/api/student/getProfileImage/${currentUser.value.profileImage}` ||
+      'https://images.vexels.com/media/users/3/129616/isolated/preview/fb517f8913bd99cd48ef00facb4a67c0-businessman-avatar-silhouette-by-vexels.png';
+
     const point = ref('0');
     if (currentUser.value && currentUser.value.point)
       point.value = currentUser.value.point;
