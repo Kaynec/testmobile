@@ -3,15 +3,13 @@
   <div class="user-home" v-else>
     <!-- Header -->
     <Header />
-    <img
-      src="../../../assets/img/tech-training-purple@2x.png"
-      class="hero"
-      alt="hero-img"
-    />
+    <transition name="fade">
+      <img :src="currentImg" class="hero" alt="hero-img" :key="currentImg" />
+    </transition>
     <!-- Main Container -->
     <div class="cart-container">
       <div class="cart long">
-        <img src="../../../assets/img/home-icons/time-exam.svg" />
+        <img src="../../../assets/img/home-icons/time-exam.png" />
       </div>
 
       <div class="cart long">
@@ -22,18 +20,21 @@
       </div>
 
       <div class="cart">
-        <img src="../../../assets/img/home-icons/bill-of-document.svg" />
+        <img src="../../../assets/img/home-icons/book.svg" />
+        <h5>کتب درسی</h5>
       </div>
 
       <div class="cart">
         <img
-          src="../../../assets/img/home-icons/pencil.svg"
+          src="../../../assets/img/home-icons/class.svg"
           @touchstart="MoveToCLassRoom"
         />
+        <h5>کلاس ها</h5>
       </div>
 
       <div class="cart">
-        <img src="../../../assets/img/home-icons/archive.svg" />
+        <img src="../../../assets/img/home-icons/support.svg" />
+        <h5>پشتیبانی</h5>
       </div>
 
       <div class="cart">
@@ -41,20 +42,23 @@
           src="../../../assets/img/home-icons/azmoon.svg"
           @touchstart="changeShowAzmoon(true)"
         />
+        <h5>آزمون ها</h5>
       </div>
 
       <div class="cart">
         <img
-          src="../../../assets/img/home-icons/google-maps-icon-256.svg"
+          src="../../../assets/img/home-icons/group.svg"
           @touchstart="changeShowRoadMap(true)"
         />
+        <h5>نقشه راه</h5>
       </div>
 
       <div class="cart">
         <img
           @touchstart="MoveToCalendar"
-          src="../../../assets/img/home-icons/system-calendar-icon-256.svg"
+          src="../../../assets/img/home-icons/calendar.svg"
         />
+        <h5>تقویم</h5>
       </div>
     </div>
     <Footer />
@@ -71,7 +75,8 @@ import router from '@/router';
 import Footer from '@/modules/student-modules/footer/footer.vue';
 import Header from '@/modules/student-modules/header/header.vue';
 import Azmoon from '@/modules/student-modules/azmoon/azmoon.vue';
-import { store } from '@/store';
+// import { StudentAuthServiceApi } from '@/api/services/student/student-auth-service';
+// import { store } from '@/store';
 
 @Options({
   components: {
@@ -79,14 +84,38 @@ import { store } from '@/store';
     Header,
     Azmoon
   },
-  computed: {}
+  computed: {
+    currentImg: function () {
+      return require('../../../assets/' +
+        this.images[Math.abs(this.currentIndex) % this.images.length] +
+        '.png');
+    }
+  }
 })
 export default class Login extends Vue {
   public showAzmoon = false;
   public showRoadMap = false;
-
+  public timer = null as number | null;
+  public currentIndex = 0;
+  public images = [
+    // '../../../assets/img/tech-training-purple.png'
+    'duel.png',
+    'img/tech-training-purple@2x',
+    'roadmap@3x'
+  ];
   mounted() {
-    console.log(store.getters.getCurrentStudent.profileImage);
+    this.startSlide();
+  }
+
+  public startSlide() {
+    this.timer = setInterval(this.next, 8000);
+  }
+
+  public next() {
+    this.currentIndex += 1;
+  }
+  public prev() {
+    this.currentIndex -= 1;
   }
 
   public MoveToCLassRoom(): void {
@@ -160,6 +189,7 @@ export default class Login extends Vue {
   flex-direction: row;
   flex-wrap: wrap;
   align-items: center;
+  justify-content: space-evenly;
   max-height: 500px;
 
   .cart {
@@ -167,15 +197,24 @@ export default class Login extends Vue {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    flex-basis: 33.33%;
-    width: 33.33%;
-    // background: red;
+    background: #efefef;
+    border: 1px solid rgba(128, 128, 128, 0.192);
+    box-shadow: 0 5px 5px -5px gray;
+    margin: 0.2rem;
+    border-radius: 50%;
+    width: clamp(17%, 25%, 250px);
+    // height: 25%;
+    aspect-ratio: 1;
+    padding: 0.5rem;
+
+    h5 {
+      font-size: 0.88rem;
+      font-family: IRANSans;
+      font-weight: bold;
+    }
 
     img {
-      border-radius: 50%;
-      // width: 80%;
-      width: 100%;
-
+      padding-bottom: 0.7rem;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -192,6 +231,9 @@ export default class Login extends Vue {
     flex-basis: 50%;
     height: 6.2rem;
     margin: 0.7rem auto 0 auto;
+    padding: 0;
+    box-shadow: none;
+    border: none;
 
     img {
       padding: 3%;
