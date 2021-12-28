@@ -6,7 +6,7 @@
     <div
       class="circles"
       :style="`background: url(${require('../../../assets/img/roadmap/3-d-space-scene@3x.png')})
-      ;
+      , url(${require('../../../assets/img/roadmap/minimized-bg.jpg')});
       background-size : cover;
       background-position : center 
       `"

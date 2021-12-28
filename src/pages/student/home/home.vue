@@ -106,7 +106,7 @@ import Azmoon from '@/modules/student-modules/azmoon/azmoon.vue';
 export default class Login extends Vue {
   public showAzmoon = false;
   public showRoadMap = false;
-  public timer = null as number | null;
+  public timer = null as any;
   public currentIndex = 0;
   public images = ['tech-training-purple@2x.png', 'roadmap@3x.png'];
   mounted() {
@@ -114,10 +114,12 @@ export default class Login extends Vue {
   }
 
   public startSlide() {
-    this.timer = setInterval(this.next, 3000);
+    this.timer = setInterval(this.next, 5000);
   }
 
   public next() {
+    clearInterval(this.timer);
+    this.timer = setInterval(this.next, 5000);
     this.currentIndex = (this.currentIndex + 1) % this.images.length;
   }
   public prev() {
@@ -170,15 +172,15 @@ export default class Login extends Vue {
 }
 
 .user-home {
+  width: 100%;
+  height: 100%;
+  font-family: IRANSans;
+  background-color: #f4f4f4;
+  overflow-x: hidden;
+  position: relative;
   display: flex;
   flex-direction: column;
-  overflow-x: hidden;
-  width: 100%;
-  background-color: #f4f4f4;
-  font-family: IRANSans;
-  position: relative;
-  padding-top: 8vh;
-  height: 100%;
+  padding-top: 5vh;
 
   .hero-container {
     width: 100%;
@@ -186,12 +188,14 @@ export default class Login extends Vue {
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    margin: 0;
+    padding: 0;
     .hero {
       width: 95%;
       min-height: 27vh;
       max-height: 35vh;
       object-fit: contain;
-      margin: 1rem auto 0;
+      margin: 1rem 0 0;
     }
     .img-control {
       display: flex;
@@ -204,7 +208,7 @@ export default class Login extends Vue {
         background-color: rgba(237, 27, 36, 0.4);
         border-radius: 50%;
         display: inline-block;
-        margin: 5px;
+        margin: 0 5px;
       }
       .rectangle {
         width: 36px;
@@ -217,7 +221,7 @@ export default class Login extends Vue {
 }
 .cart-container {
   width: 95%;
-  margin-inline: auto;
+  margin: 0 auto;
   flex-grow: 1;
   display: flex;
   flex-direction: row;
@@ -225,6 +229,7 @@ export default class Login extends Vue {
   align-items: center;
   justify-content: space-evenly;
   max-height: 500px;
+  padding-bottom: 4rem;
 
   .cart {
     display: flex;
@@ -232,32 +237,25 @@ export default class Login extends Vue {
     align-items: center;
     justify-content: center;
     background: #efefef;
-    border: 1px solid rgba(128, 128, 128, 0.192);
-    box-shadow: 0 5px 5px -5px gray;
-    margin: 0.2rem;
+    border: 1px solid #b1b1b123;
+    box-shadow: 0 5px 8px -3px gray;
     border-radius: 50%;
-    width: clamp(17%, 25%, 250px);
+    margin: 0.2rem 0;
+    width: 28vw;
+    height: 15vh;
     aspect-ratio: 1;
-    padding: 0.5rem;
-
     h5 {
-      font-size: 0.88rem;
-      font-family: IRANSans;
+      font-size: 0.65rem;
       font-weight: bold;
     }
 
     img {
-      padding-bottom: 0.7rem;
+      width: 30%;
+      margin-bottom: 0.5rem;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-    }
-
-    &:nth-of-type(7),
-    &:nth-of-type(6),
-    &:nth-of-type(8) {
-      margin-bottom: 3.8rem;
     }
   }
   .long {

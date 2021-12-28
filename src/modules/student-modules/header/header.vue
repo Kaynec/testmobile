@@ -68,8 +68,9 @@ header {
       font-weight: bold;
     }
     .profile-image {
-      width: 2.6rem;
-      height: 2.6rem;
+      width: 12vw;
+      height: 6vh;
+      aspect-ratio: 1;
       margin: 0 10px 0 0;
       border-radius: 50%;
       border: solid 2px #ddd;

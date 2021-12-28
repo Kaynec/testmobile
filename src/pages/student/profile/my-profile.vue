@@ -37,7 +37,8 @@
         v-for="item in data"
         :key="item"
         @touchstart="touchstart"
-        @touchend="touchend(item.component, $event)"
+        @touchend="touchend"
+        @click="clicked(item.component)"
       >
         <span> {{ item.label }} </span>
         <i class="fas fa-angle-left"></i>
@@ -105,8 +106,10 @@ export default defineComponent({
       e.target.classList.add('active');
     };
 
-    const touchend = (component: string, e: any) => {
+    const touchend = (e: any) => {
       e.target.classList.remove('active');
+    };
+    const clicked = (component: string) => {
       if (component != 'logOut')
         router.push({
           name: component
@@ -138,6 +141,9 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
+body {
+  overflow: hidden;
+}
 .my-profile {
   width: 100%;
   height: 100%;
@@ -145,10 +151,14 @@ export default defineComponent({
   font-family: IRANSans;
   position: relative;
   padding-top: 8vh;
+  display: flex;
+  flex-direction: column;
   overflow: hidden;
   .info {
     width: 95%;
-    margin: 0 auto 1rem;
+    overflow: hidden;
+    margin: 0.9rem auto 0.3rem;
+    height: fit-content;
     background: linear-gradient(
       to top left,
       rgb(189, 39, 43) 0%,
@@ -157,17 +167,22 @@ export default defineComponent({
       rgba(189, 39, 43, 0.95) 100%
     );
     display: flex;
+    justify-content: center;
     justify-content: flex-start;
-    padding: 2.5rem 0;
+    align-items: center;
     border-radius: 15px;
+    min-height: 15rem;
+    height: auto;
 
     .right {
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
+      justify-content: center;
       align-items: center;
       position: relative;
       flex-basis: 35%;
+      height: 100%;
+      gap: 0.3rem;
 
       // fallback
       @supports not (aspect-ratio: auto) {
@@ -186,9 +201,8 @@ export default defineComponent({
       }
 
       img {
-        max-width: 65%;
+        max-width: 6rem;
         aspect-ratio: 1;
-
         border-radius: 50px;
         padding: 2px;
         border: solid 4.4px rgba(255, 255, 255, 0.21);
@@ -203,6 +217,7 @@ export default defineComponent({
         color: white;
         font-size: 9.2px;
         width: 5.5rem;
+        // margin-top: 1rem;
 
         i {
           position: absolute;
@@ -252,9 +267,8 @@ export default defineComponent({
 
   .container {
     width: 100%;
-    margin: 0 auto;
-    padding-bottom: 4rem;
-    overflow: auto;
+    overflow-y: auto;
+    padding-bottom: 5rem;
 
     .dialog {
       box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.05);
