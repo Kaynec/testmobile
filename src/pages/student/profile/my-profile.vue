@@ -140,11 +140,12 @@ export default defineComponent({
 <style lang="scss" scoped>
 .my-profile {
   width: 100%;
+  height: 100%;
   background-color: #f4f4f4;
   font-family: IRANSans;
-  height: 100%;
   position: relative;
   padding-top: 8vh;
+  overflow: hidden;
   .info {
     width: 95%;
     margin: 0 auto 1rem;
@@ -253,6 +254,7 @@ export default defineComponent({
     width: 100%;
     margin: 0 auto;
     padding-bottom: 4rem;
+    overflow: auto;
 
     .dialog {
       box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.05);

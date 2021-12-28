@@ -3,7 +3,14 @@
   <div class="roadmap" v-else>
     <SmallHeader />
     <div class="bg"></div>
-    <div class="circles">
+    <div
+      class="circles"
+      :style="`background: url(${require('../../../assets/img/roadmap/3-d-space-scene@3x.png')})
+      ;
+      background-size : cover;
+      background-position : center 
+      `"
+    >
       <div class="circle" v-for="(circle, i) in data" :key="circle.title">
         <div
           class="control-container animate__animated animate__fadeIn"
@@ -130,9 +137,6 @@ export default defineComponent({
     flex-wrap: nowrap;
     justify-content: space-between;
     align-items: flex-end;
-    background: url('../../../assets/img/roadmap/3-d-space-scene@3x.png');
-    background-size: cover;
-    background-position: center;
     height: 100%;
 
     .circle {
